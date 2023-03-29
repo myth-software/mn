@@ -1,0 +1,40 @@
+{
+  "schematics": {
+    "controllers": {
+      "factory": "./src/factories/controllers/index#controllers",
+      "description": "generate controllers"
+    },
+    "openApi": {
+      "factory": "./src/open-api/factories/index#openApi",
+      "description": "generate open api json"
+    },
+    "zod": {
+      "factory": "./src/factories/zod/index#zod",
+      "description": "generate zod"
+    },
+    "react-query": {
+      "factory": "./src/react-query/factories/index#reactQuery",
+      "description": "generate react-query state"
+    },
+    "rtk-query": {
+      "factory": "./src/rtk-query/factories/index#rtkQuery",
+      "description": "generate rtk-query state"
+    },
+    "interfaces": {
+      "factory": "./src/factories/interfaces/index#interfaces",
+      "description": "generate interfaces"
+    },
+    "entities": {
+      "factory": "./src/factories/entities/index#entities",
+      "description": "generate entities"
+    },
+    "locals": {
+      "factory": "./src/factories/locals/index#locals",
+      "description": "generate locals"
+    },
+    "mock-api": {
+      "factory": "./src/mock-api/factories/index#mockApi",
+      "description": "generate mockApi"
+    }
+  }
+}

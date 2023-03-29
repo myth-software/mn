@@ -15,8 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@mountnotion/types": ["packages/types/index.d.ts"],
-      "@mountnotion/tools": ["packages/tools/src/index.ts"]
+      "@mountnotion/cli": ["packages/cli/src/index.ts"],
+      "@mountnotion/schematics": ["packages/schematics/src/index.ts"],
+      "@mountnotion/tools": ["packages/tools/src/index.ts"],
+      "@mountnotion/types": ["packages/types/index.d.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

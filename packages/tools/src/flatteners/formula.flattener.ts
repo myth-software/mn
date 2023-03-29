@@ -1,7 +1,11 @@
+import { DateResponse } from '@mountnotion/types';
+import { flattenDate } from './date.flattener';
+
 export function flattenFormula(formula: {
   expression?: unknown;
   string?: string;
   number?: number;
+  date?: DateResponse;
 }) {
   if (formula?.expression) {
     return formula.expression;
@@ -9,8 +13,12 @@ export function flattenFormula(formula: {
   if (formula?.string) {
     return formula.string;
   }
-  if (formula?.number) {
+  if (Number.isFinite(formula?.number)) {
     return formula.number;
+  }
+
+  if (formula?.date) {
+    return flattenDate(formula.date);
   }
 
   throw new Error('formula could not be flattened');

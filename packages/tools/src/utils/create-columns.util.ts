@@ -1,4 +1,4 @@
-import { Columns, PageObjectResponse } from '@mountnotion/types';
+import { Columns, ColumnTypes } from '@mountnotion/types';
 
 /**
  * provides a map of column names to types
@@ -6,10 +6,15 @@ import { Columns, PageObjectResponse } from '@mountnotion/types';
  * @returns mapping of properties to columns
  */
 export const createColumns = (
-  properties: PageObjectResponse['properties']
+  properties: Record<
+    string,
+    {
+      id: string;
+      type: ColumnTypes;
+    }
+  >
 ): Columns => {
-  return Object.keys(properties).reduce((acc, property) => {
-    const { type } = properties[property];
+  return Object.entries(properties).reduce((acc, [property, { type }]) => {
     return {
       ...acc,
       [property]: type,

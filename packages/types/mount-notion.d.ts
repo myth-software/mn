@@ -23,6 +23,23 @@ export declare type BasicOptions = {
   entities: string;
 };
 
+export declare type MockApiOptions = BasicOptions & AuthOptions;
+
+export declare type RtkQueryOptions = BasicOptions & AuthOptions;
+
+export declare type ControllersOptions = {
+  /**
+   * organization to import in loopback repository
+   */
+  org: string;
+  accessorProperty: string;
+} & BasicOptions &
+  AuthOptions;
+
+export declare type LocalsOptions = BasicOptions & {
+  all?: string[];
+};
+
 export declare type Schematics = {
   collection: string;
   name: string;

@@ -1,0 +1,23 @@
+{
+  "auth": {
+    "key": null
+  },
+  "options": {
+    "auth": {},
+    "basic": {
+      "pageId": "56e60220-5deb-4126-9598-dd2267491a06",
+      "outDir": "test"
+    }
+  },
+  "schematics": [
+    {
+      "collection": "@mountnotion/schematics",
+      "name": "entities",
+      "options": {
+        "cacheFile": "./.mountnotion/entities.json",
+        "pageId": "56e60220-5deb-4126-9598-dd2267491a06",
+        "outDir": "test"
+      }
+    }
+  ]
+}

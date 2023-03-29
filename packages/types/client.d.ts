@@ -67,6 +67,8 @@ export declare type Filter<
           ? { select: TypedSelectColumnFilter<T, Q> }
           : ColumnType extends 'rich_text'
           ? { rich_text: TextPropertyFilter }
+          : ColumnType extends 'title'
+          ? { title: TextPropertyFilter }
           : ColumnType extends 'phone_number'
           ? { phone_number: TextPropertyFilter }
           : ColumnType extends 'url'

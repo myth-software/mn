@@ -3,12 +3,26 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "dependencies": {
+    "@angular-devkit/core": "13.3.10",
+    "@angular-devkit/schematics": "13.3.10",
+    "@notionhq/client": "^2.2.3",
+    "@types/node": "^18.15.0",
+    "chalk": "^4.0.0",
+    "commander": "^10.0.0",
+    "dotenv": "^16.0.3",
+    "enquirer": "^2.3.6",
+    "openai": "^3.2.1",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "symbol-observable": "^4.0.0"
+  },
   "devDependencies": {
     "@nrwl/devkit": "^15.8.5",
     "@nrwl/eslint-plugin-nx": "15.8.5",
     "@nrwl/js": "15.8.5",
     "@nrwl/linter": "15.8.5",
     "@nrwl/workspace": "15.8.5",
+    "@types/prettier": "^2.7.2",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "~8.15.0",
@@ -17,8 +31,7 @@
     "prettier": "^2.6.2",
     "typescript": "~4.9.5"
   },
-  "dependencies": {
-    "@notionhq/client": "^2.2.3",
-    "@types/node": "^18.15.0"
+  "scripts": {
+    "mn": "node dist/packages/cli/src/index.js"
   }
 }

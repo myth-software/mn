@@ -1,0 +1,35 @@
+{
+  "name": "schematics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/schematics/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/schematics",
+        "main": "packages/schematics/src/index.ts",
+        "tsConfig": "packages/schematics/tsconfig.lib.json",
+        "assets": ["packages/schematics/*.md"],
+        "rootDir": "packages/schematics"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./prep-files.sh &&  cd ../../dist/packages/schematics && npm publish --access public --tag next",
+        "cwd": "packages/schematics"
+      },
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/schematics/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

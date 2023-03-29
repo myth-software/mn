@@ -9,7 +9,7 @@ export function flattenDescription(
   }[]
 ) {
   if (description.length === 0) {
-    return null;
+    return '';
   }
 
   return description

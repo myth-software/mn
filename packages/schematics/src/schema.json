@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "cli": "schematics",
+  "$id": "notion options",
+  "type": "object",
+  "properties": {
+    "pageId": {
+      "type": "string",
+      "description": "page id to look for databases at",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "org": {
+      "type": "string",
+      "description": "organization to import in loopback repository"
+    },
+    "rtk": {
+      "type": "boolean",
+      "description": "client with rk"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "client baseUrl"
+    },
+    "auth": {
+      "type": "boolean",
+      "description": "generate controllers with auth"
+    },
+    "outDir": {
+      "type": "string",
+      "description": "specify the output directory"
+    },
+    "entities": {
+      "type": "string",
+      "description": "entities"
+    },
+    "notionIntegrationKey": {
+      "type": "string",
+      "description": "notion api key to authorize client",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    }
+  },
+  "required": ["pageId"]
+}

@@ -1,0 +1,18 @@
+{
+  "column": {
+    <% for(const [column, type] of Object.entries(columns)) { %>
+      "<%= column %>": "<%= column %>",
+    <% } %>
+  },
+  <% if (options) { %>
+    "option": {
+      <% for(const [property, values] of Object.entries(options)) { %>
+        "<%= property %>": [
+          <% values.map((option) => { %>
+            "<%= option %>",
+          <% }) %>
+        ],
+      <% } %>
+    }
+  <% } %>
+}

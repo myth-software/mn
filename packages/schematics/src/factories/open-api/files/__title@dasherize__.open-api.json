@@ -1,0 +1,209 @@
+{
+  basePath: '/',
+  paths: {
+    '/<%= dasherize(title) %>': {
+      get: {
+        description: 'get <%= title %> by query',
+        tags: ['<%= classify(title) %>'],
+        operationId: '<%= classify(title) %>.getByQuery',
+        'x-operation-name': 'getByQuery',
+        'x-controller-name': '<%= classify(title) %>',
+        parameters: [
+          {
+            in: 'query',
+            name: 'where',
+            description:
+              '[mount notion query parameters](https://docs.mountnotion.com/reference/server/query-parameters)',
+            content: {
+              'application/json': {
+                schema: QueryDatabaseParametersSchema,
+                examples: {
+                  containsUser: {
+                    summary: 'contains name',
+                    value: {
+                      filter: {
+                        property: 'name',
+                        title: {
+                          contains: 'Percy Malantian',
+                        },
+                      },
+                    },
+                  },
+                  noFilter: { summary: 'no filter' },
+                },
+              },
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'found <%= title %>',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: oasSchema,
+                  example: [<%= underscore(title).toUpperCase() %>.mock],
+                },
+              },
+            },
+          },
+        },
+        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+      },
+      post: {
+        description: 'create <%= title %>',
+        tags: ['<%= classify(title) %>'],
+        operationId: '<%= classify(title) %>.create',
+        'x-operation-name': 'create',
+        'x-controller-name': '<%= classify(title) %>',
+        requestBody: {
+          description: 'single <%= title %>',
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                ...oasSchema,
+                example: _.omit(
+                  <%= underscore(title).toUpperCase() %>.mock,
+                  'id',
+                  'created time',
+                  'created by',
+                  'last edited time',
+                  'last edited by',
+                  'cover',
+                  'icon',
+                ),
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'created <%= title %>',
+            content: {
+              'application/json': {
+                schema: {
+                  ...oasSchema,
+                  example: <%= underscore(title).toUpperCase() %>.mock,
+                }
+              },
+            },
+          },
+        },
+        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+      }, <% } %>
+    },
+    '/<%= dasherize(title) %>/{id}': {
+      get: {
+        description: 'get <%= title %> by id',
+        tags: ['<%= classify(title) %>'],
+        operationId: '<%= classify(title) %>.getById',
+        'x-operation-name': 'getById',
+        'x-controller-name': '<%= classify(title) %>',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            schema: {
+              type: 'string',
+              example: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+            },
+            required: true
+          },
+        ],
+        responses: {
+          200: {
+            description: 'found single <%= title %>',
+            content: {
+              'application/json': {
+                schema: {
+                  ...oasSchema,
+                  example: <%= underscore(title).toUpperCase() %>.mock,
+                }
+              },
+            },
+          },
+        },
+        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+      },
+      patch: {
+        description: 'update <%= title %> by id',
+        tags: ['<%= classify(title) %>'],
+        operationId: '<%= classify(title) %>.patchById',
+        'x-operation-name': 'patchById',
+        'x-controller-name': '<%= classify(title) %>',
+        requestBody: {
+          description: 'single <%= title %>',
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                ...oasSchema,
+                example: _.omit(
+                  <%= underscore(title).toUpperCase() %>.mock,
+                  'id',
+                  'created time',
+                  'created by',
+                  'last edited time',
+                  'last edited by',
+                  'cover',
+                  'icon',
+                ),
+              },
+            },
+          },
+        },
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            schema: {
+              type: 'string',
+              example: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+            },
+            required: true
+          },
+        ],
+        responses: {
+          200: {
+            description: 'updated single <%= title %>',
+            content: {
+              'application/json': {
+                schema: {
+                  ...oasSchema,
+                  example: <%= underscore(title).toUpperCase() %>.mock,
+                }
+              },
+            },
+          },
+        },
+        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+      },
+      delete: {
+        description: 'delete <%= title %> by id',
+        tags: ['<%= classify(title) %>'],
+        operationId: '<%= classify(title) %>.deleteById',
+        'x-operation-name': 'deleteById',
+        'x-controller-name': '<%= classify(title) %>',
+        parameters: [
+          {
+            in: 'path',
+            name: 'id',
+            schema: {
+              type: 'string',
+              example: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+            },
+            required: true
+          },
+        ],
+        responses: {
+          204: {
+            description: 'deleted <%= title %>'
+          },
+        },
+        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+      },
+    },
+  },
+}

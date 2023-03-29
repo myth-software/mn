@@ -1,14 +1,14 @@
 import { DatabaseObjectResponse, FlatDatabase } from '@mountnotion/types';
-import { createColumns } from '../utils';
+import { createColumns, createOptions } from '../utils';
 import { flattenCover } from './cover.flattener';
 import { flattenDescription } from './description.flattener';
 import { flattenIcon } from './icon.flattener';
 import { flattenRichText } from './rich-text.flattener';
 
 /**
- *  flattens a notion page response to a tuple of the entity and mapping of keys to columns
+ *  flattens a notion database response
  * @param database {@link DatabaseObjectResponse}
- * @returns flattened database
+ * @returns flat database {@link FlatDatabase}
  */
 export const flattenDatabaseResponse = ({
   id,
@@ -23,8 +23,8 @@ export const flattenDatabaseResponse = ({
     icon: flattenIcon(icon),
     cover: flattenCover(cover),
     description: flattenDescription(description),
+    title: flattenRichText(title) ?? '',
     columns: createColumns(properties),
-    title: flattenRichText(title),
-    options: {},
+    options: createOptions(properties),
   };
 };

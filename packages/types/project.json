@@ -17,7 +17,7 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "cd {options.outputPath} && npm publish --access public --tag next"
+        "command": "cd dist/packages/types && npm publish --access public --tag next"
       },
       "dependsOn": ["build"]
     },

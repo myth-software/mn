@@ -1,24 +1,21 @@
-import { GetDatabaseResponse } from './api-endpoints';
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
+export declare type Options = Record<string | number | symbol, string[]>;
+
 export declare type FlatDatabase = {
   id: string;
-  title: string | null;
+  title: string;
   icon: string;
-  description: string | null;
+  description: string;
   cover: string;
   columns: Columns;
-  options: Record<string | number | symbol, string[]>;
+  options: Options | null;
 };
 
 export declare type Cache = FlatDatabase & {
-  database: GetDatabaseResponse;
-  rollup: any;
-  standardsFails: {
-    columns: unknown[];
-    rows: unknown[];
-  };
+  rollups: Columns;
+  rollupsOptions: Options | null;
 };
 
 export declare type Entity = DeepReadonly<FlatDatabase>;

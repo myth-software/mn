@@ -3776,7 +3776,9 @@ export declare type MultiSelectDatabasePropertyConfigResponse = {
 };
 export declare type StatusDatabasePropertyConfigResponse = {
   type: 'status';
-  status: EmptyObject;
+  status: {
+    options: Array<SelectPropertyResponse>;
+  };
   id: string;
   name: string;
 };
@@ -11025,7 +11027,7 @@ export declare const createPage: {
     'icon',
     'cover',
     'content',
-    'children',
+    'children'
   ];
   readonly path: () => string;
 };
@@ -11643,7 +11645,7 @@ export declare const updateBlock: {
     'template',
     'callout',
     'synced_block',
-    'table',
+    'table'
   ];
   readonly path: (p: UpdateBlockPathParameters) => string;
 };
@@ -11961,7 +11963,7 @@ export declare const updateDatabase: {
     'cover',
     'properties',
     'is_inline',
-    'archived',
+    'archived'
   ];
   readonly path: (p: UpdateDatabasePathParameters) => string;
 };
@@ -12032,7 +12034,7 @@ export declare const queryDatabase: {
     'filter',
     'start_cursor',
     'page_size',
-    'archived',
+    'archived'
   ];
   readonly path: (p: QueryDatabasePathParameters) => string;
 };
@@ -12234,7 +12236,7 @@ export declare const createDatabase: {
     'cover',
     'title',
     'description',
-    'is_inline',
+    'is_inline'
   ];
   readonly path: () => string;
 };
@@ -12274,7 +12276,7 @@ export declare const search: {
     'query',
     'start_cursor',
     'page_size',
-    'filter',
+    'filter'
   ];
   readonly path: () => string;
 };
