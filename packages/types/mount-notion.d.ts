@@ -40,6 +40,10 @@ export declare type LocalsOptions = BasicOptions & {
   all?: string[];
 };
 
+export declare type I18nOptions = BasicOptions & {
+  languages: ('en' | 'es')[];
+};
+
 export declare type Schematics = {
   collection: string;
   name: string;

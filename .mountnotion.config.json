@@ -12,11 +12,14 @@
   "schematics": [
     {
       "collection": "@mountnotion/schematics",
-      "name": "entities",
+      "name": "i18n",
       "options": {
-        "cacheFile": "./.mountnotion/entities.json",
-        "pageId": "56e60220-5deb-4126-9598-dd2267491a06",
-        "outDir": "test"
+        "basic": {
+          "cacheFile": "./.mountnotion/entities.json",
+          "pageId": "56e60220-5deb-4126-9598-dd2267491a06",
+          "outDir": "test",
+          "languages": ["en", "es"]
+        }
       }
     }
   ]

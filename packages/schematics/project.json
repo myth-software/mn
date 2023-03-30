@@ -15,13 +15,21 @@
         "rootDir": "packages/schematics"
       }
     },
-    "publish": {
+    "prepublish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./prep-files.sh &&  cd ../../dist/packages/schematics && npm publish --access public --tag next",
+        "command": "./prep-files.sh",
         "cwd": "packages/schematics"
       },
       "dependsOn": ["build"]
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm publish --access public --tag next",
+        "cwd": "dist/packages/schematics"
+      },
+      "dependsOn": ["prepublish"]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
