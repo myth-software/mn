@@ -3,12 +3,12 @@ import 'symbol-observable';
 
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
+import * as chalk from 'chalk';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
 import { MountnCommand } from '../types';
 import { logger } from '../utils';
-import chalk = require('chalk');
 dotenv.config();
 
 export default {

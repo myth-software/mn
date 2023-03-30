@@ -1,3 +1,8 @@
+#!/usr/bin/env node
+
+/**
+ * imports
+ */
 import { MountNotionConfig } from '@mountnotion/types';
 import { Command } from 'commander';
 import * as fs from 'fs/promises';
@@ -10,8 +15,11 @@ export async function cli(): Promise<undefined> {
   process.chdir(path.dirname(configPath));
   const unparsedConfig = await fs.readFile(configPath, { encoding: 'utf8' });
   const config = JSON.parse(unparsedConfig) as MountNotionConfig;
-  // third thing in "" should be surrounded by <> for a required argument to that flag,
-  // or [] for optional argument to that flag. for requiring the flag itself see program.requiredOption()
+  /**
+   * third thing in "" should be surrounded by <> for a required argument to
+   * that flag, or [] for optional argument to that flag. for requiring the
+   * flag itself see program.requiredOption()
+   */
   const program = new Command();
 
   program.name('mountn').description(description).version(version);

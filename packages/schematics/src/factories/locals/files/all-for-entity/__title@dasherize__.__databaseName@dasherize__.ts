@@ -10,7 +10,7 @@ export const <%= camelize(databaseName) %><%= classify(title) %>: <%= classify(d
       ],  
     <% } %>
     <% if(typeof value === 'string') { %>
-      '<%= property %>': '<%= value %>',
+      '<%= property %>': "<%= value %>",
     <% } %>
     <% if(typeof value === 'number') { %>
       '<%= property %>': <%= value %>,

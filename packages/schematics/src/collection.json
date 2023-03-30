@@ -5,7 +5,7 @@
       "description": "generate controllers"
     },
     "openApi": {
-      "factory": "./src/open-api/factories/index#openApi",
+      "factory": "./src/factories/open-api/index#openApi",
       "description": "generate open api json"
     },
     "zod": {
@@ -13,11 +13,11 @@
       "description": "generate zod"
     },
     "react-query": {
-      "factory": "./src/react-query/factories/index#reactQuery",
+      "factory": "./src/factories/react-query/index#reactQuery",
       "description": "generate react-query state"
     },
     "rtk-query": {
-      "factory": "./src/rtk-query/factories/index#rtkQuery",
+      "factory": "./src/factories/rtk-query/index#rtkQuery",
       "description": "generate rtk-query state"
     },
     "interfaces": {
@@ -33,7 +33,7 @@
       "description": "generate locals"
     },
     "mock-api": {
-      "factory": "./src/mock-api/factories/index#mockApi",
+      "factory": "./src/factories/mock-api/index#mockApi",
       "description": "generate mockApi"
     }
   }
