@@ -17,9 +17,7 @@ export const getlocals = async (
     database_id: options.pageId,
   });
 
-  const useAll = options.all?.includes(
-    flattenDatabaseResponse(database).title!
-  );
+  const useAll = options.all?.includes(flattenDatabaseResponse(database).title);
   const query = useAll
     ? notion.databases.query<any>(
         {

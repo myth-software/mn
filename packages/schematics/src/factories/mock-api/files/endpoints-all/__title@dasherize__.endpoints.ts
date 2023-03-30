@@ -1,10 +1,10 @@
-import { <%= underscore(title).toUpperCase() %> } from '<%= entities %>';
+import { local<%= classify(title) %> } from '<%= entities %>';
 import { Response, Server } from 'miragejs';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 export function <%= camelize(title) %>Endpoints(server: Server) {
-  let db: any[] = [<%= underscore(title).toUpperCase() %>.mock];
+  let db: any[] = local<%= classify(title) %>.list;
   server.get('/<%= dasherize(title) %>', () => {
     return new Response(200, {}, db);
   });
@@ -21,13 +21,13 @@ export function <%= camelize(title) %>Endpoints(server: Server) {
   });
 
   server.get('/<%= dasherize(title) %>/:id', (schema, request) => {
-    const page_id = request.params.id;
+    const page_id = request.params['id'];
     const response = db.find(item => item.page_id === page_id);
     return new Response(200, {}, response);
   });
 
   server.patch('/<%= dasherize(title) %>/:id', (schema, request) => {
-    const page_id = request.params.id;
+    const page_id = request.params['id'];
     const response = db.find(item => item.page_id === page_id);
     const update = JSON.parse(request.requestBody);
     const updated = {
@@ -40,7 +40,7 @@ export function <%= camelize(title) %>Endpoints(server: Server) {
   });
 
   server.delete('/<%= dasherize(title) %>/:id', (schema, request) => {
-    const page_id = request.params.id;
+    const page_id = request.params['id'];
     const index = db.findIndex(item => item.page_id === page_id);
     if (index > -1) {
       db.splice(index, 1);

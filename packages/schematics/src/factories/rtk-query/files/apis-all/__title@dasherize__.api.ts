@@ -46,7 +46,7 @@ reducerPath: '<%= classify(title) %>',
         );
 
         const patchResult = dispatch(
-          <%= camelize(title) %>Api.util.updateQueryData('get', null, drafts => {
+          <%= camelize(title) %>Api.util.updateQueryData('get', undefined, drafts => {
             const index = drafts.findIndex(draft => draft.id === id);
             if (index) {
               drafts[index] = { ...drafts[index], ...body };
