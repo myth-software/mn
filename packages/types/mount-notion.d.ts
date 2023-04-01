@@ -23,7 +23,8 @@ export declare type BasicOptions = {
   entities: string;
 };
 
-export declare type MockApiOptions = BasicOptions & AuthOptions;
+export declare type MockApiOptions = { locals: string } & BasicOptions &
+  AuthOptions;
 
 export declare type RtkQueryOptions = BasicOptions & AuthOptions;
 

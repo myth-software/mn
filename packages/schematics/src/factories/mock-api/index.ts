@@ -11,7 +11,7 @@ export function mockApi(options: MockApiOptions): Rule {
   validateBasicInputs(options);
   validateAuthInputs(options);
 
-  const { outDir, entities, baseUrl, usersDatabase } = options;
+  const { outDir, entities, baseUrl, usersDatabase, locals } = options;
   const excludes = options.excludes ?? [];
   return () => {
     const pageIds = [options.pageId].flat();
@@ -28,6 +28,7 @@ export function mockApi(options: MockApiOptions): Rule {
             title,
             entities,
             baseUrl,
+            locals,
             ...strings,
           }),
           move(`${outDir}/endpoints`),
@@ -40,6 +41,7 @@ export function mockApi(options: MockApiOptions): Rule {
               titles,
               entities,
               baseUrl,
+              locals,
               usersDatabase,
               ...strings,
             }),
@@ -50,6 +52,7 @@ export function mockApi(options: MockApiOptions): Rule {
               titles,
               entities,
               baseUrl,
+              locals,
               ...strings,
             }),
             move(`${outDir}/endpoints`),
@@ -61,6 +64,7 @@ export function mockApi(options: MockApiOptions): Rule {
             title,
             entities,
             baseUrl,
+            locals,
             ...strings,
           }),
           move(`${outDir}/models`),
@@ -72,6 +76,7 @@ export function mockApi(options: MockApiOptions): Rule {
           titles,
           entities,
           baseUrl,
+          locals,
           ...strings,
         }),
         move(`${outDir}/models`),
@@ -82,6 +87,7 @@ export function mockApi(options: MockApiOptions): Rule {
           titles,
           entities,
           baseUrl,
+          locals,
           ...strings,
         }),
         move(outDir),

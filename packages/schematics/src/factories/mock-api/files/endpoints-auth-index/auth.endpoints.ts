@@ -1,9 +1,9 @@
-import { <%= underscore(usersDatabase).toUpperCase() %> } from '<%= entities %>';
+import { local<%= classify(usersDatabase) %> } from '<%= locals %>';
 import { Response, Server } from 'miragejs';
 
 export function authEndpoints(server: Server) {
   server.get(`/a/sms/profile`, () => {
-    return new Response(200, {}, <%= underscore(usersDatabase).toUpperCase() %>.mock);
+    return new Response(200, {}, local<%= classify(usersDatabase) %>.example);
   });
 
   server.post(`/a/sms/login-initalization`, () => {

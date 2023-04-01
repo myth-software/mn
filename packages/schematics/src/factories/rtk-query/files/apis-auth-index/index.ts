@@ -4,7 +4,9 @@
 <% } %>
 export * from './auth.api';
 
-export const apis = {
+export const apis: {
+  [title: string]: any;
+} = {
  <% for(const title of titles) { %>
   '<%= title %>': <%= camelize(title) %>Api,
  <% } %>

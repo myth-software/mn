@@ -9,7 +9,21 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
   import { RootState } from '../store';
 <% } %>
 
-export const <%= camelize(title) %>Api = createApi({
+const {
+  useDeleteByIdMutation,
+  useGetByIdQuery,
+  useGetQuery,
+  useLazyGetByIdQuery,
+  useLazyGetQuery,
+  usePatchByIdMutation,
+  usePostMutation,
+  usePrefetch,
+  util,
+  endpoints,
+  reducer,
+  reducerPath,
+  middleware,
+} = createApi({
 reducerPath: '<%= classify(title) %>',
   baseQuery: fetchBaseQuery({
     baseUrl: '<%= baseUrl %>/<%= dasherize(title) %>',
@@ -118,3 +132,18 @@ reducerPath: '<%= classify(title) %>',
   ],
 });
 
+export const <%= camelize(title) %>Api = {
+  useDeleteByIdMutation,
+  useGetByIdQuery,
+  useGetQuery,
+  useLazyGetByIdQuery,
+  useLazyGetQuery,
+  usePatchByIdMutation,
+  usePostMutation,
+  usePrefetch,
+  util,
+  endpoints,
+  reducer,
+  reducerPath,
+  middleware,
+}
