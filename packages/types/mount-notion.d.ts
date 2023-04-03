@@ -34,6 +34,7 @@ export declare type ControllersOptions = {
    */
   org: string;
   accessorProperty: string;
+  locals: string;
 } & BasicOptions &
   AuthOptions;
 

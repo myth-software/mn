@@ -26,6 +26,7 @@ export function controllers(options: ControllersOptions): Rule {
             index: cache,
             org: options.org,
             entities: options.entities,
+            locals: options.locals,
             strategy: options.strategy,
             userColumn: options.userColumn,
             accessorProperty: options.accessorProperty,

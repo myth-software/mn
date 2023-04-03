@@ -27,6 +27,9 @@ import {
   <%= underscore(title).toUpperCase() %>,
   indicies 
 } from '<%= entities %>';
+import { 
+  local<%= classify(title) %>,
+} from '<%= locals %>';
 const mountn = configure({
   integrationKey: process.env.INTEGRATION_KEY!,
   indicies
@@ -77,7 +80,7 @@ const mountn = configure({
                 schema: {
                   type: 'array',
                   items: oasSchema,
-                  example: [<%= underscore(title).toUpperCase() %>.mock],
+                  example: local<%= classify(title) %>.list,
                 },
               },
             },
@@ -99,7 +102,7 @@ const mountn = configure({
               schema: {
                 ...oasSchema,
                 example: _.omit(
-                  <%= underscore(title).toUpperCase() %>.mock,
+                  local<%= classify(title) %>.example,
                   'id',
                   'created time',
                   'created by',
@@ -119,7 +122,7 @@ const mountn = configure({
               'application/json': {
                 schema: {
                   ...oasSchema,
-                  example: <%= underscore(title).toUpperCase() %>.mock,
+                  example: local<%= classify(title) %>.example,
                 }
               },
             },
@@ -153,7 +156,7 @@ const mountn = configure({
               'application/json': {
                 schema: {
                   ...oasSchema,
-                  example: <%= underscore(title).toUpperCase() %>.mock,
+                  example: local<%= classify(title) %>.example,
                 }
               },
             },
@@ -175,7 +178,7 @@ const mountn = configure({
               schema: {
                 ...oasSchema,
                 example: _.omit(
-                  <%= underscore(title).toUpperCase() %>.mock,
+                  local<%= classify(title) %>.example,
                   'id',
                   'created time',
                   'created by',
@@ -206,7 +209,7 @@ const mountn = configure({
               'application/json': {
                 schema: {
                   ...oasSchema,
-                  example: <%= underscore(title).toUpperCase() %>.mock,
+                  example: local<%= classify(title) %>.example,
                 }
               },
             },
