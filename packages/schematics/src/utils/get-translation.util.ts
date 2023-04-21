@@ -1,5 +1,7 @@
-import { Columns, FlatDatabase, Options } from '@mountnotion/types';
+import { FlatDatabase } from '@mountnotion/types';
 import { Configuration, OpenAIApi } from 'openai';
+import { recursiveMap } from './recursize-map';
+import { recursiveZip } from './recursize-zip';
 export async function getTranslation(
   { columns, options }: FlatDatabase,
   lng: 'en' | 'es'
@@ -11,63 +13,43 @@ export async function getTranslation(
     };
   }, {} as Record<string, string>);
 
+  const translatable = {
+    columns: columnNames,
+    options,
+  };
+
   if (lng === 'en') {
-    return {
-      columns: columnNames,
-      options,
-    };
+    return translatable;
   }
   const language = lng === 'es' ? 'spanish' : 'english';
-
   const configuration = new Configuration({
     apiKey: process.env['OPENAI_API_KEY'],
   });
   const openai = new OpenAIApi(configuration);
-
-  const translatedColumns = (
+  const translationInput = recursiveMap(translatable);
+  const translationOutput = (
     await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'system',
-          content: `Translate i18n locale json file to ${language} by translating only the values, not the keys.`,
+          content: `Translate all of the strings in the json to ${language}.`,
         },
         {
           role: 'user',
-          content: JSON.stringify(columnNames),
+          content: JSON.stringify(translationInput),
         },
       ],
     })
   ).data.choices[0].message?.content;
 
-  const translatedOptions = options
-    ? (
-        await openai.createChatCompletion({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: `Translate i18n locale json file to ${language} by translating only the values, not the keys.`,
-            },
-            {
-              role: 'user',
-              content: JSON.stringify(options),
-            },
-          ],
-        })
-      ).data.choices[0].message?.content
-    : null;
-
-  if (translatedColumns === undefined || translatedOptions === undefined) {
+  if (translationOutput === undefined) {
     throw new Error('error');
   }
 
-  const response = {
-    columns: JSON.parse(translatedColumns) as Columns,
-    options:
-      translatedOptions === null
-        ? null
-        : (JSON.parse(translatedOptions) as Options),
-  };
+  const response = recursiveZip(
+    translationInput,
+    JSON.parse(translationOutput)
+  );
   return response;
 }
