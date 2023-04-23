@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ *
+ * @param input english language original array from recursive map
+ * @param output translated language array
+ * @returns locale object
+ */
 export function recursiveZip(input: any[], output: any[]): any {
-  // Use Object.entries() to get an array of the object's key-value pairs
   return input.reduce((acc, currentInput, i) => {
     const [key, inputVal] = currentInput;
     const [, outputVal] = output[i];
@@ -12,9 +17,6 @@ export function recursiveZip(input: any[], output: any[]): any {
         [key]: recursiveZip(inputVal, outputVal),
       };
     }
-
-    // If the value is not an object, call the callback function with that value as the argument,
-    // and assign the result of the callback to the property
 
     return {
       ...acc,

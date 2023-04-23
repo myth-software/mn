@@ -1,10 +1,11 @@
 import { FlatDatabase } from '@mountnotion/types';
 import { Configuration, OpenAIApi } from 'openai';
-import { recursiveMap } from './recursize-map';
-import { recursiveZip } from './recursize-zip';
+import { recursiveMap } from './recursive-map';
+import { recursiveZip } from './recursive-zip';
+
 export async function getTranslation(
   { columns, options }: FlatDatabase,
-  lng: 'en' | 'es'
+  lng: 'en' | 'es' | 'pt' | 'th'
 ) {
   const columnNames = Object.keys(columns).reduce((acc, curr) => {
     return {
