@@ -28,7 +28,8 @@ export async function getTranslation(
   });
   const openai = new OpenAIApi(configuration);
   const translationInput = recursiveMap(translatable);
-  const translationOutput = (
+  const content = JSON.stringify(translationInput);
+  const translationOutputString = (
     await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
@@ -38,19 +39,17 @@ export async function getTranslation(
         },
         {
           role: 'user',
-          content: JSON.stringify(translationInput),
+          content,
         },
       ],
     })
   ).data.choices[0].message?.content;
 
-  if (translationOutput === undefined) {
+  if (translationOutputString === undefined) {
     throw new Error('error');
   }
 
-  const response = recursiveZip(
-    translationInput,
-    JSON.parse(translationOutput)
-  );
+  const translationOutput = JSON.parse(translationOutputString);
+  const response = recursiveZip(translationInput, translationOutput);
   return response;
 }

@@ -6,6 +6,14 @@
  * @returns locale object
  */
 export function recursiveZip(input: any[], output: any[]): any {
+  if (!Array.isArray(input)) {
+    throw new Error('recursiveZip input must be an array');
+  }
+
+  if (!Array.isArray(output)) {
+    throw new Error('recursiveZip output must be an array');
+  }
+
   return input.reduce((acc, currentInput, i) => {
     const [key, inputVal] = currentInput;
     const [, outputVal] = output[i];

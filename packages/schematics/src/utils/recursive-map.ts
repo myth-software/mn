@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function recursiveMap(obj: any) {
+  if (typeof obj !== 'object') {
+    throw new Error('cannot recursive map, obj is not an object');
+  }
   /**
    * the empty array outer holds a tuple of a string identifying the key for
    * the property and the array of strings in the inner object
@@ -17,9 +20,9 @@ export function recursiveMap(obj: any) {
     if (typeof val === 'object') {
       outer.push([key, recursiveMap(val)]);
     } else {
-    /**
-     * when the value is a string then push the value
-     */
+      /**
+       * when the value is a string then push the value
+       */
       strings.push(val);
     }
   });

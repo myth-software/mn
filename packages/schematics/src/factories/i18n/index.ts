@@ -44,6 +44,7 @@ export function i18n(options: I18nOptions): Rule {
           const translationPromises = includedCaches.map((cache) =>
             getTranslation(cache, lng)
           );
+
           const entities = await Promise.all(translationPromises);
 
           const formatted = includedCaches.reduce((acc, curr, i) => {
