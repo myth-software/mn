@@ -14,9 +14,20 @@ export async function getTranslation(
     };
   }, {} as Record<string, string>);
 
+  const optionNames = options
+    ? Object.entries(options).reduce((acc, [key, values]) => {
+        return {
+          ...acc,
+          [key]: values.reduce((acc, curr) => {
+            return { ...acc, [curr]: curr };
+          }, {}),
+        };
+      }, {})
+    : {};
+
   const translatable = {
     columns: columnNames,
-    options,
+    options: optionNames,
   };
 
   if (lng === 'en') {

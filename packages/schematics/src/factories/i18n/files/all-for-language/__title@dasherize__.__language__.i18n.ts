@@ -5,11 +5,7 @@ export const <%= camelize(title) %> = {
   <% if(options) { %>
     option: {
       <% for(const [property, values] of Object.entries(options)) { %>
-        '<%= property %>': [
-          <% values.map((option) => { %>
-            '<%= option %>',
-          <% }) %>
-        ],
+        '<%= property %>': <%= JSON.stringify(values) %>
       <% } %>
     }
   <% } %>
