@@ -4,6 +4,7 @@ import {
   ExpandedColumns,
   InferWriteonly,
 } from '@mountnotion/types';
+import { expandDate } from './date.expander';
 import { expandFiles } from './files.expander';
 import { expandRelation } from './relation.expander';
 import { expandRichText } from './rich-text.expander';
@@ -89,6 +90,12 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
         case 'relation': {
           return {
             [key]: expandRelation(value),
+            ...acc,
+          };
+        }
+        case 'date': {
+          return {
+            [key]: expandDate(value),
             ...acc,
           };
         }
