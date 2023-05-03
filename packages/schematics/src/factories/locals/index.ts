@@ -2,7 +2,7 @@ import { strings } from '@angular-devkit/core';
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/tools';
 import { Cache, LocalsOptions } from '@mountnotion/types';
-import { applyWithoutOverwrite, applyWithOverwrite } from '../../rules';
+import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
 
 /**
@@ -39,7 +39,7 @@ export function locals(options: LocalsOptions): Rule {
                 .replace("'", '')
                 .replace('’', '');
 
-              return applyWithoutOverwrite(url('./files/all-for-entity'), [
+              return applyWithOverwrite(url('./files/all-for-entity'), [
                 template({
                   title: formattedTitle,
                   local: rest,
