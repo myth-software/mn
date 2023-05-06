@@ -1,19 +1,19 @@
-# @mount-notion/tools
+# @mount-notion/sdk
 
 ## install
 
 ```bash
 # npm
-npm i -S @mount-notion/tools
+npm i -S @mount-notion/sdk
 
 # yarn
-yarn add @mount-notion/tools
+yarn add @mount-notion/sdk
 ```
 
 ## overview
 
 **summary**  
-notion api responses are EXTREMELY deeply nested. tools provides simple flattening of notion responses and simple expansion of properties. beyond that, it exports a wrapper around the notion api for easy configuration.
+notion api responses are EXTREMELY deeply nested. sdk provides simple flattening of notion responses and simple expansion of properties. beyond that, it exports a wrapper around the notion api for easy configuration.
 
 ### example usage
 
@@ -22,7 +22,7 @@ import {
   flattenPageResponse,
   expandProperties,
   notion,
-} from '@mount-notion/tools';
+} from '@mount-notion/sdk';
 
 const page = await notion.pages.retrieve({
   page_id,

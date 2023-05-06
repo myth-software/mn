@@ -9,7 +9,7 @@ import { QueryDatabaseParametersSchema } from '<%= org %>/types';
 import { api, param, requestBody } from '@loopback/rest';
 import {
     configure
-} from '@mountnotion/tools';
+} from '@mountnotion/sdk';
 import {
     Filter,
     OrFilter,

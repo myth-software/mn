@@ -1,23 +1,23 @@
 {
-  "name": "tools",
+  "name": "sdk",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/tools/src",
+  "sourceRoot": "packages/sdk/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/tools",
-        "main": "packages/tools/src/index.ts",
-        "tsConfig": "packages/tools/tsconfig.lib.json",
-        "assets": ["packages/tools/*.md"]
+        "outputPath": "dist/packages/sdk",
+        "main": "packages/sdk/src/index.ts",
+        "tsConfig": "packages/sdk/tsconfig.lib.json",
+        "assets": ["packages/sdk/*.md"]
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "cd dist/packages/tools && npm publish --access public --tag next"
+        "command": "cd dist/packages/sdk && npm publish --access public --tag next"
       },
       "dependsOn": ["build"]
     },
@@ -25,7 +25,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/tools/**/*.ts"]
+        "lintFilePatterns": ["packages/sdk/**/*.ts"]
       }
     }
   },

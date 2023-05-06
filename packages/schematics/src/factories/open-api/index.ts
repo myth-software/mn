@@ -1,6 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/tools';
+import { createDatabaseCaches } from '@mountnotion/sdk';
 import { AuthOptions, BasicOptions } from '@mountnotion/types';
 import { applyWithOverwrite } from '../..//rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';

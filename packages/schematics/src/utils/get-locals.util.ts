@@ -1,4 +1,4 @@
-import { flattenDatabaseResponse, notion } from '@mountnotion/tools';
+import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import { LocalsOptions } from '@mountnotion/types';
 import { santitizeTitle } from './sanitize-title.util';
 

@@ -3,7 +3,7 @@ dotenv.config();
 
 import { strings } from '@angular-devkit/core';
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/tools';
+import { createDatabaseCaches } from '@mountnotion/sdk';
 import { Cache, I18nOptions, Options } from '@mountnotion/types';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';

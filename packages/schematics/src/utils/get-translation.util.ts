@@ -33,7 +33,14 @@ export async function getTranslation(
   if (lng === 'en') {
     return translatable;
   }
-  const language = lng === 'es' ? 'spanish' : 'english';
+  const language =
+    lng === 'es'
+      ? 'spanish'
+      : lng === 'th'
+      ? 'thai'
+      : lng === 'pt'
+      ? 'portuguese'
+      : 'english';
   const configuration = new Configuration({
     apiKey: process.env['OPENAI_API_KEY'],
   });
