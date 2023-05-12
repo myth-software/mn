@@ -2,6 +2,7 @@ import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
+import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';
 
@@ -93,6 +94,10 @@ export const createDatabaseCaches = async (
         rollups,
         rollupsOptions: createRollupsOptions(
           rollups,
+          allUsableDatabases[i].properties,
+          flatDatabases
+        ),
+        relations: createRelations(
           allUsableDatabases[i].properties,
           flatDatabases
         ),

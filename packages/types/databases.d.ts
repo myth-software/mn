@@ -1,10 +1,7 @@
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
-export declare type Relations = Record<
-  string | number | symbol,
-  { database_id: string; limit: 'one' | 'none' }
->;
+export declare type Relations = Record<string | number | symbol, string>;
 export declare type Options = Record<string | number | symbol, string[]>;
 
 export declare type FlatDatabase = {

@@ -1,18 +1,24 @@
-import { DatabasePropertyConfigResponse, Relations } from '@mountnotion/types';
+import {
+  DatabasePropertyConfigResponse,
+  FlatDatabase,
+  Relations,
+} from '@mountnotion/types';
+import { ensure } from './ensure.util';
 
 export function createRelations(
-  properties: Record<string, DatabasePropertyConfigResponse>
+  properties: Record<string, DatabasePropertyConfigResponse>,
+  flatDatabases: FlatDatabase[]
 ) {
   const relations = Object.entries(properties).reduce(
     (acc, [property, value]) => {
       if (value.type === 'relation') {
+        const flat = ensure(
+          flatDatabases.find((f) => f.id === value.relation.database_id)
+        );
         return {
           ...acc,
-          [property]: {
-            database_id: value.relation.database_id,
-            limit: value.relation.type === 'single_property' ? 'one' : 'none',
-          },
-        } as Relations;
+          [property]: flat.title,
+        };
       }
 
       return acc;

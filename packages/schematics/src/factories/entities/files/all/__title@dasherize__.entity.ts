@@ -24,11 +24,8 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% }  %>  
   <% if(relations) { %>
     relations: {
-      <% for(const [property, { database_id, limit }] of Object.entries(relations)) { %>
-        '<%= property %>': {
-          database_id: '<%= database_id %>',
-          limit: '<%= limit %>',
-        },
+      <% for(const [property, relation] of Object.entries(relations)) { %>
+        '<%= property %>': '<%= relation %>',
       <% } %>
     },
   <% } else { %>
