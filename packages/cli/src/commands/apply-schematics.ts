@@ -14,7 +14,9 @@ dotenv.config();
 export default {
   name: 'apply-schematics',
   description: 'applies schematics',
-  options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
+  options: [
+    { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
+  ],
   actionFactory: (config) => async (clearCache) => {
     console.log({ clearCache });
     function findUp(names: string | string[], from: string) {

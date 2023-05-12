@@ -18,7 +18,7 @@ export const <%= underscore(title).toUpperCase() %> = {
           <% }) %>
         ],
       <% } %>
-    }
+    },
   <% } else { %>
     options: null,
   <% }  %>  
