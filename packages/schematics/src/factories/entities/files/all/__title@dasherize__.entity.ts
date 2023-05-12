@@ -20,7 +20,19 @@ export const <%= underscore(title).toUpperCase() %> = {
       <% } %>
     }
   <% } else { %>
-    options: null
+    options: null,
+  <% }  %>
+  <% if(relations) { %>
+    relations: {
+      <% for(const [property, { database_id, limit }] of Object.entries(relations)) { %>
+        '<%= property %>': {
+          database_id: <%= database_id %>,
+          limit: <%= limit %>,
+        },
+      <% } %>
+    },
+  <% } else { %>
+    relations: null
   <% }  %>
 } as const;
 

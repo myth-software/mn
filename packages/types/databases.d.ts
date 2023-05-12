@@ -1,6 +1,10 @@
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
+export declare type Relations = Record<
+  string | number | symbol,
+  { database_id: string; limit: 'one' | 'none' }
+>;
 export declare type Options = Record<string | number | symbol, string[]>;
 
 export declare type FlatDatabase = {
@@ -11,6 +15,7 @@ export declare type FlatDatabase = {
   cover: string;
   columns: Columns;
   options: Options | null;
+  relations: Relations | null;
 };
 
 export declare type Cache = FlatDatabase & {
@@ -74,4 +79,8 @@ export declare type InferWriteonly<T extends Entity> = {
       ? number | null
       : never
     : never;
+};
+
+export type FullGetDatabaseResponse = GetDatabaseResponse & {
+  icon: UpdatePageParameters['icon'];
 };

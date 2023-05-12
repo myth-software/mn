@@ -14,7 +14,8 @@
     "enquirer": "^2.3.6",
     "openai": "^3.2.1",
     "prettier-plugin-organize-imports": "^3.2.2",
-    "symbol-observable": "^4.0.0"
+    "symbol-observable": "^4.0.0",
+    "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
     "@nrwl/devkit": "^15.8.5",

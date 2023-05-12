@@ -1,14 +1,73 @@
+import { expandProperties, notion } from '@mountnotion/sdk';
+import { FullGetDatabaseResponse } from '@mountnotion/types';
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { LogInput, MountnCommand } from '../types';
 import { printPhraseList } from '../utils';
 
 export default {
-  name: 'grade-standards-rows',
+  name: 'lint-rows',
   description:
-    'grade workspaces’s databases rows for pass or fail against standards',
+    'lint workspaces’s databases rows for pass or fail against standards',
   options: [
     { name: '-p, --page-id', description: 'id of page with databases' },
   ],
-  actionFactory: () => () => {
+  actionFactory: () => async () => {
+    const database_id = '';
+    const [entities, properties] = await notion.databases.query<any>(
+      {
+        database_id,
+        page_size: 100,
+      },
+      { all: true, resultsOnly: true, flattenResponse: true }
+    );
+
+    const database = (await notion.databases.retrieve({
+      database_id,
+    })) as FullGetDatabaseResponse;
+
+    while (entities.length) {
+      const entity = entities.shift();
+
+      if (entity.name && entity.name !== entity.name.toLowerCase()) {
+        await notion.pages.update({
+          page_id: entity.page_id,
+          properties: expandProperties<any>(
+            {
+              name: entity.name.toLowerCase(),
+            },
+            {
+              columns: properties,
+            }
+          ),
+        });
+      }
+
+      if (!entity.name) {
+        await notion.pages.update({
+          page_id: entity.page_id,
+          properties: expandProperties<any>(
+            {
+              name: uniqueNamesGenerator({
+                dictionaries: [animals, colors],
+                separator: ' ',
+                length: 2,
+              }),
+            },
+            {
+              columns: properties,
+            }
+          ),
+        });
+      }
+
+      if (!entity.icon) {
+        await notion.pages.update({
+          page_id: entity.page_id,
+          icon: database.icon,
+        });
+      }
+    }
+
     console.log('3 databases rows to grade: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
       {

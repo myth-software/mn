@@ -8,8 +8,8 @@ import configureStandardsColumns from './configure-standards-columns';
 import configureStandardsRows from './configure-standards-rows';
 import configureWorkspace from './configure-workspace';
 import fetch from './fetch';
-import gradeStandardsColumns from './grade-standards-columns';
-import gradeStandardsRows from './grade-standards-rows';
+import lintColumns from './lint-columns';
+import lintRows from './lint-rows';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 
@@ -23,8 +23,8 @@ export const commands: Array<MountnCommand> = [
   configureStandardsRows,
   configureWorkspace,
   fetch,
-  gradeStandardsColumns,
-  gradeStandardsRows,
+  lintColumns,
+  lintRows,
   selectPagesIntegrationKey,
   selectPagesOauth,
 ];

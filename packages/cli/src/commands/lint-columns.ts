@@ -2,12 +2,12 @@ import { LogInput, MountnCommand } from '../types';
 import { printPhraseList } from '../utils';
 
 export default {
-  name: 'grade-standards-columns',
+  name: 'lint-columns',
   description:
-    'grade workspaces’s databases columns for pass or fail against standards',
+    'lint workspaces’s databases columns for pass or fail against standards',
   options: [],
   actionFactory: () => () => {
-    console.log('3 databases columns to grade: 🔢 sets, 🔵 overlays, 📝 logs');
+    console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
       {
         action: 'pass',
