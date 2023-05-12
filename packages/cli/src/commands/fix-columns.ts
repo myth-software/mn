@@ -2,7 +2,7 @@ import { LogInput, MountnCommand } from '../types';
 import { printPhraseList } from '../utils';
 
 export default {
-  name: 'apply-standards-columns',
+  name: 'fix-columns',
   description: 'standardizes any columns that failed grading',
   options: [],
   actionFactory: () => () => {

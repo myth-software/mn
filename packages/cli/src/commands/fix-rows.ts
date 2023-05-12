@@ -2,7 +2,7 @@ import { LogInput, MountnCommand } from '../types';
 import { printPhraseList } from '../utils';
 
 export default {
-  name: 'apply-standards-rows',
+  name: 'fix-rows',
   description: 'standardizes any rows that failed grading',
   options: [],
   actionFactory: () => () => {
