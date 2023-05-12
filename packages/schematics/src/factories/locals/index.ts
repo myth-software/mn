@@ -11,6 +11,12 @@ import { getlocals } from '../../utils';
  * not include '?', though 'title' strings do
  */
 export function locals(options: LocalsOptions): Rule {
+  const formatTitle = (title: string) =>
+    title
+      .replace('&', 'and')
+      .replace('?', '')
+      .replace("'", '')
+      .replace('’', '');
   const { outDir, entities } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
@@ -34,11 +40,7 @@ export function locals(options: LocalsOptions): Rule {
             titlesRef = cachesRef.map(({ title }) => title) as string[];
             const localsRules = locals.map((local) => {
               const { title: localTitle, ...rest } = local;
-              const formattedTitle = localTitle
-                .replace('?', '')
-                .replace("'", '')
-                .replace('’', '');
-
+              const formattedTitle = formatTitle(localTitle);
               return applyWithOverwrite(url('./files/all-for-entity'), [
                 template({
                   title: formattedTitle,
@@ -57,10 +59,7 @@ export function locals(options: LocalsOptions): Rule {
                 template({
                   locals: locals.map((local) => ({
                     ...local,
-                    title: local.title
-                      .replace('?', '')
-                      .replace("'", '')
-                      .replace('’', ''),
+                    title: formatTitle(local.title),
                   })),
                   titles: titlesRef,
                   entities,
