@@ -15,12 +15,14 @@ export const createMappings = (
     }
   >
 ): Mappings => {
-  const emoji =
-    /([\u2700-\u27BF]|uFE0F|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]|[\p{N}\p{Z}^$\n])/g;
+  // const emoji =
+  //   /([\u2700-\u27BF]|\uFE0F|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+  const emoji2 =
+    /[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2580-\u27BF]|\uD83E[\uDD10-\uDDFF]/g;
   const punctuation = /[?.,/#!$%^&*;:{}=\-_`~()]/g;
   return Object.entries(properties).reduce((acc, [property]) => {
     const propertyWithoutEmoji = property
-      .replace(emoji, '')
+      .replace(emoji2, '')
       .replace(punctuation, '');
     return {
       ...acc,
