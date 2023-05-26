@@ -1,5 +1,5 @@
-import { camelize } from '@angular-devkit/core/src/utils/strings';
 import { ColumnTypes, Mappings } from '@mountnotion/types';
+import { camelize } from './strings.util';
 
 /**
  * provides a map of column names to javascript properties
@@ -15,10 +15,13 @@ export const createMappings = (
     }
   >
 ): Mappings => {
-  const emojiRegex =
-    /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+  const emoji =
+    /([\u2700-\u27BF]|uFE0F|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]|[^\p{L}\p{N}\p{Z}^$\n])/g;
+  const punctuation = /[?.,/#!$%^&*;:{}=\-_`~()]/g;
   return Object.entries(properties).reduce((acc, [property]) => {
-    const propertyWithoutEmoji = property.replace(emojiRegex, '');
+    const propertyWithoutEmoji = property
+      .replace(emoji, '')
+      .replace(punctuation, '');
     return {
       ...acc,
       [property]: camelize(propertyWithoutEmoji),
