@@ -1,6 +1,7 @@
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
+export declare type Mappings = Record<string | number | symbol, string>;
 export declare type Relations = Record<string | number | symbol, string>;
 export declare type Options = Record<string | number | symbol, string[]>;
 
@@ -13,6 +14,7 @@ export declare type FlatDatabase = {
   columns: Columns;
   options: Options | null;
   relations: Relations | null;
+  mappings: Mappings | null;
 };
 
 export declare type Cache = FlatDatabase & {

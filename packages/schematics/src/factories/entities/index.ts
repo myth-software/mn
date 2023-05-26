@@ -8,6 +8,7 @@ import { validateInputs } from './validate-inputs';
 
 dotenv.config();
 export function entities(options: BasicOptions): Rule {
+  console.log('command: entities');
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();

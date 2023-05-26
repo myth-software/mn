@@ -31,6 +31,15 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% } else { %>
     relations: null
   <% }  %>
+  <% if(mappings) { %>
+    mappings: {
+      <% for(const [property, mapping] of Object.entries(mappings)) { %>
+        '<%= property %>': '<%= mapping %>',
+      <% } %>
+    },
+  <% } else { %>
+    mappings: null
+  <% }  %>
 } as const;
 
 export declare type <%= classify(title) %>Index = typeof <%= underscore(title).toUpperCase() %>;

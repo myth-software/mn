@@ -13,6 +13,7 @@ export const createDatabaseCaches = async (
   if (!existsSync('./.mountnotion')) {
     mkdirSync('./.mountnotion');
   }
+
   const CACHE = options?.cacheFile ?? './.mountnotion/cache.json';
   let cached;
   try {
@@ -85,7 +86,7 @@ export const createDatabaseCaches = async (
 
   const caches: Cache[] = allUsableDatabases
     .map((database) => {
-      return flattenDatabaseResponse(database);
+      return flattenDatabaseResponse(database, options);
     })
     .map((flatDatabase, i, flatDatabases) => {
       const rollups = allRollups[i];

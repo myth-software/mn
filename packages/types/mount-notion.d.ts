@@ -21,6 +21,7 @@ export declare type BasicOptions = {
   outDir: string;
   baseUrl: string;
   entities: string;
+  javascriptizeColumns: boolean;
 };
 
 export declare type MockApiOptions = { locals: string } & BasicOptions &
