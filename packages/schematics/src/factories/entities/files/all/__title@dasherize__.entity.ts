@@ -29,7 +29,7 @@ export const <%= underscore(title).toUpperCase() %> = {
       <% } %>
     },
   <% } else { %>
-    relations: null
+    relations: null,
   <% }  %>
   <% if(mappings) { %>
     mappings: {
@@ -38,7 +38,7 @@ export const <%= underscore(title).toUpperCase() %> = {
       <% } %>
     },
   <% } else { %>
-    mappings: null
+    mappings: null,
   <% }  %>
 } as const;
 
