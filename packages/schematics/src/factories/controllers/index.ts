@@ -24,7 +24,7 @@ export function controllers(options: ControllersOptions): Rule {
         return applyWithOverwrite(url('./files/all'), [
           template({
             title,
-            index: cache,
+            cache,
             org: options.org,
             entities: options.entities,
             locals: options.locals,
@@ -32,7 +32,7 @@ export function controllers(options: ControllersOptions): Rule {
             userColumn: options.userColumn,
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,
-            isPublic: options.public.includes(title),
+            isPublic: options.public?.includes(title) ?? false,
             ...strings,
           }),
           move(outDir),
