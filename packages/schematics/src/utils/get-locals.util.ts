@@ -1,6 +1,6 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import { LocalsOptions } from '@mountnotion/types';
-import { systemize } from '@mountnotion/utils';
+import { logInfo, systemize } from '@mountnotion/utils';
 
 type LocalResponse = {
   locals: any[];
@@ -32,7 +32,11 @@ export const getlocals = async (
         },
         { flattenResponse: true, resultsOnly: true }
       );
-
+  logInfo({
+    action: 'querying',
+    message: useAll ? 'locals, all' : 'locals, one',
+    page: { emoji: flatDatabase.icon, title: flatDatabase.title },
+  });
   const [locals] = await query;
 
   const santitizedLocals = locals.map((local) => {

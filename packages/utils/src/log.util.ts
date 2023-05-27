@@ -1,11 +1,11 @@
 import { LogInput } from '@mountnotion/types';
 import * as chalk from 'chalk';
 
-export const success = chalk.hex('#00ccc2');
+export const success = chalk.bold.hex('#00ccc2');
 export const error = chalk.bold.red;
 export const fatal = chalk.bold.red;
 export const warn = chalk.bold.hex('#FFA500');
-export const info = chalk.bold();
+export const info = chalk.bold;
 export const debug = chalk.bold();
 
 export const log = console.log;
@@ -25,6 +25,16 @@ export function logSuccess({ action, message, page }: LogInput) {
     return;
   }
   log(`${success(paddedAction)} ${message}`);
+  return;
+}
+
+export function logInfo({ action, message, page }: LogInput) {
+  const paddedAction = action.padEnd(10);
+  if (page) {
+    log(`${info(paddedAction)} ${page.emoji} ${page.title} ${message}`);
+    return;
+  }
+  log(`${info(paddedAction)} ${message}`);
   return;
 }
 

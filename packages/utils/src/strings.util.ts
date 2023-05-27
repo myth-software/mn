@@ -11,7 +11,7 @@ const STRING_DECAMELIZE_REGEXP = /([a-z\d])([A-Z])/g;
 const STRING_CAMELIZE_REGEXP = /(-|_|\.|\s)+(.)?/g;
 const STRING_UNDERSCORE_REGEXP_1 = /([a-z\d])([A-Z]+)/g;
 const STRING_UNDERSCORE_REGEXP_2 = /-|\s+/g;
-const STRING_ALPHABETIZE_REGEXP = /[^a-zA-Z ]/g;
+const STRING_ALPHANUMERIZE_REGEXP = /[^a-zA-Z0-9 ]/g;
 const STRING_DEPUNCTUATE_REGEXP = /[?.,/#!$%^&*;:{}=\-_`~()]/g;
 
 /**
@@ -203,7 +203,7 @@ export function levenshtein(a: string, b: string): number {
 export function variablize(str: string): string {
   return camelize(
     str
-      .replace(STRING_ALPHABETIZE_REGEXP, '')
+      .replace(STRING_ALPHANUMERIZE_REGEXP, '')
       .replace(STRING_DEPUNCTUATE_REGEXP, '')
   );
 }
