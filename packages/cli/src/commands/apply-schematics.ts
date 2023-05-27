@@ -17,8 +17,7 @@ export default {
   options: [
     { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
   ],
-  actionFactory: (config) => async (clearCache, a: any) => {
-    console.log({ clearCache: a.parent.args });
+  actionFactory: (config) => async () => {
     function findUp(names: string | string[], from: string) {
       if (!Array.isArray(names)) {
         names = [names];

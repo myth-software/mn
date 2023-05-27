@@ -1,13 +1,14 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { MockApiOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
+import { logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 dotenv.config();
 
 export function mockApi(options: MockApiOptions): Rule {
+  logSuccess({ action: 'run', message: 'mock api schematic' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 

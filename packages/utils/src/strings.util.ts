@@ -94,7 +94,7 @@ export function camelize(str: string): string {
 export function classify(str: string): string {
   return str
     .split('.')
-    .map((part) => capitalize(camelize(part)))
+    .map((part) => capitalize(variablize(part)))
     .join('');
 }
 

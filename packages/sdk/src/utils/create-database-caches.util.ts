@@ -1,4 +1,5 @@
 import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
+import { logSuccess } from '@mountnotion/utils';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
@@ -18,9 +19,9 @@ export const createDatabaseCaches = async (
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');
-    console.log('cache found. getting from cache');
+    logSuccess({ action: 'load', message: 'data from filesystem cache' });
   } catch (error) {
-    console.log('no cache found. getting from notion data');
+    logSuccess({ action: 'load', message: 'data from notion workspace' });
   }
 
   if (cached) {

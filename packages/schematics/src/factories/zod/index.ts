@@ -1,13 +1,14 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
+import { logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
 export function zod(options: BasicOptions): Rule {
+  logSuccess({ action: 'run', message: 'zod schematic' });
   validateInputs(options);
   const { outDir } = options;
 

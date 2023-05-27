@@ -1,6 +1,6 @@
 import { <%= classify(databaseName) %> } from '<%= entities %>';
 
-export const <%= variablize(databaseName) %><%= classify(title) %>: <%= classify(databaseName) %> = {
+export const <%= camelize(databaseName) %><%= classify(title) %>: <%= classify(databaseName) %> = {
   <% for(const [property, value] of Object.entries(local)) { %>
     <% if(Array.isArray(value)) { %>
       '<%= property %>': [

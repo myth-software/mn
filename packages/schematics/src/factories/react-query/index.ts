@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
+import { logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateBasicInputs } from '../../utils';
@@ -9,6 +9,7 @@ import { validateBasicInputs } from '../../utils';
 dotenv.config();
 
 export function reactQuery(options: BasicOptions): Rule {
+  logSuccess({ action: 'run', message: 'react query schematic' });
   validateBasicInputs(options);
 
   const { outDir, entities, baseUrl } = options;

@@ -1,11 +1,12 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { AuthOptions, BasicOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
-import { applyWithOverwrite } from '../..//rules';
+import { logSuccess, strings } from '@mountnotion/utils';
+import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
+  logSuccess({ action: 'run', message: 'open api schematic' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 
