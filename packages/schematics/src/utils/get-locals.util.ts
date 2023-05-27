@@ -64,8 +64,8 @@ export const getlocals = async (
     return {
       title: systemize(local.name),
       id: local.id,
-      cover: local.cover,
       icon: local.icon,
+      cover: local.cover,
       ...localOnlyWithFoundColumns,
     };
   });
