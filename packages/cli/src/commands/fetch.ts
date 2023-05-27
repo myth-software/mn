@@ -1,5 +1,5 @@
-import { LogInput, MountnCommand } from '../types';
-import { logSuccess } from '../utils';
+import { LogInput, MountnCommand } from '@mountnotion/types';
+import { logSuccess } from '@mountnotion/utils';
 
 export default {
   name: 'fetch',

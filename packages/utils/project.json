@@ -17,7 +17,7 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node tools/scripts/publish.mjs utils {args.ver} {args.tag}"
+        "command": "cd dist/packages/utils && npm publish --access public --tag next"
       },
       "dependsOn": ["build"]
     },

@@ -1,7 +1,10 @@
 import { expandProperties, notion } from '@mountnotion/sdk';
-import { FullGetDatabaseResponse } from '@mountnotion/types';
+import {
+  FullGetDatabaseResponse,
+  LogInput,
+  MountnCommand,
+} from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-import { LogInput, MountnCommand } from '../types';
 import { printPhraseList } from '../utils';
 
 export default {

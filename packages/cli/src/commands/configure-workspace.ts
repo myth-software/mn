@@ -1,5 +1,5 @@
+import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
-import { MountnCommand } from '../types';
 
 export type WorkspaceConfig = {
   entities: string | null;

@@ -1,5 +1,5 @@
 import { notion } from '@mountnotion/sdk';
-import { LogInput, MountnCommand } from '../types';
+import { LogInput, MountnCommand } from '@mountnotion/types';
 import { EMOJI, printPhraseList } from '../utils';
 
 export default {

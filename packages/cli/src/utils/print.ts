@@ -1,5 +1,6 @@
-import { failActions, LogInput, successActions, warnActions } from '../types';
-import { logFail, logSuccess, logWarn } from './log';
+import { LogInput } from '@mountnotion/types';
+import { logFail, logSuccess, logWarn } from '@mountnotion/utils';
+import { failActions, successActions, warnActions } from '../types';
 
 export function printPhraseList(input: LogInput, index: number) {
   setTimeout(() => {

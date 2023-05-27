@@ -1,5 +1,5 @@
+import { MountnCommand } from '@mountnotion/types';
 import * as open from 'open';
-import { MountnCommand } from '../types';
 
 export default {
   name: 'auth-oauth',

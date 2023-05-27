@@ -1,5 +1,5 @@
 import { notion } from '@mountnotion/sdk';
-import { MountnCommand } from '../types';
+import { MountnCommand } from '@mountnotion/types';
 
 export default {
   name: 'delete-recursive',

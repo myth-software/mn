@@ -1,14 +1,14 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
+import { logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
 export function entities(options: BasicOptions): Rule {
-  console.log('command: entities');
+  logSuccess({ action: 'run', message: 'entities schematic' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();

@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { Cache, LocalsOptions } from '@mountnotion/types';
-import { strings } from '@mountnotion/utils';
+import { logSuccess, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
 
@@ -11,8 +11,7 @@ import { getlocals } from '../../utils';
  * not include '?', though 'title' strings do
  */
 export function locals(options: LocalsOptions): Rule {
-  console.log('command: locals');
-
+  logSuccess({ action: 'run', message: 'locals schematic' });
   const { outDir, entities } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];

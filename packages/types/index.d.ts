@@ -4,6 +4,7 @@ export * from './columns';
 export * from './databases';
 export * from './file';
 export * from './helpers';
+export * from './log';
 export * from './mount-notion';
 export * from './standards';
 export * from './tools-configuration';

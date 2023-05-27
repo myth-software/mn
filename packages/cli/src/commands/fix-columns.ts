@@ -1,4 +1,4 @@
-import { LogInput, MountnCommand } from '../types';
+import { LogInput, MountnCommand } from '@mountnotion/types';
 import { printPhraseList } from '../utils';
 
 export default {

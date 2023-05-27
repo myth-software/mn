@@ -1,13 +1,3 @@
-import { MountNotionConfig } from '@mountnotion/types';
-
-export type CliInput = {
-  args: string[];
-};
-
-export type OauthPagesChoices = {
-  choices: string[];
-};
-
 // interface SelectedColumnConfig {
 //   selections: [
 //     | "consistent titles as 'name'"
@@ -33,21 +23,3 @@ export const successActions = [
 ];
 export const warnActions = ['warn'];
 export const failActions = ['fail'];
-
-export type LogInput = {
-  action: string;
-  page: {
-    emoji: string;
-    title: string;
-  };
-  message: string;
-};
-
-export type MountnCommand = {
-  name: string;
-  description: string;
-  options?: Array<{ name: string; description: string }>;
-  actionFactory: (
-    config: MountNotionConfig
-  ) => (...args: Array<unknown>) => void | Promise<void>;
-};

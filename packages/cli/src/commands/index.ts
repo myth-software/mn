@@ -1,4 +1,4 @@
-import { MountnCommand } from '../types';
+import { MountnCommand } from '@mountnotion/types';
 import applySchematics from './apply-schematics';
 import authIntegrationKey from './auth-integration-key';
 import authOauth from './auth-oauth';
