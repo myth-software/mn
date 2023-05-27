@@ -62,11 +62,11 @@ export const getlocals = async (
     );
 
     return {
-      ...localOnlyWithFoundColumns,
+      title: systemize(local.name),
       id: local.id,
       cover: local.cover,
       icon: local.icon,
-      title: systemize(local.name),
+      ...localOnlyWithFoundColumns,
     };
   });
 

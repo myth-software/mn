@@ -18,10 +18,18 @@ export const logger = {
   fatal: (s: string) => log(chalk.bold.red(s)),
 };
 
+function formatPageTitle(str: string) {
+  return str.length >= 20 ? str.substring(0, 16) + '...' : str.padEnd(20);
+}
+
 export function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(`${success(paddedAction)} ${page.emoji} ${page.title} ${message}`);
+    log(
+      `${success(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
     return;
   }
   log(`${success(paddedAction)} ${message}`);
@@ -31,7 +39,11 @@ export function logSuccess({ action, message, page }: LogInput) {
 export function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(`${info(paddedAction)} ${page.emoji} ${page.title} ${message}`);
+    log(
+      `${info(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
     return;
   }
   log(`${info(paddedAction)} ${message}`);
@@ -41,7 +53,11 @@ export function logInfo({ action, message, page }: LogInput) {
 export function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(`${warn(paddedAction)} ${page.emoji} ${page.title} ${message}`);
+    log(
+      `${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
     return;
   }
   log(`${warn(paddedAction)} ${message}`);
@@ -51,7 +67,11 @@ export function logWarn({ action, message, page }: LogInput) {
 export function logFail({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(`${error(paddedAction)} ${page.emoji} ${page.title} ${message}`);
+    log(
+      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
     return;
   }
   log(`${error(paddedAction)} ${message}`);
