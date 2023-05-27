@@ -8,7 +8,7 @@ import { validateInputs } from './validate-inputs';
 
 dotenv.config();
 export function zod(options: BasicOptions): Rule {
-  logSuccess({ action: 'run', message: 'zod schematic' });
+  logSuccess({ action: 'running', message: 'zod schematic' });
   validateInputs(options);
   const { outDir } = options;
 

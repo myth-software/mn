@@ -18,7 +18,7 @@ type FormattedTranslations = {
   };
 };
 export function i18n(options: I18nOptions): Rule {
-  logSuccess({ action: 'run', message: 'i18n schematic' });
+  logSuccess({ action: 'running', message: 'i18n schematic' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();

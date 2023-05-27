@@ -6,7 +6,7 @@ import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 export function controllers(options: ControllersOptions): Rule {
-  logSuccess({ action: 'run', message: 'controllers schematic' });
+  logSuccess({ action: 'running', message: 'controllers schematic' });
   validateInputs(options);
 
   const outDir = options.outDir;

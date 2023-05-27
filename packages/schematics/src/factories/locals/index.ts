@@ -11,7 +11,7 @@ import { getlocals } from '../../utils';
  * not include '?', though 'title' strings do
  */
 export function locals(options: LocalsOptions): Rule {
-  logSuccess({ action: 'run', message: 'locals schematic' });
+  logSuccess({ action: 'running', message: 'locals schematic' });
   const { outDir, entities } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];

@@ -19,14 +19,18 @@ export const createDatabaseCaches = async (
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');
-    logSuccess({ action: 'load', message: 'data from filesystem cache' });
+    logSuccess({ action: 'loading', message: 'data from filesystem cache' });
   } catch (error) {
-    logSuccess({ action: 'load', message: 'data from notion workspace' });
+    logSuccess({ action: 'loading', message: 'data from notion workspace' });
   }
 
   if (cached) {
     return JSON.parse(cached) as Cache[];
   }
+
+  const page = (await infrastructure.pages.retrieve({
+    page_id: pageIds[0],
+  })) as any;
 
   const promises = pageIds.map((page_id) =>
     infrastructure.blocks.children.listAll({
@@ -34,6 +38,11 @@ export const createDatabaseCaches = async (
       page_size: 100,
     })
   );
+  logSuccess({
+    action: 'listing',
+    message: 'databases page children',
+    page: { emoji: page.icon, title: page.title },
+  });
   const allResponses = (await Promise.all(promises)).flat();
 
   const results = allResponses.flatMap(
@@ -51,6 +60,11 @@ export const createDatabaseCaches = async (
     .filter((result) => result.type === 'child_database')
     .map(({ id }) => id);
   const primaryIds = [...new Set(allPrimaryIds.concat(allParagraphIds))];
+  logSuccess({
+    action: 'retrieving',
+    message: 'databases primary databases',
+    page: { emoji: page.icon, title: page.title },
+  });
   const primaryDatabases = await infrastructure.databases.retrieveAll(
     primaryIds
   );
@@ -64,7 +78,11 @@ export const createDatabaseCaches = async (
       allRelatedIds.filter((relatedId) => !primaryIds.includes(relatedId))
     ),
   ] as string[];
-
+  logSuccess({
+    action: 'retrieving',
+    message: 'databases related databases',
+    page: { emoji: page.icon, title: page.title },
+  });
   const relatedDatabases = await infrastructure.databases.retrieveAll(
     relatedIds
   );
@@ -78,11 +96,21 @@ export const createDatabaseCaches = async (
       { flattenResponse: true, resultsOnly: true }
     )
   );
+  logSuccess({
+    action: 'querying',
+    message: 'databases primary and related databases',
+    page: { emoji: page.icon, title: page.title },
+  });
   const nestedPages = await Promise.all(pagePromises);
   const pages = nestedPages.map(([nestedPage]) => nestedPage).flat();
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
     createRollups(database.properties, pages[i].id)
   );
+  logSuccess({
+    action: 'querying',
+    message: 'databases property types',
+    page: { emoji: page.icon, title: page.title },
+  });
   const allRollups = await Promise.all(allRollupsPromises);
 
   const caches: Cache[] = allUsableDatabases
@@ -106,6 +134,11 @@ export const createDatabaseCaches = async (
       };
     });
 
+  logSuccess({
+    action: 'caching',
+    message: 'databases',
+    page: { emoji: page.icon, title: page.title },
+  });
   writeFileSync(CACHE, JSON.stringify(caches));
 
   return caches;

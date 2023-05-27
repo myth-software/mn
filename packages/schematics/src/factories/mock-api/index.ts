@@ -8,7 +8,7 @@ import { validateAuthInputs, validateBasicInputs } from '../../utils';
 dotenv.config();
 
 export function mockApi(options: MockApiOptions): Rule {
-  logSuccess({ action: 'run', message: 'mock api schematic' });
+  logSuccess({ action: 'running', message: 'mock api schematic' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 

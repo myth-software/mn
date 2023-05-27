@@ -6,7 +6,7 @@ import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
-  logSuccess({ action: 'run', message: 'open api schematic' });
+  logSuccess({ action: 'running', message: 'open api schematic' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 

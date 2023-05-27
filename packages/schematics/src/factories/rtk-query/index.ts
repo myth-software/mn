@@ -9,7 +9,7 @@ import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 export function rtkQuery(options: RtkQueryOptions): Rule {
-  logSuccess({ action: 'run', message: 'rtk query schematic' });
+  logSuccess({ action: 'running', message: 'rtk query schematic' });
   validateInputs(options);
   const { outDir, entities, baseUrl } = options;
   const excludes = options.excludes ?? [];
