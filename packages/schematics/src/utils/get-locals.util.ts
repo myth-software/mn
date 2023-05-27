@@ -16,8 +16,8 @@ export const getlocals = async (
   const database = await notion.databases.retrieve({
     database_id: options.pageId,
   });
-
-  const useAll = options.all?.includes(flattenDatabaseResponse(database).title);
+  const flatDatabase = flattenDatabaseResponse(database);
+  const useAll = options.all?.includes(flatDatabase.title);
   const query = useAll
     ? notion.databases.query<any>(
         {
@@ -35,13 +35,36 @@ export const getlocals = async (
 
   const [locals] = await query;
 
-  const santitizedLocals = locals.map((entity) => ({
-    ...entity,
-    title: sanitizeTitle(entity.name),
-  }));
+  const santitizedLocals = locals.map((local) => {
+    /**
+     * localOnlyWithFoundColumns is necessary for scenarios where a relation
+     * exists that is not shared with the integration. that relation will not
+     * be a column, therefore the local must not include it's reference in the
+     * response
+     */
+    const localOnlyWithFoundColumns = Object.entries(local).reduce(
+      (acc, [column, value]) => {
+        const hasColumn = flatDatabase.columns[column] ? true : false;
+
+        if (hasColumn) {
+          return {
+            ...acc,
+            [column]: value,
+          };
+        }
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+
+    return {
+      ...localOnlyWithFoundColumns,
+      title: sanitizeTitle(local.name),
+    };
+  });
 
   const response = {
-    title: (database as any).title[0].plain_text,
+    title: flatDatabase.title,
     locals: santitizedLocals,
   };
 

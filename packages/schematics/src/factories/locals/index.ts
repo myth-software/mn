@@ -11,6 +11,7 @@ import { getlocals } from '../../utils';
  * not include '?', though 'title' strings do
  */
 export function locals(options: LocalsOptions): Rule {
+  console.log('command: locals');
   const formatTitle = (title: string) =>
     title
       .replace('&', 'and')
@@ -22,6 +23,7 @@ export function locals(options: LocalsOptions): Rule {
   const excludes = options.excludes ?? [];
   let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];
+
   return () =>
     createDatabaseCaches(pageIds, options)
       .then((caches) => {
