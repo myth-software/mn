@@ -8,6 +8,10 @@
       "factory": "./src/factories/entities/index#entities",
       "description": "generate entities"
     },
+    "express": {
+      "factory": "./src/factories/express/index#express",
+      "description": "generate express"
+    },
     "i18n": {
       "factory": "./src/factories/i18n/index#i18n",
       "description": "generate i18n"
