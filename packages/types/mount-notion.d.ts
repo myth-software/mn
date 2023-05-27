@@ -16,7 +16,7 @@ export declare type AuthOptions = {
 
 export declare type BasicOptions = {
   pageId: string;
-  excludes: string[];
+  excludes: Array<string>;
   cacheFile: string;
   outDir: string;
   baseUrl: string;
@@ -36,6 +36,7 @@ export declare type ControllersOptions = {
   org: string;
   accessorProperty: string;
   locals: string;
+  public: Array<string>;
 } & BasicOptions &
   AuthOptions;
 

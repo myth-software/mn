@@ -32,6 +32,7 @@ export function controllers(options: ControllersOptions): Rule {
             userColumn: options.userColumn,
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,
+            isPublic: options.public.includes(title),
             ...strings,
           }),
           move(outDir),

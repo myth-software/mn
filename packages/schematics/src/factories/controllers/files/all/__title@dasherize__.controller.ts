@@ -255,7 +255,9 @@ export class <%= classify(title) %>Controller {
       user: UserProfile, <% } %>
     where: MountNotionQueryParameters<<%= classify(title) %>Index>,
   ): Promise<<%= classify(title) %>[]> {
-    <% if (strategy && userColumn && accessorProperty) { %>
+    <% if (isPublic || !strategy) { %>
+      return mountn.<%= camelize(title) %>.query(where);
+    <% } else if (strategy && userColumn && accessorProperty) { %>
       const userFilter: OrFilter<<%= classify(title) %>Index> = {
         or: [
           {
@@ -272,13 +274,22 @@ export class <%= classify(title) %>Controller {
           },
         ],
       };
+
+      const filter = where?.filter
+        ? ({
+          and: [where.filter as OrFilter<<%= classify(title) %>Index>, userFilter],
+        } as QueryFilter<<%= classify(title) %>Index>)
+      : (userFilter as QueryFilter<<%= classify(title) %>Index>);
+
+      return mountn.<%= camelize(title) %>.query({
+        ...where,
+        filter,
+      });
     <% } else if (strategy && userColumn) { %>
       const userFilter: Filter<<%= classify(title) %>Index> = {
         property: '<%= userColumn %>',
         relation: { contains: user[securityId] },
       };
-    <% } %>
-    <% if (strategy) { %>
       const filter = where?.filter
         ? ({
           and: [where.filter as OrFilter<<%= classify(title) %>Index>, userFilter],
@@ -290,7 +301,7 @@ export class <%= classify(title) %>Controller {
         filter, 
       });
     <% } else { %> 
-    return mountn.<%= camelize(title) %>.query(where);
+        return mountn.<%= camelize(title) %>.query(where);
     <% } %>
   }
 
