@@ -73,7 +73,7 @@ export declare type InferWriteonly<T extends Entity> = {
       : ColumnType extends 'files'
       ? string[] | null
       : ColumnType extends 'checkbox'
-      ? boolean | null
+      ? boolean
       : ColumnType extends 'number'
       ? number | null
       : never

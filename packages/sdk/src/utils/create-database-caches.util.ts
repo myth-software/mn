@@ -1,7 +1,12 @@
-import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
+import {
+  BasicOptions,
+  BlockObjectResponse,
+  Cache,
+  Entity,
+} from '@mountnotion/types';
 import { logSuccess } from '@mountnotion/utils';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { flattenDatabaseResponse } from '../flatteners';
+import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
 import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
@@ -28,10 +33,10 @@ export const createDatabaseCaches = async (
     return JSON.parse(cached) as Cache[];
   }
 
-  const page = (await infrastructure.pages.retrieve({
+  const pageResponse = await infrastructure.pages.retrieve({
     page_id: pageIds[0],
-  })) as any;
-
+  });
+  const [page] = flattenPageResponse<Entity>(pageResponse);
   const promises = pageIds.map((page_id) =>
     infrastructure.blocks.children.listAll({
       block_id: page_id,
