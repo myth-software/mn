@@ -1,6 +1,6 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import { LocalsOptions } from '@mountnotion/types';
-import { sanitizeTitle } from './sanitize-title.util';
+import { systemize } from '@mountnotion/utils';
 
 type LocalResponse = {
   locals: any[];
@@ -59,7 +59,7 @@ export const getlocals = async (
 
     return {
       ...localOnlyWithFoundColumns,
-      title: sanitizeTitle(local.name),
+      title: systemize(local.name),
     };
   });
 

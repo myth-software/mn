@@ -3,7 +3,7 @@ import {
   FlatDatabase,
   Relations,
 } from '@mountnotion/types';
-import { ensure } from './ensure.util';
+import { ensure } from '@mountnotion/utils';
 
 export function createRelations(
   properties: Record<string, DatabasePropertyConfigResponse>,

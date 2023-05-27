@@ -5,4 +5,3 @@ export * from './create-options.util';
 export * from './create-relations.util';
 export * from './create-rollups-options.util';
 export * from './create-rollups.util';
-export * from './strings.util';

@@ -1,5 +1,5 @@
 import { ColumnTypes, Mappings } from '@mountnotion/types';
-import { camelize } from './strings.util';
+import { variablize } from '@mountnotion/utils';
 
 /**
  * provides a map of column names to javascript properties
@@ -15,15 +15,10 @@ export const createMappings = (
     }
   >
 ): Mappings => {
-  const nonAlphabet = /[^a-zA-Z ]/g;
-  const punctuation = /[?.,/#!$%^&*;:{}=\-_`~()]/g;
   return Object.entries(properties).reduce((acc, [property]) => {
-    const propertyWithoutEmoji = property
-      .replace(nonAlphabet, '')
-      .replace(punctuation, '');
     return {
       ...acc,
-      [property]: camelize(propertyWithoutEmoji),
+      [property]: variablize(property),
     };
   }, {} as Mappings);
 };

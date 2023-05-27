@@ -18,7 +18,8 @@
       "@mountnotion/cli": ["packages/cli/src/index.ts"],
       "@mountnotion/schematics": ["packages/schematics/src/index.ts"],
       "@mountnotion/sdk": ["packages/sdk/src/index.ts"],
-      "@mountnotion/types": ["packages/types/index.d.ts"]
+      "@mountnotion/types": ["packages/types/index.d.ts"],
+      "@mountnotion/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

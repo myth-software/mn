@@ -4,7 +4,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@angular-devkit/core": "13.3.10",
     "@angular-devkit/schematics": "13.3.10",
     "@notionhq/client": "^2.2.3",
     "@types/node": "^18.15.0",
