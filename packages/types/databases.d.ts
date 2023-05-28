@@ -27,7 +27,7 @@ export declare type Entity = DeepReadonly<FlatDatabase>;
 export declare type InferReadonly<T extends Entity> = {
   [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? P
-    : never]: T['columns'][P] extends infer ColumnType
+    : never]: T['columns'][T['mappings'][P]] extends infer ColumnType
     ? ColumnType extends 'created_by'
       ? string | null
       : ColumnType extends 'created_time'
@@ -47,7 +47,7 @@ export declare type InferReadonly<T extends Entity> = {
 export declare type InferWriteonly<T extends Entity> = {
   [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? never
-    : P]: T['columns'][P] extends infer ColumnType
+    : P]: T['columns'][T['mappings'][P]] extends infer ColumnType
     ? ColumnType extends 'title'
       ? string | null
       : ColumnType extends 'rich_text'
@@ -61,13 +61,13 @@ export declare type InferWriteonly<T extends Entity> = {
       : ColumnType extends 'date'
       ? string | null
       : ColumnType extends 'status'
-      ? T['options'][P][number] | null
+      ? T['options'][T['mappings'][P]][number] | null
       : ColumnType extends 'select'
-      ? T['options'][P][number] | null
+      ? T['options'][T['mappings'][P]][number] | null
       : ColumnType extends 'email'
       ? string | null
       : ColumnType extends 'multi_select'
-      ? T['options'][P][number][] | null
+      ? T['options'][T['mappings'][P]][number][] | null
       : ColumnType extends 'relation'
       ? string[] | null
       : ColumnType extends 'files'
