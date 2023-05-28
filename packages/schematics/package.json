@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/schematics",
-  "version": "1.4.31",
+  "version": "1.4.32",
   "author": "myth software, llc",
   "license": "unlicensed",
   "schematics": "./collection.json"

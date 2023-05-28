@@ -34,10 +34,7 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% if(mappings) { %>
     mappings: {
       <% for(const [property, mapping] of Object.entries(mappings)) { %>
-        /**
-          * notion column name: <%= mapping %>
-          * notion column type: <%= columns[mapping] %>
-          */
+        /** notion column type: [<%= columns[mapping] %>](https://docs.mountnotion.com/<%= columns[mapping] %>) */
         '<%= property %>': '<%= mapping %>',
       <% } %>
     },
