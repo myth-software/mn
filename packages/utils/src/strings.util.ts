@@ -13,6 +13,10 @@ const STRING_UNDERSCORE_REGEXP_1 = /([a-z\d])([A-Z]+)/g;
 const STRING_UNDERSCORE_REGEXP_2 = /-|\s+/g;
 const STRING_ALPHANUMERIZE_REGEXP = /[^a-zA-Z0-9 ]/g;
 const STRING_DEPUNCTUATE_REGEXP = /[?.,/#!$%^&*;:{}=\-_`~()]/g;
+/**
+ * systemize is identical to depunctuate except excludes - (hyphen)
+ */
+const STRING_SYSTEMIZE_REGEXP = /[?.,/#!$%^&*;:{}=_`~()]/g;
 
 /**
  * Converts a camelized string into all lower case separated by underscores.
@@ -230,7 +234,7 @@ export function sanitizeTitle(title: string) {
  @return {String} The systemized string.
  */
 export function systemize(str: string): string {
-  return str.replace('/', ' ');
+  return str.replace(STRING_SYSTEMIZE_REGEXP, ' ');
 }
 
 /**
