@@ -19,14 +19,14 @@ export const logger = {
 };
 
 function formatPageTitle(str: string) {
-  return str.length >= 15 ? str.substring(0, 11) + '...' : str.padEnd(15);
+  return str.length >= 15 ? str.substring(0, 11) + '...' : str;
 }
 
 export function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     log(
-      `${success(paddedAction)} ${page.emoji.padEnd(3)} ${formatPageTitle(
+      `${success(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -40,7 +40,7 @@ export function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     log(
-      `${info(paddedAction)} ${page.emoji.padEnd(3)} ${formatPageTitle(
+      `${info(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -54,7 +54,7 @@ export function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     log(
-      `${warn(paddedAction)} ${page.emoji.padEnd(3)} ${formatPageTitle(
+      `${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -68,7 +68,7 @@ export function logFail({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     log(
-      `${error(paddedAction)} ${page.emoji.padEnd(3)} ${formatPageTitle(
+      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );

@@ -1,6 +1,6 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import { LocalsOptions } from '@mountnotion/types';
-import { logInfo, systemize } from '@mountnotion/utils';
+import { flip, logInfo, systemize } from '@mountnotion/utils';
 
 type LocalResponse = {
   locals: any[];
@@ -34,7 +34,7 @@ export const getlocals = async (
       );
   logInfo({
     action: 'querying',
-    message: useAll ? 'locals, all' : 'locals, one',
+    message: useAll ? 'all locals' : 'one locals',
     page: { emoji: flatDatabase.icon, title: flatDatabase.title },
   });
   const [locals] = await query;
@@ -51,9 +51,11 @@ export const getlocals = async (
         const hasColumn = flatDatabase.columns[column] ? true : false;
 
         if (hasColumn) {
+          const mapping = flip(flatDatabase.mappings);
+          const mappedColumn = mapping[column];
           return {
             ...acc,
-            [column]: value,
+            [mappedColumn]: value,
           };
         }
         return acc;
