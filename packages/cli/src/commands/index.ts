@@ -10,6 +10,7 @@ import fixColumns from './fix-columns';
 import fixRows from './fix-rows';
 import lintColumns from './lint-columns';
 import lintRows from './lint-rows';
+import renameColumns from './rename-columns';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 
@@ -25,6 +26,7 @@ export const commands: Array<MountnCommand> = [
   fetch,
   lintColumns,
   lintRows,
+  renameColumns,
   selectPagesIntegrationKey,
   selectPagesOauth,
 ];
