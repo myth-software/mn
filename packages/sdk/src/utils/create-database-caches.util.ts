@@ -14,13 +14,13 @@ import { createRollups } from './create-rollups.util';
 
 export const createDatabaseCaches = async (
   pageIds: string[],
-  options?: BasicOptions
+  options: BasicOptions
 ): Promise<Cache[]> => {
   if (!existsSync('./.mountnotion')) {
     mkdirSync('./.mountnotion');
   }
 
-  const CACHE = options?.cacheFile ?? './.mountnotion/cache.json';
+  const CACHE = options.cacheFile ?? './.mountnotion/cache.json';
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');
