@@ -18,7 +18,7 @@ export const createMappings = (
   return Object.entries(properties).reduce((acc, [property]) => {
     return {
       ...acc,
-      [property]: variablize(property),
+      [variablize(property)]: property,
     };
   }, {} as Mappings);
 };

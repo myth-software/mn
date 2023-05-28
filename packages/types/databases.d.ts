@@ -14,7 +14,7 @@ export declare type FlatDatabase = {
   columns: Columns;
   options: Options | null;
   relations: Relations | null;
-  mappings: Mappings | null;
+  mappings: Mappings | Columns;
 };
 
 export declare type Cache = FlatDatabase & {
@@ -25,7 +25,7 @@ export declare type Cache = FlatDatabase & {
 export declare type Entity = DeepReadonly<FlatDatabase>;
 
 export declare type InferReadonly<T extends Entity> = {
-  [P in keyof T['columns'] as T['columns'][P] extends ReadonlyColumnTypes
+  [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? P
     : never]: T['columns'][P] extends infer ColumnType
     ? ColumnType extends 'created_by'
@@ -45,7 +45,7 @@ export declare type InferReadonly<T extends Entity> = {
 } & AdditionalProperties;
 
 export declare type InferWriteonly<T extends Entity> = {
-  [P in keyof T['columns'] as T['columns'][P] extends ReadonlyColumnTypes
+  [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? never
     : P]: T['columns'][P] extends infer ColumnType
     ? ColumnType extends 'title'

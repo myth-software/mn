@@ -28,6 +28,8 @@ export const flattenDatabaseResponse = (
     columns: createColumns(properties),
     options: createOptions(properties),
     relations: null,
-    mappings: options?.javascriptizeColumns ? createMappings(properties) : null,
+    mappings: options?.javascriptizeColumns
+      ? createMappings(properties)
+      : createColumns(properties),
   };
 };
