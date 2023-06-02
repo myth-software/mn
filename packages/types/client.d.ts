@@ -55,14 +55,14 @@ export declare type TypedSelectColumnFilterTwo<
 
 export declare type Filter<
   T extends Entity,
-  K extends keyof T['columns'] = keyof T['columns']
+  K extends keyof T['mappings'] = keyof T['mappings']
 > = {
   [P in K]: Merge<
     {
       property: P;
     },
     {
-      [Q in P]: T['columns'][Q] extends infer ColumnType
+      [Q in P]: T['columns'][T['mappings'][Q]] extends infer ColumnType
         ? ColumnType extends 'select'
           ? { select: TypedSelectColumnFilter<T, Q> }
           : ColumnType extends 'rich_text'
@@ -133,12 +133,14 @@ export declare type QueryFilter<T extends Entity> =
 export declare type MountNotionQueryParameters<T extends Entity> = {
   [Property in keyof QueryDatabaseBodyParameters]: Property extends 'filter'
     ? QueryFilter<T>
+    : Property extends 'sorts'
+    ? QuerySorts<T>
     : QueryDatabaseParameters[Property];
 };
 
 export declare type QuerySorts<T extends Entity> = Array<
   | {
-      property: keyof T['columns'];
+      property: keyof T['mappings'];
       direction: 'ascending' | 'descending';
     }
   | {

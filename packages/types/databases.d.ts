@@ -14,7 +14,7 @@ export declare type FlatDatabase = {
   columns: Columns;
   options: Options | null;
   relations: Relations | null;
-  mappings: Mappings | Columns;
+  mappings: Mappings;
 };
 
 export declare type Cache = FlatDatabase & {

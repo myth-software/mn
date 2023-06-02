@@ -1,4 +1,4 @@
-<% console.log('start schema') %>
+
 export const oasSchema = {  
   type: 'object', 
   properties: {
@@ -92,4 +92,3 @@ export const oasSchema = {
   <% } %>
   }
 };
-<% console.log('start schema') %>
