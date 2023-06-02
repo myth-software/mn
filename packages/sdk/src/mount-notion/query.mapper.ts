@@ -1,17 +1,19 @@
 import { Mappings } from '@mountnotion/types';
 
 export function queryMapper(query: any, mappings: Mappings) {
+  const filterMapper = (filter: any) => ({
+    ...filter,
+    property: mappings[query.filter.property],
+  });
+
   if (!query.filter) {
     return query;
   }
-  const filterKeys = Object.keys(query.filter);
-  if (!filterKeys.some((key) => key === 'and' || key === 'or')) {
+
+  if (!query.filter.or && !query.filter.and) {
     return {
       ...query,
-      filter: {
-        ...query.filter,
-        property: mappings[query.filter.property],
-      },
+      filter: filterMapper(query.filter),
     };
   }
 
@@ -19,25 +21,22 @@ export function queryMapper(query: any, mappings: Mappings) {
     return {
       ...query,
       filter: {
-        or: query.filter.or.map((orFilter: any) => ({
-          ...orFilter,
-          property: mappings[orFilter.property],
-        })),
+        or: query.filter.or.map((orFilter: any) => filterMapper(orFilter)),
       },
     };
   }
-  if (query.filter.and) {
+
+  if (query.filter.and && query.filter.and[0].or) {
     return {
       ...query,
       filter: {
         and: [
           {
-            ...query.filter.and[0],
-            filter: {
-              ...query.filter,
-              property: mappings[query.filter.property],
-            },
+            or: query.filter.and[0].or.map((orFilter: any) =>
+              filterMapper(orFilter)
+            ),
           },
+          filterMapper(query.filter.and[1]),
         ],
       },
     };
