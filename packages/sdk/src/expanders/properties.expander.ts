@@ -13,21 +13,20 @@ import { expandStatus } from './status.expander';
 import { expandTitle } from './title.expander';
 
 export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
-  entity: T,
-  config: ExpandColumnsConfiguration
+  instance: T,
+  { mappings, columns }: ExpandColumnsConfiguration
 ): ExpandedColumns {
-  if (entity === undefined) {
-    throw new Error('must have entity');
+  if (instance === undefined) {
+    throw new Error('must have instance');
   }
 
-  const properties = config.columns;
-  const notionColumns = Object.keys(entity)
+  const notionColumns = Object.keys(instance)
     .map((key) => ({
       key,
-      type: properties[key],
+      type: columns[mappings[key]],
     }))
     .reduce((acc, { key, type }: { key: string; type: string }) => {
-      const value = entity[key];
+      const value = instance[key];
       if (value === undefined) {
         return acc;
       }

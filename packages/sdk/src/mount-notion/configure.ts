@@ -12,6 +12,7 @@ import {
 import { expandProperties } from '../expanders/properties.expander';
 import { flattenPageResponse, flattenPageResponses } from '../flatteners';
 import client from '../infrastructure/client';
+import { mapper } from '../mapper';
 
 export function configure<Config extends MountNotionClientConfig>(
   config: Config
@@ -29,21 +30,21 @@ export function configure<Config extends MountNotionClientConfig>(
           });
 
           const results = response.results as PageObjectResponse[];
-          const [entity] = flattenPageResponses<
+          const [instances] = flattenPageResponses<
             InferReadonly<typeof index> & InferWriteonly<typeof index>
           >(results);
 
-          return entity;
+          return instances.map((instance) => mapper(instance, index.mappings));
         },
         retrieve: async ({ id }: { id: string }) => {
           const response = (await notion.pages.retrieve({
             page_id: id,
           })) as PageObjectResponse;
-          const [entity] = flattenPageResponse<
+          const [instance] = flattenPageResponse<
             InferReadonly<typeof index> & InferWriteonly<typeof index>
           >(response);
 
-          return entity;
+          return mapper(instance, index.mappings);
         },
         update: async ({
           id,
@@ -53,23 +54,25 @@ export function configure<Config extends MountNotionClientConfig>(
             Partial<InferWriteonly<typeof index>>
           >(body, {
             columns: index.columns,
+            mappings: index.mappings,
           });
 
           const response = (await notion.pages.update({
             page_id: id,
             properties,
           })) as PageObjectResponse;
-          const [entity] = flattenPageResponse<
+          const [instance] = flattenPageResponse<
             InferReadonly<typeof index> & InferWriteonly<typeof index>
           >(response);
 
-          return entity;
+          return mapper(instance, index.mappings);
         },
         create: async (body: Partial<InferWriteonly<typeof index>>) => {
           const properties = expandProperties<
             Partial<InferWriteonly<typeof index>>
           >(body, {
             columns: index.columns,
+            mappings: index.mappings,
           });
 
           const response = (await notion.pages.create({
@@ -82,11 +85,11 @@ export function configure<Config extends MountNotionClientConfig>(
             },
             properties,
           })) as PageObjectResponse;
-          const [entity] = flattenPageResponse<
+          const [instance] = flattenPageResponse<
             InferReadonly<typeof index> & InferWriteonly<typeof index>
           >(response);
 
-          return entity;
+          return mapper(instance, index.mappings);
         },
       },
     ];

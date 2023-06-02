@@ -1,4 +1,4 @@
-import { Entity, Options } from '@mountnotion/types';
+import { Entity, Instance, Options } from '@mountnotion/types';
 import { ensure } from './ensure.util';
 import { orderToDisplayValues } from './order-to-display-values';
 import { orderToFields } from './order-to-fields';
@@ -9,7 +9,6 @@ import {
   displayActions,
   DisplayConfiguration,
   Fields,
-  Instance,
   TypedDisplay,
   TypedDisplayConfiguration,
   TypedValues,

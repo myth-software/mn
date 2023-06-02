@@ -40,6 +40,7 @@ export default {
             },
             {
               columns: properties,
+              mappings: {},
             }
           ),
         });
@@ -58,6 +59,7 @@ export default {
             },
             {
               columns: properties,
+              mappings: {},
             }
           ),
         });

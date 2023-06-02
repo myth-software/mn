@@ -1,11 +1,6 @@
-import { Entity, Options } from '@mountnotion/types';
+import { Entity, Instance, Options } from '@mountnotion/types';
 import { ensure } from './ensure.util';
-import {
-  Displayable,
-  DisplayConfiguration,
-  Instance,
-  TypedValues,
-} from './types';
+import { Displayable, DisplayConfiguration, TypedValues } from './types';
 
 export function orderToDisplayValues<T extends Entity>({
   config,

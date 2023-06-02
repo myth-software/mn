@@ -1,11 +1,6 @@
-import { Entity } from '@mountnotion/types';
+import { Entity, Instance } from '@mountnotion/types';
 import { ensure } from './ensure.util';
-import {
-  Displayable,
-  Instance,
-  TypedDisplayConfiguration,
-  TypedValues,
-} from './types';
+import { Displayable, TypedDisplayConfiguration, TypedValues } from './types';
 
 export function orderToInitialValues<T extends Entity>({
   config,

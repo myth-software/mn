@@ -23,9 +23,9 @@ export const flattenPageResponse = <Entity>({
     cover: flattenCover(cover),
   };
   for (const property in properties) {
-    const entity = properties[property];
+    const instance = properties[property];
 
-    flat[property] = flattenNotionProperty(entity);
+    flat[property] = flattenNotionProperty(instance);
   }
   const columns = createColumns(properties);
   const values = flat as unknown as Entity;

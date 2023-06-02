@@ -1,4 +1,5 @@
 import { Columns } from './columns';
+import { Mappings } from './databases';
 
 export declare type ToolsConfiguration = {
   flattenResponse?: boolean;
@@ -9,4 +10,5 @@ export declare type ToolsConfiguration = {
 
 export declare type ExpandColumnsConfiguration = ToolsConfiguration & {
   columns: Columns;
+  mappings: Mappings;
 };

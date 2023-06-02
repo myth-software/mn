@@ -1,4 +1,10 @@
-import { DeepReadonly, Entity, Merge, Options } from '@mountnotion/types';
+import {
+  DeepReadonly,
+  Entity,
+  Instance,
+  Merge,
+  Options,
+} from '@mountnotion/types';
 
 const addActions = ['add', 'upload'] as const;
 const updateActions = ['edit'] as const;
@@ -14,7 +20,6 @@ export declare type UpdateAction = (typeof updateActions)[number];
 export declare type DeleteAction = (typeof deleteActions)[number];
 export declare type DisplayAction = (typeof displayActions)[number];
 
-export type Instance = Record<string, any>;
 export type Values = Record<string, string | boolean | string[] | number>;
 
 export type TypedValues<
