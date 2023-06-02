@@ -268,7 +268,7 @@ export class <%= classify(title) %>Controller {
             property: '<%= accessorProperty %>',
             rollup: {
               any: {
-                relation: { contains: user[securityId] },
+                relation: { contains: user.<%= accessorProperty %> },
               },
             },
           },
