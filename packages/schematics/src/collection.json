@@ -4,6 +4,10 @@
       "factory": "./src/factories/controllers/index#controllers",
       "description": "generate controllers"
     },
+    "drizzle": {
+      "factory": "./src/factories/drizzle/index#drizzle",
+      "description": "generate drizzle"
+    },
     "entities": {
       "factory": "./src/factories/entities/index#entities",
       "description": "generate entities"
