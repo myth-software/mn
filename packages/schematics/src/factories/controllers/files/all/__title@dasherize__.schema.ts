@@ -17,7 +17,7 @@ export const oasSchema = {
       readOnly: true,
       nullable: true
     },
-      <% for(const [property, type] of Object.entries(cache.columns)) {  %>
+      <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
         '<%= property %>': {
         nullable: true,
       <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
