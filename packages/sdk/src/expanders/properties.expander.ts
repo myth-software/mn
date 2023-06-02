@@ -26,6 +26,7 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
       type: columns[mappings[key]],
     }))
     .reduce((acc, { key, type }: { key: string; type: string }) => {
+      const column = mappings[key];
       const value = instance[key];
       if (value === undefined) {
         return acc;
@@ -34,29 +35,29 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
       switch (type) {
         case 'title':
           return {
-            [key]: expandTitle(value),
+            [column]: expandTitle(value),
             ...acc,
           };
         case 'number':
           return {
-            [key]: {
+            [column]: {
               number: value,
             },
             ...acc,
           };
         case 'rich_text':
           return {
-            [key]: expandRichText(value),
+            [column]: expandRichText(value),
             ...acc,
           };
         case 'files':
           return {
-            [key]: expandFiles(value),
+            [column]: expandFiles(value),
             ...acc,
           };
         case 'email': {
           return {
-            [key]: {
+            [column]: {
               email: value,
             },
             ...acc,
@@ -64,7 +65,7 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
         }
         case 'url': {
           return {
-            [key]: {
+            [column]: {
               url: value,
             },
             ...acc,
@@ -72,7 +73,7 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
         }
         case 'checkbox': {
           return {
-            [key]: {
+            [column]: {
               checkbox: value,
             },
             ...acc,
@@ -80,7 +81,7 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
         }
         case 'phone_number': {
           return {
-            [key]: {
+            [column]: {
               phone_number: value,
             },
             ...acc,
@@ -88,25 +89,25 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
         }
         case 'relation': {
           return {
-            [key]: expandRelation(value),
+            [column]: expandRelation(value),
             ...acc,
           };
         }
         case 'date': {
           return {
-            [key]: expandDate(value),
+            [column]: expandDate(value),
             ...acc,
           };
         }
         case 'status': {
           return {
-            [key]: expandStatus(value),
+            [column]: expandStatus(value),
             ...acc,
           };
         }
         case 'select': {
           return {
-            [key]: expandSelect(value),
+            [column]: expandSelect(value),
             ...acc,
           };
         }

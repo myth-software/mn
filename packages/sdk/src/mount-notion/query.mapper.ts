@@ -3,7 +3,7 @@ import { Mappings } from '@mountnotion/types';
 export function queryMapper(query: any, mappings: Mappings) {
   const filterMapper = (filter: any) => ({
     ...filter,
-    property: mappings[query.filter.property],
+    property: mappings[filter.property],
   });
 
   if (!query.filter) {
