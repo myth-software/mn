@@ -42,6 +42,15 @@ export function queryMapper(query: any, mappings: Mappings) {
     };
   }
 
+  if (query.filter.and) {
+    return {
+      ...query,
+      filter: {
+        and: query.filter.and.map((orFilter: any) => filterMapper(orFilter)),
+      },
+    };
+  }
+
   return {
     ...query,
   };
