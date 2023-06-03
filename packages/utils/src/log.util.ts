@@ -6,13 +6,13 @@ export const error = chalk.bold.red;
 export const fatal = chalk.bold.red;
 export const warn = chalk.bold.hex('#FFA500');
 export const info = chalk.bold;
-export const debug = chalk.bold();
+export const debug = chalk.bold;
 
 export const log = console.log;
 
 export const logger = {
   info: (s: string) => s,
-  debug: (s: string) => s,
+  debug: (s: string) => log(debug(s)),
   warn: (s: string) => log(chalk.bold.hex('#FFA500')(s)),
   error: (s: string) => log(chalk.bold.red(s)),
   fatal: (s: string) => log(chalk.bold.red(s)),

@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { logger, logSuccess, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
@@ -24,7 +24,7 @@ export function express(options: ControllersOptions): Rule {
         return applyWithOverwrite(url('./files/all'), [
           template({
             title,
-            index: cache,
+            cache,
             org: options.org,
             entities: options.entities,
             locals: options.locals,
@@ -32,6 +32,8 @@ export function express(options: ControllersOptions): Rule {
             userColumn: options.userColumn,
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,
+            debug: options.debug,
+            logger,
             ...strings,
           }),
           move(outDir),
@@ -41,6 +43,8 @@ export function express(options: ControllersOptions): Rule {
       const expressIndexRule = applyWithOverwrite(url('./files/index'), [
         template({
           titles,
+          debug: options.debug,
+          logger,
           ...strings,
         }),
         move(outDir),

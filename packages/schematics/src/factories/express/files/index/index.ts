@@ -1,3 +1,7 @@
+<% if (debug) { %>
+  <%= logger.debug({ from: "index", titles }) %>
+<% } %>
+
 import 'dotenv/config';
 
 import express from 'express';

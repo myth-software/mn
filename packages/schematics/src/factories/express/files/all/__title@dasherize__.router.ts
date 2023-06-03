@@ -1,3 +1,7 @@
+<% if (debug) { %>
+  <%= logger.debug({ from: "router", title}) %>
+<% } %>
+
 import express, { Request, Response } from 'express';
 import { 
   <%= classify(title) %>,
