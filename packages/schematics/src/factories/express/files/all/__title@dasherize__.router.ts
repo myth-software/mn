@@ -22,7 +22,7 @@ const mn = configure({
 export const <%= camelize(title) %>Router = express.Router();
 
 <%= camelize(title) %>Router.get('/', async (req: Request, res: Response) => {
-  cons where = req.query.where as MountNotionQueryParameters<<%= classify(title) %>Index>;
+  const where = req.query.where as MountNotionQueryParameters<<%= classify(title) %>Index>;
   try {
     const <%= camelize(title) %>: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query(where);
     

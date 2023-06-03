@@ -10,7 +10,7 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 <% for(const title of titles) { %>
-  import { <%= dasherize(title) %>Router } from './<%= dasherize(title) %>.router';
+  import { <%= camelize(title) %>Router } from './<%= dasherize(title) %>.router';
 <% } %>
 
 
