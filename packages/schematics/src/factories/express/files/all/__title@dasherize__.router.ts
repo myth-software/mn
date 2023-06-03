@@ -17,7 +17,7 @@ import { MountNotionQueryParameters } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
 const mn = configure({
-  integrationKey: process.env.INTEGRATION_KEY!,
+  integrationKey: process.env.INTEGRATION_KEY,
   indicies
 });
 

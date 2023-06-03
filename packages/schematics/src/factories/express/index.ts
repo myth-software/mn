@@ -3,6 +3,7 @@ import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
 import { logDebug, logSuccess, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
+import { addPackageToPackageJson } from '../../utils';
 import { validateInputs } from './validate-inputs';
 
 export function express(options: ControllersOptions): Rule {
@@ -12,7 +13,9 @@ export function express(options: ControllersOptions): Rule {
   const outDir = options.outDir;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
-  return () => {
+  return (tree) => {
+    addPackageToPackageJson(tree, 'helmet', '7.0.0');
+    addPackageToPackageJson(tree, 'cors', '2.8.5');
     return createDatabaseCaches(pageIds, options).then((caches) => {
       const includedCaches = caches.filter(
         ({ title }) => title && !excludes.includes(title)
