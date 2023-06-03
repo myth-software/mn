@@ -85,8 +85,7 @@ const mountn = configure({
               },
             },
           },
-        },
-        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
+        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       <% if (title !== usersDatabase) { %> post: {
         description: 'create <%= title %>',
@@ -128,7 +127,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
+        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       }, <% } %>
     },
     '/<%= dasherize(title) %>/{id}': {
@@ -162,7 +161,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
+        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       patch: {
         description: 'update <%= title %> by id',
@@ -215,7 +214,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
+        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       delete: {
         description: 'delete <%= title %> by id',
@@ -239,7 +238,7 @@ const mountn = configure({
             description: 'deleted <%= title %>'
           },
         },
-        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
+        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
     },
   },
