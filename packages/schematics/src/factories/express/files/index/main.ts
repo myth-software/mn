@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 <% for(const title of titles) { %>
-  app.use('/<%= dasherize(title) %>', <%= dasherize(title) %>Router);
+  app.use('/<%= dasherize(title) %>', <%= camelize(title) %>Router);
   import * from './<%= dasherize(title) %>.router';
 <% } %>
 

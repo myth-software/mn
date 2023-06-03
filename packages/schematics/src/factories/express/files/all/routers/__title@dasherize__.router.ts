@@ -13,6 +13,8 @@ import {
 import {
     configure
 } from '@mountnotion/sdk';
+import { MountNotionQueryParameters } from '@mountnotion/types';
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
 const mn = configure({
   integrationKey: process.env.INTEGRATION_KEY!,
@@ -34,7 +36,7 @@ export const <%= camelize(title) %>Router = express.Router();
 });
 
 <%= camelize(title) %>Router.get('/:id', async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10);
+  const id = req.params.id;
 
   try {
     const item: <%= classify(title) %> = await mn.<%= camelize(title) %>.retrieve({ id });
@@ -60,7 +62,7 @@ export const <%= camelize(title) %>Router = express.Router();
 
     const new<%= classify(title) %> = await mn.<%= camelize(title) %>.create({
       name,
-      ...body,
+      ...item,
     });
 
     res.status(201).json(new<%= classify(title) %>);
@@ -70,14 +72,14 @@ export const <%= camelize(title) %>Router = express.Router();
 });
 
 <%= camelize(title) %>Router.patch('/:id', async (req: Request, res: Response) => {
-  const id: number = parseInt(req.params.id, 10);
+  const id = req.params.id;
 
   try {
-    const itemUpdate: Partial<<%= classify(title) %>Writeonly> = req.body;
+    const item: Partial<<%= classify(title) %>Writeonly> = req.body;
 
     const updated<%= classify(title) %> = mn.<%= camelize(title) %>.update({
       id,
-      ...body,
+      ...item,
     });;
 
     res.status(200).json(updated<%= classify(title) %>);
@@ -88,7 +90,7 @@ export const <%= camelize(title) %>Router = express.Router();
 
 <%= camelize(title) %>Router.delete('/:id', async (req: Request, res: Response) => {
   try {
-    const id: number = parseInt(req.params.id, 10);
+    const id = req.params.id;
     const deleted = await mn.delete({ id });
 
     res.status(204).send(deleted);
