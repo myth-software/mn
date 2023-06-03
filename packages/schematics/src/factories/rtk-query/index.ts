@@ -30,20 +30,20 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
               title,
               entities,
               baseUrl,
-              strategy: options.strategy,
+              strategies: options.strategies,
               ...strings,
             }),
             move(`${outDir}/apis`),
           ]);
         });
 
-      const apisIndexRule = options.strategy
+      const apisIndexRule = options.strategies
         ? applyWithOverwrite(url(`${files}/apis-auth-index`), [
             template({
               titles,
               baseUrl,
               entities,
-              strategy: options.strategy,
+              strategies: options.strategies,
               userColumn: options.userColumn,
               usersDatabase: options.usersDatabase,
               ...strings,
@@ -60,7 +60,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             move(`${outDir}/apis`),
           ]);
 
-      const domainIndexRule = options.strategy
+      const domainIndexRule = options.strategies
         ? applyWithOverwrite(url(`${files}/auth-index`), [
             template({
               entities,

@@ -4,7 +4,7 @@ import { prompt } from 'enquirer';
 export type WorkspaceConfig = {
   entities: string | null;
   baseUrl: string | null;
-  authStrategy: 'notion' | 'sms' | null;
+  authStrategies: Array<'notion' | 'sms'> | null;
   usersDatabase: 'people' | 'companies' | 'users' | null;
   userColumn: string | null;
 };
@@ -49,18 +49,18 @@ export const promptConfigureWorkspace = async (
   } else {
     currentConfig.baseUrl = newConfig.baseUrl;
   }
-  if (newConfig.authStrategy === undefined) {
+  if (newConfig.authStrategies === undefined) {
     const results = await prompt<WorkspaceConfig>([
       {
-        type: 'list',
-        message: 'authentication strategy:',
-        name: 'authStrategy',
+        type: 'multiselect',
+        message: 'authentication strategies:',
+        name: 'authStrategies',
         choices: ['notion', 'sms'],
       },
     ]);
-    currentConfig.authStrategy = results.authStrategy;
+    currentConfig.authStrategies = results.authStrategies;
   } else {
-    currentConfig.authStrategy = newConfig.authStrategy;
+    currentConfig.authStrategies = newConfig.authStrategies;
   }
   if (newConfig.usersDatabase === undefined) {
     const results = await prompt<WorkspaceConfig>([
@@ -105,7 +105,7 @@ export default {
     let workspaceConfig: WorkspaceConfig = {
       entities: null,
       baseUrl: null,
-      authStrategy: null,
+      authStrategies: null,
       usersDatabase: null,
       userColumn: null,
     };
@@ -113,7 +113,7 @@ export default {
     const selectedConfig: WorkspaceConfig = {
       entities: options['entities'],
       baseUrl: options['baseUrl'],
-      authStrategy: options['authStrategy'],
+      authStrategies: options['authStrategies'],
       usersDatabase: options['usersDatabase'],
       userColumn: options['userColumn'],
     };
@@ -121,7 +121,7 @@ export default {
     if (
       options['entities'] &&
       options['baseUrl'] &&
-      options['authStrategy'] &&
+      options['authStrategies'] &&
       options['usersDatabase'] &&
       options['userColumn']
     ) {
@@ -130,7 +130,7 @@ export default {
       if (
         options['entities'] === undefined ||
         options['baseUrl'] === undefined ||
-        options['authStrategy'] === undefined ||
+        options['authStrategies'] === undefined ||
         options['usersDatabase'] === undefined ||
         options['userColumn'] === undefined
       ) {
@@ -139,7 +139,7 @@ export default {
         workspaceConfig = {
           entities: options['entities'],
           baseUrl: options['baseUrl'],
-          authStrategy: options['authStrategy'],
+          authStrategies: options['authStrategies'],
           usersDatabase: options['usersDatabase'],
           userColumn: options['userColumn'],
         };

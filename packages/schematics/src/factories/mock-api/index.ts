@@ -36,7 +36,7 @@ export function mockApi(options: MockApiOptions): Rule {
         ]);
       });
 
-      const endpointsIndexRule = options.strategy
+      const endpointsIndexRule = options.strategies
         ? applyWithOverwrite(url(`${files}/endpoints-auth-index`), [
             template({
               titles,

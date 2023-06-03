@@ -14,7 +14,7 @@ export const authApi = createApi({
     }
   }),
   endpoints: build => ({
-    <% if (strategy === 'notion') { %>
+    <% if (strategies.includes('notion')) { %>
       postALogin: build.mutation<TokenObjectResponse, {
         email: string;
         password?: string;
@@ -42,7 +42,8 @@ export const authApi = createApi({
           body,
         }),
       }),
-    <% } else if (strategy === 'sms') { %>
+    <% } %>
+    <% if (strategies.includes('sms')) { %>
       postASmsLoginInitialization: build.mutation<
         void,
         {
@@ -112,11 +113,12 @@ export type TokenObjectResponse = {
 };
 
 export const {
-  <% if (strategy === 'notion') { %>
+  <% if (strategies.includes('notion')) { %>
     usePostALoginMutation,
     useGetAMeQuery,
     usePostASignupMutation,
-  <% } else if (strategy === 'sms') { %>
+  <% } %> 
+  <% if (strategies.includes('sms')) { %>
     usePostASmsLoginInitializationMutation,
     usePostASmsLoginMutation,
     useGetASmsProfileQuery,

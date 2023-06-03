@@ -27,7 +27,7 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
             title,
             index,
             entities: options.entities,
-            strategy: options.strategy,
+            strategies: options.strategies,
             userColumn: options.userColumn,
             usersDatabase: options.usersDatabase,
             ...strings,

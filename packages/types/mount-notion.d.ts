@@ -9,7 +9,7 @@ import { Entity, InferReadonly, InferWriteonly } from './databases';
 import { ColumnsStandards, RowsStandards } from './standards';
 
 export declare type AuthOptions = {
-  strategy: string;
+  strategies: Array<string>;
   usersDatabase: string;
   userColumn: string;
 };

@@ -28,7 +28,7 @@ export function controllers(options: ControllersOptions): Rule {
             org: options.org,
             entities: options.entities,
             locals: options.locals,
-            strategy: options.strategy,
+            strategies: options.strategies,
             userColumn: options.userColumn,
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,

@@ -5,7 +5,7 @@ import {
   <%= classify(title) %>QueryParameters,
 } from '<%= entities %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-<% if (strategy) { %>
+<% if (strategies) { %>
   import { RootState } from '../store';
 <% } %>
 
@@ -27,7 +27,7 @@ const {
 reducerPath: '<%= classify(title) %>',
   baseQuery: fetchBaseQuery({
     baseUrl: '<%= baseUrl %>/<%= dasherize(title) %>',
-    <% if (strategy) { %>
+    <% if (strategies) { %>
       prepareHeaders: (headers, { getState }) => {
         const tokens = (getState() as RootState).tokens;
         if (tokens.accessToken) {

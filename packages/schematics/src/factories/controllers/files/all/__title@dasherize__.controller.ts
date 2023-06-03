@@ -1,4 +1,4 @@
-<% if (strategy) { %>
+<% if (strategies) { %>
   import { authenticate } from '@loopback/authentication';
   import { ACL } from '<%= org %>/authorization';
   import { authorize } from '@loopback/authorization';
@@ -86,7 +86,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
       },
       <% if (title !== usersDatabase) { %> post: {
         description: 'create <%= title %>',
@@ -128,7 +128,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
       }, <% } %>
     },
     '/<%= dasherize(title) %>/{id}': {
@@ -162,7 +162,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
       },
       patch: {
         description: 'update <%= title %> by id',
@@ -215,7 +215,7 @@ const mountn = configure({
             },
           },
         },
-        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
       },
       delete: {
         description: 'delete <%= title %> by id',
@@ -239,25 +239,25 @@ const mountn = configure({
             description: 'deleted <%= title %>'
           },
         },
-        <% if (strategy) { %> security: [{ <%= strategy %>: [] }], <% } %>
+        <% if (strategies) { %> security: <% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>, <% } %>
       },
     },
   },
 })
-<% if (strategy) { %>
-  @authenticate('<%= strategy %>')
+<% if (strategies) { %>
+  @authenticate(<% for (const strategy of strategies) { %> '<%= strategy %>', <% } %>)
 <% } %>
 export class <%= classify(title) %>Controller {
   async getByQuery(
     @param.query.object('where')
-    <% if (strategy) { %>
+    <% if (strategies) { %>
       @inject(SecurityBindings.USER, { optional: true })
       user: UserProfile, <% } %>
     where: MountNotionQueryParameters<<%= classify(title) %>Index>,
   ): Promise<<%= classify(title) %>[]> {
-    <% if (isPublic || !strategy) { %>
+    <% if (isPublic || !strategies) { %>
       return mountn.<%= camelize(title) %>.query(where);
-    <% } else if (strategy && userColumn && accessorProperty) { %>
+    <% } else if (strategies && userColumn && accessorProperty) { %>
       const userFilter: OrFilter<<%= classify(title) %>Index> = {
         or: [
           {
@@ -285,7 +285,7 @@ export class <%= classify(title) %>Controller {
         ...where,
         filter,
       });
-    <% } else if (strategy && userColumn) { %>
+    <% } else if (strategies && userColumn) { %>
       const userFilter: Filter<<%= classify(title) %>Index> = {
         property: '<%= userColumn %>',
         relation: { contains: user[securityId] },
@@ -305,14 +305,14 @@ export class <%= classify(title) %>Controller {
     <% } %>
   }
 
-  <% if (strategy) { %>
+  <% if (strategies) { %>
     @authorize(ACL.readOne)
   <% } %>
   async getById(@param.path.string('id') id: string): Promise<<%= classify(title) %>> {
     return mountn.<%= camelize(title) %>.retrieve({ id });
   }
 
-  <% if (strategy) { %>
+  <% if (strategies) { %>
     @authorize(ACL.modifyOne)
   <% } %>
   async patchById(
@@ -331,7 +331,7 @@ export class <%= classify(title) %>Controller {
     async create(
       @requestBody()
       body: Partial<<%= classify(title) %>Writeonly>,
-      <% if (strategy) { %> @inject(SecurityBindings.USER, { optional: true })
+      <% if (strategies) { %> @inject(SecurityBindings.USER, { optional: true })
         user: UserProfile, 
       <% } %>
     ): Promise<<%= classify(title) %>> {
@@ -342,7 +342,7 @@ export class <%= classify(title) %>Controller {
         length: 2,
       });
 
-      <% if (strategy) { %>
+      <% if (strategies) { %>
         return mountn.<%= camelize(title) %>.create({
           name,
           '<%= userColumn %>': [user[securityId]],
@@ -358,7 +358,7 @@ export class <%= classify(title) %>Controller {
   <% } %>
   
 
-  <% if (strategy) { %>
+  <% if (strategies) { %>
     @authorize(ACL.modifyOne)
   <% } %>
   async deleteById(@param.path.string('id') id: string): Promise<DeleteBlockResponse> {
