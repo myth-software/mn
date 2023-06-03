@@ -3,9 +3,8 @@ import 'symbol-observable';
 
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
-import { MountnCommand } from '@mountnotion/types';
+import { LogInput, MountnCommand } from '@mountnotion/types';
 import { logError, logInfo, logSuccess } from '@mountnotion/utils';
-import * as chalk from 'chalk';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
@@ -80,7 +79,7 @@ export default {
 
     // Logging queue that receives all the messages to show the users. This only get shown when no
     // errors happened.
-    let loggingQueue: string[] = [];
+    let loggingQueue: LogInput[] = [];
     let error = false;
 
     /**
@@ -111,21 +110,23 @@ export default {
           logError({ action: 'erroring', message: `${eventPath} ${desc}` });
           break;
         case 'update':
-          loggingQueue.push(
-            `${chalk.cyan('UPDATE')} ${eventPath} (${
-              event.content.length
-            } bytes)`
-          );
+          loggingQueue.push({
+            action: 'updating',
+            message: `${eventPath} (${event.content.length} bytes)`,
+          });
           break;
         case 'create':
-          loggingQueue.push(
-            `${chalk.green('CREATE')} ${eventPath} (${
-              event.content.length
-            } bytes)`
-          );
+          loggingQueue.push({
+            action: 'creating',
+            message: `${eventPath} (${event.content.length} bytes)`,
+          });
+
           break;
         case 'delete':
-          loggingQueue.push(`${chalk.yellow('DELETE')} ${eventPath}`);
+          loggingQueue.push({
+            action: 'deleting',
+            message: `${eventPath}`,
+          });
           break;
       }
     });
@@ -137,9 +138,7 @@ export default {
       if (event.kind == 'workflow-end' || event.kind == 'post-tasks-start') {
         if (!error) {
           // Flush the log queue and clean the error state.
-          loggingQueue.forEach((message) =>
-            logInfo({ action: 'informing', message })
-          );
+          loggingQueue.forEach((input) => logInfo(input));
         }
 
         loggingQueue = [];
