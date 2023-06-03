@@ -25,7 +25,7 @@ export function configure<Config extends MountNotionClientConfig>(
       title,
       {
         query: async (args: MountNotionQueryParameters<typeof index>) => {
-          const query = queryMapper(args, index.mappings);
+          const query = args ? queryMapper(args, index.mappings) : {};
           const response = await notion.databases.query({
             database_id: index.id,
             ...(query as QueryDatabaseBodyParameters),

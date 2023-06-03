@@ -31,7 +31,7 @@ export const <%= camelize(title) %>Router = express.Router();
 
     res.status(200).send(<%= camelize(title) %>);
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(500).send({ status: 500, message: e.message });
   }
 });
 
@@ -45,9 +45,10 @@ export const <%= camelize(title) %>Router = express.Router();
       return res.status(200).send(item);
     }
 
-    res.status(404).send('item not found');
+
+    res.status(404).send({ status: 404, message: '<%= title %> not found' });
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(500).send({ status: 500, message: e.message });
   }
 });
 
@@ -67,7 +68,7 @@ export const <%= camelize(title) %>Router = express.Router();
 
     res.status(201).json(new<%= classify(title) %>);
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(500).send({ status: 500, message: e.message });
   }
 });
 
@@ -84,7 +85,7 @@ export const <%= camelize(title) %>Router = express.Router();
 
     res.status(200).json(updated<%= classify(title) %>);
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(500).send({ status: 500, message: e.message });
   }
 });
 
@@ -95,6 +96,6 @@ export const <%= camelize(title) %>Router = express.Router();
 
     res.status(204).send(deleted);
   } catch (e) {
-    res.status(500).send(e.message);
+    res.status(500).send({ status: 500, message: e.message });
   }
 });
