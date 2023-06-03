@@ -1,5 +1,5 @@
 <% if (debug) { %>
-  <%= logger.debug({ from: "router", title}) %>
+  <%= logDebug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
 import express, { Request, Response } from 'express';
@@ -10,6 +10,9 @@ import {
   <%= underscore(title).toUpperCase() %>,
   indicies 
 } from '<%= entities %>';
+import {
+    configure
+} from '@mountnotion/sdk';
 
 const mn = configure({
   integrationKey: process.env.INTEGRATION_KEY!,

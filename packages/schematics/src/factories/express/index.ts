@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
-import { logger, logSuccess, strings } from '@mountnotion/utils';
+import { logDebug, logSuccess, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
@@ -33,7 +33,7 @@ export function express(options: ControllersOptions): Rule {
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,
             debug: options.debug,
-            logger,
+            logDebug,
             ...strings,
           }),
           move(outDir),
@@ -44,7 +44,7 @@ export function express(options: ControllersOptions): Rule {
         template({
           titles,
           debug: options.debug,
-          logger,
+          logDebug,
           ...strings,
         }),
         move(outDir),

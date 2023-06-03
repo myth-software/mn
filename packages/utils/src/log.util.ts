@@ -78,6 +78,20 @@ export function logFail({ action, message, page }: LogInput) {
   return;
 }
 
+export function logDebug({ action, message, page }: LogInput) {
+  const paddedAction = action.padEnd(10);
+  if (page) {
+    log(
+      `${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
+    return;
+  }
+  log(`${debug(paddedAction)} ${message}`);
+  return;
+}
+
 export function styleQuestion(input: string) {
   log(success(input));
   return;
