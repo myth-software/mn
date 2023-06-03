@@ -4,7 +4,7 @@ import 'symbol-observable';
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
 import { MountnCommand } from '@mountnotion/types';
-import { logger } from '@mountnotion/utils';
+import { logError, logInfo, logSuccess } from '@mountnotion/utils';
 import * as chalk from 'chalk';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
@@ -18,6 +18,7 @@ export default {
     { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
   ],
   actionFactory: (config) => async () => {
+    logSuccess({ action: 'starting', message: 'apply-schematics command' });
     function findUp(names: string | string[], from: string) {
       if (!Array.isArray(names)) {
         names = [names];
@@ -58,7 +59,10 @@ export default {
     }
 
     if (!config) {
-      logger.error(`ERROR! missing config file.`);
+      logError({
+        action: 'erroring',
+        message: 'missing mount notion config file',
+      });
 
       return;
     }
@@ -104,8 +108,7 @@ export default {
       switch (event.kind) {
         case 'error':
           error = true;
-
-          logger.error(`ERROR! ${eventPath} ${desc}.`);
+          logError({ action: 'erroring', message: `${eventPath} ${desc}` });
           break;
         case 'update':
           loggingQueue.push(
@@ -134,7 +137,9 @@ export default {
       if (event.kind == 'workflow-end' || event.kind == 'post-tasks-start') {
         if (!error) {
           // Flush the log queue and clean the error state.
-          loggingQueue.forEach((log) => logger.info(log));
+          loggingQueue.forEach((message) =>
+            logInfo({ action: 'informing', message })
+          );
         }
 
         loggingQueue = [];
@@ -156,35 +161,48 @@ export default {
       }
 
       if (!process.env['NOTION_INTEGRATION_KEY']) {
-        throw 'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable';
+        logError({
+          action: 'erroring',
+          message:
+            'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable',
+        });
+        throw new Error();
       }
 
       for (const schematic of config.schematics) {
-        await workflow
-          .execute({
-            collection: schematic.collection,
-            schematic: schematic.name,
-            options: {
-              ...config.options?.auth,
-              ...config.options?.basic,
-              ...schematic.options?.auth,
-              ...schematic.options?.basic,
-            },
-          })
-          .toPromise();
+        if (!schematic.disable) {
+          await workflow
+            .execute({
+              collection: schematic.collection,
+              schematic: schematic.name,
+              options: {
+                ...config.options?.auth,
+                ...config.options?.basic,
+                ...schematic.options?.auth,
+                ...schematic.options?.basic,
+              },
+            })
+            .toPromise();
+        }
       }
 
       if (nothingDone) {
-        logger.info('Nothing to be done.');
+        logInfo({ action: 'informing', message: 'nothing to be done' });
       }
 
       return;
     } catch (err) {
       if (err instanceof UnsuccessfulWorkflowExecution) {
         // "See above" because we already printed the error.
-        logger.fatal('The Schematic workflow failed. See above.');
+        logError({
+          action: 'erroring',
+          message: 'the schematic workflow failed. see above',
+        });
       } else {
-        logger.fatal(`Error: ${err instanceof Error ? err.message : err}`);
+        logError({
+          action: 'erroring',
+          message: `${err instanceof Error ? err.message : err}`,
+        });
       }
 
       return;

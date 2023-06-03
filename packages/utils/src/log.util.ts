@@ -64,7 +64,7 @@ export function logWarn({ action, message, page }: LogInput) {
   return;
 }
 
-export function logFail({ action, message, page }: LogInput) {
+export function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     log(
