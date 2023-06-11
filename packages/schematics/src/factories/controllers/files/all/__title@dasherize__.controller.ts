@@ -44,7 +44,7 @@ const mountn = configure({
   paths: {
     '/<%= dasherize(title) %>': {
       get: {
-        summary: 'by query',
+        summary: 'read by query',
         description: 'get <%= title %> by query',
         tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
         operationId: '<%= classify(title) %>.getByQuery',
@@ -141,7 +141,7 @@ const mountn = configure({
     },
     '/<%= dasherize(title) %>/{id}': {
       get: {
-        summary: 'by id',
+        summary: 'read by id',
         description: 'get <%= title %> by id',
         tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
         operationId: '<%= classify(title) %>.getById',
@@ -174,7 +174,7 @@ const mountn = configure({
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       patch: {
-        summary: 'by id',
+        summary: 'update by id',
         description: 'update <%= title %> by id',
         tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
         operationId: '<%= classify(title) %>.patchById',
@@ -228,7 +228,7 @@ const mountn = configure({
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       delete: {
-        summary: 'by id',
+        summary: 'delete by id',
         description: 'delete <%= title %> by id',
         tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
         operationId: '<%= classify(title) %>.deleteById',
