@@ -1,3 +1,7 @@
+<% if (debug) { %>
+  <%= logDebug({ action: 'debugging', message: `controllers: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+<% } %>
+
 <% if (strategies) { %>
   import { authenticate } from '@loopback/authentication';
   import { ACL } from '<%= org %>/authorization';
@@ -88,49 +92,54 @@ const mountn = configure({
           },
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
-      <% if (title !== usersDatabase) { %> post: {
-        summary: 'create',
-        description: 'create <%= title %>',
-        tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
-        operationId: '<%= classify(title) %>.create',
-        'x-operation-name': 'create',
-        'x-controller-name': '<%= capitalize(title) %>',
-        requestBody: {
-          description: 'single <%= title %>',
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                ...oasSchema,
-                example: _.omit(
-                  local<%= classify(title) %>.example,
-                  'id',
-                  'created time',
-                  'created by',
-                  'last edited time',
-                  'last edited by',
-                  'cover',
-                  'icon',
-                ),
-              },
-            },
-          },
-        },
-        responses: {
-          201: {
-            description: 'created <%= title %>',
+      <% if (title !== usersDatabase) { %>
+        <% if (debug) { %>
+          <%= logDebug({ action: 'debugging', message: 'inside post' }) %>
+        <% } %>
+        post: {
+          summary: 'create',
+          description: 'create <%= title %>',
+          tags: ['<%= cache.icon %> <%= capitalize(title) %>'],
+          operationId: '<%= classify(title) %>.create',
+          'x-operation-name': 'create',
+          'x-controller-name': '<%= capitalize(title) %>',
+          requestBody: {
+            description: 'single <%= title %>',
+            required: true,
             content: {
               'application/json': {
                 schema: {
                   ...oasSchema,
-                  example: local<%= classify(title) %>.example,
-                }
+                  example: _.omit(
+                    local<%= classify(title) %>.example,
+                    'id',
+                    'created time',
+                    'created by',
+                    'last edited time',
+                    'last edited by',
+                    'cover',
+                    'icon',
+                  ),
+                },
               },
             },
           },
-        },
-        <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
-      }, <% } %>
+          responses: {
+            201: {
+              description: 'created <%= title %>',
+              content: {
+                'application/json': {
+                  schema: {
+                    ...oasSchema,
+                    example: local<%= classify(title) %>.example,
+                  }
+                },
+              },
+            },
+          },
+          <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
+        }, 
+      <% } %>
       },
     },
     '/<%= dasherize(title) %>/{id}': {

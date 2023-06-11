@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { logDebug, logSuccess, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
@@ -33,6 +33,8 @@ export function controllers(options: ControllersOptions): Rule {
             accessorProperty: options.accessorProperty,
             usersDatabase: options.usersDatabase,
             isPublic: options.public?.includes(title) ?? false,
+            debug: options.debug,
+            logDebug,
             ...strings,
           }),
           move(outDir),
