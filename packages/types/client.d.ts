@@ -130,6 +130,11 @@ export declare type QueryFilter<T extends Entity> =
   | MajorOrFilter<T>
   | MajorAndFilter<T>;
 
+/**
+ *
+ * [notion docs for filtering](https://developers.notion.com/reference/post-database-query-filter)
+ * [notion docs for sorting](https://developers.notion.com/reference/post-database-query-sort)
+ * */
 export declare type MountNotionQueryParameters<T extends Entity> = {
   [Property in keyof QueryDatabaseBodyParameters]: Property extends 'filter'
     ? QueryFilter<T>

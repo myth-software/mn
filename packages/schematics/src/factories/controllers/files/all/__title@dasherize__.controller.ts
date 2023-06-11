@@ -247,6 +247,7 @@ const mountn = configure({
       },
     },
   },
+  },
 })
 <% if (strategies) { %>
   @authenticate(<% for (const strategy of strategies) { %> '<%= strategy %>', <% } %>)
