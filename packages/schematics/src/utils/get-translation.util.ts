@@ -1,12 +1,37 @@
+import { TranslationServiceClient } from '@google-cloud/translate';
 import { FlatDatabase } from '@mountnotion/types';
+import { ensure } from '@mountnotion/utils';
 import { Configuration, OpenAIApi } from 'openai';
 import { recursiveMap } from './recursive-map';
 import { recursiveZip } from './recursive-zip';
+
+// Instantiates a client
+const translationClient = new TranslationServiceClient();
+
+const projectId = 'mountnotion';
+const location = 'global';
+const text = 'Hello, world!';
 
 export async function getTranslation(
   { columns, options }: FlatDatabase,
   lng: 'en' | 'es' | 'pt' | 'th'
 ) {
+  // Construct request
+  const request = {
+    parent: `projects/${projectId}/locations/${location}`,
+    contents: [text],
+    mimeType: 'text/plain', // mime types: text/plain, text/html
+    sourceLanguageCode: 'en',
+    targetLanguageCode: 'es',
+  };
+
+  // Run request
+  const [res] = await translationClient.translateText(request);
+
+  for (const translation of ensure(res.translations)) {
+    console.log(`Translation: ${translation.translatedText}`);
+  }
+
   const columnNames = Object.keys(columns).reduce((acc, curr) => {
     return {
       ...acc,

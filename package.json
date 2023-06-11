@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/schematics": "13.3.10",
+    "@google-cloud/translate": "^7.2.1",
     "@notionhq/client": "^2.2.3",
     "@types/node": "^18.15.0",
     "chalk": "^4.0.0",
