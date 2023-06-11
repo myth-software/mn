@@ -1,4 +1,4 @@
-import { MountNotionQueryParameters, InferReadonly, InferWriteonly } from '@mountnotion/types';
+import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
 
 export const <%= underscore(title).toUpperCase() %> = {
   title: '<%= title %>',
@@ -34,7 +34,7 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% if(mappings) { %>
     mappings: {
       <% for(const [property, mapping] of Object.entries(mappings)) { %>
-        /** notion column type: [<%= columns[mapping] %>](https://docs.mountnotion.com/<%= columns[mapping] %>) */
+        /** [notion docs for <%= columns[mapping] %>](https://developers.notion.com/reference/property-object#<%= columns[mapping].replace('_', '-') %>) */
         '<%= property %>': '<%= mapping %>',
       <% } %>
     },

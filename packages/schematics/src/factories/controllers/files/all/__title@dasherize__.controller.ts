@@ -40,11 +40,12 @@ const mountn = configure({
   paths: {
     '/<%= dasherize(title) %>': {
       get: {
+        summary: 'by query',
         description: 'get <%= title %> by query',
         tags: ['<%= classify(title) %>'],
         operationId: '<%= classify(title) %>.getByQuery',
         'x-operation-name': 'getByQuery',
-        'x-controller-name': '<%= classify(title) %>',
+        'x-controller-name': '<%= cache.icon %> <%= capitalize(title) %>',
         parameters: [
           {
             in: 'query',
@@ -88,11 +89,12 @@ const mountn = configure({
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       <% if (title !== usersDatabase) { %> post: {
+        summary: 'create',
         description: 'create <%= title %>',
         tags: ['<%= classify(title) %>'],
         operationId: '<%= classify(title) %>.create',
         'x-operation-name': 'create',
-        'x-controller-name': '<%= classify(title) %>',
+        'x-controller-name': '<%= cache.icon %> <%= capitalize(title) %>',
         requestBody: {
           description: 'single <%= title %>',
           required: true,
@@ -132,11 +134,12 @@ const mountn = configure({
     },
     '/<%= dasherize(title) %>/{id}': {
       get: {
+        summary: 'by id',
         description: 'get <%= title %> by id',
         tags: ['<%= classify(title) %>'],
         operationId: '<%= classify(title) %>.getById',
         'x-operation-name': 'getById',
-        'x-controller-name': '<%= classify(title) %>',
+        'x-controller-name': '<%= cache.icon %> <%= capitalize(title) %>',
         parameters: [
           {
             in: 'path',
@@ -164,11 +167,12 @@ const mountn = configure({
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       patch: {
+        summary: 'by id',
         description: 'update <%= title %> by id',
         tags: ['<%= classify(title) %>'],
         operationId: '<%= classify(title) %>.patchById',
         'x-operation-name': 'patchById',
-        'x-controller-name': '<%= classify(title) %>',
+        'x-controller-name': '<%= cache.icon %> <%= capitalize(title) %>',
         requestBody: {
           description: 'single <%= title %>',
           required: true,
@@ -217,11 +221,12 @@ const mountn = configure({
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       delete: {
+        summary: 'by id',
         description: 'delete <%= title %> by id',
         tags: ['<%= classify(title) %>'],
         operationId: '<%= classify(title) %>.deleteById',
         'x-operation-name': 'deleteById',
-        'x-controller-name': '<%= classify(title) %>',
+        'x-controller-name': '<%= cache.icon %> <%= capitalize(title) %>',
         parameters: [
           {
             in: 'path',

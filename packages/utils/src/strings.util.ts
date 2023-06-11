@@ -131,7 +131,7 @@ export function underscore(str: string): string {
  capitalize('innerHTML')         // 'InnerHTML'
  capitalize('action_name')       // 'Action_name'
  capitalize('css-class-name')    // 'Css-class-name'
- capitalize('my favorite items') // 'My favorite items'
+ capitalize('my favorite items') // 'My Favorite Items'
  ```
 
  @method capitalize
@@ -139,7 +139,10 @@ export function underscore(str: string): string {
  @return {String} The capitalized string.
  */
 export function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(' ');
 }
 
 /**
