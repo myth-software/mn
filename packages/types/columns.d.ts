@@ -10,10 +10,10 @@ import {
 } from './api-endpoints';
 
 export declare type AutomaticColumnTypes =
-  | 'last_edited_time'
-  | 'created_time'
   | 'created_by'
-  | 'last_edited_by';
+  | 'created_time'
+  | 'last_edited_by'
+  | 'last_edited_time';
 
 export declare type ReadonlyColumnTypes =
   | AutomaticColumnTypes
@@ -21,20 +21,20 @@ export declare type ReadonlyColumnTypes =
   | 'rollup';
 
 export declare type ColumnTypes =
-  | 'number'
-  | 'select'
-  | 'multi_select'
-  | 'status'
-  | 'relation'
-  | 'title'
-  | 'rich_text'
-  | 'url'
-  | 'people'
-  | 'files'
-  | 'email'
-  | 'phone_number'
-  | 'date'
   | 'checkbox'
+  | 'date'
+  | 'email'
+  | 'files'
+  | 'multi_select'
+  | 'number'
+  | 'people'
+  | 'phone_number'
+  | 'relation'
+  | 'rich_text'
+  | 'select'
+  | 'status'
+  | 'title'
+  | 'url'
   | ReadonlyColumnTypes;
 
 export declare type AdditionalPropertyTypes = 'cover' | 'id' | 'icon';
