@@ -90,12 +90,10 @@ const mountn = configure({
               },
             },
           },
+        },
         <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
       },
       <% if (title !== usersDatabase) { %>
-        <% if (debug) { %>
-          <%= logDebug({ action: 'debugging', message: 'inside post' }) %>
-        <% } %>
         post: {
           summary: 'create',
           description: 'create <%= title %>',
@@ -140,7 +138,6 @@ const mountn = configure({
           <% if (strategies) { %> security: [<% for (const strategy of strategies) { %> { <%= strategy %>: [] }, <% } %>], <% } %>
         }, 
       <% } %>
-      },
     },
     '/<%= dasherize(title) %>/{id}': {
       get: {
