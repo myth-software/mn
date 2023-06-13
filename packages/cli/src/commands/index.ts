@@ -5,6 +5,7 @@ import authOauth from './auth-oauth';
 import configureStandardsColumns from './configure-standards-columns';
 import configureStandardsRows from './configure-standards-rows';
 import configureWorkspace from './configure-workspace';
+import deleteRecursive from './delete-recursive';
 import fetch from './fetch';
 import fixColumns from './fix-columns';
 import fixRows from './fix-rows';
@@ -23,6 +24,7 @@ export const commands: Array<MountnCommand> = [
   configureStandardsColumns,
   configureStandardsRows,
   configureWorkspace,
+  deleteRecursive,
   fetch,
   lintColumns,
   lintRows,

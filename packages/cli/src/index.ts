@@ -25,13 +25,13 @@ export async function cli(): Promise<undefined> {
   program.name('mountn').description(description).version(version);
 
   commands.forEach((command) => {
-    program
+    const subcommand = program
       .command(command.name)
       .description(command.description)
       .action(command.actionFactory(config));
 
     command.options?.forEach((option) => {
-      program.option(option.name, option.description);
+      subcommand.option(option.name, option.description);
     });
   });
 
