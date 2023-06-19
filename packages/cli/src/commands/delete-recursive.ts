@@ -7,15 +7,15 @@ export default {
   description: 'delete page and relations recursively',
   options: [
     {
-      name: '--page-id',
+      name: '--page-id <id>',
       description: 'page id for deleting',
     },
   ],
-  actionFactory: () => async (pageId) => {
+  actionFactory: () => async (args) => {
+    const { pageId } = args as { pageId: string };
     logDebug({ action: 'debugging', message: `page_id: ${pageId}` });
-    const page_id = pageId as string;
     const foundPages: string[] = [];
-    return deleteRecursive(page_id);
+    return deleteRecursive(pageId);
 
     async function deleteRecursive(pageId: string) {
       if (foundPages.includes(pageId)) {

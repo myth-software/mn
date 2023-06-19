@@ -1,3 +1,6 @@
+<% if (debug) { %>
+  <%= logDebug({ action: 'debugging', message: `schema: cache ${cache ? 'is defined': 'is not defined'}` }) %>
+<% } %>
 
 export const oasSchema = {  
   type: 'object', 
@@ -30,22 +33,25 @@ export const oasSchema = {
         }
       <% } else if(type === 'checkbox') { %>
         type: 'boolean',
-      <% } else if(cache.options?.[property]) {  %>
+      <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
         type: 'array',
         items: {
           type: 'string',
           enum: [
-      
-      <% cache.options[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
+            <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
           ]
         }
+      <% } else if(cache.options?.[column] && type === 'select') {  %>
+        type: 'string',
+          enum: [
+            <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
+          ]
       <% } else if(cache.rollupsOptions?.[property]) {  %>
         type: 'array',
         items: {
           type: 'string',
           enum: [
-      
-      <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
+            <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
           ]
         }
       <% } else if(type === 'rollup') { %>
