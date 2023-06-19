@@ -1,7 +1,7 @@
 {
   "name": "@mountnotion/cli",
   "description": "cli for mounting notion",
-  "version": "1.4.69",
+  "version": "1.4.70",
   "type": "commonjs",
   "bin": {
     "mn": "./src/index.js"

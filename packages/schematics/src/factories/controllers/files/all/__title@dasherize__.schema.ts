@@ -41,7 +41,7 @@ export const oasSchema = {
             <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
           ]
         }
-      <% } else if(cache.options?.[column] && type === 'select') {  %>
+      <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
         type: 'string',
           enum: [
             <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
