@@ -7,50 +7,31 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'mount notion',
-  tagline: 'docs',
+  tagline: 'feel type-serenity, rise above the cloud, experience true peace',
   favicon: 'img/favicon.ico',
-
-  // Set the production url of your site here
-  url: 'https://docs.mountnotion.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  url: 'https://mountnotion.com',
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'myth-software', // Usually your GitHub org/user name.
-  projectName: 'mountnotion', // Usually your repo name.
-
-  onBrokenLinks: 'throw',
+  organizationName: 'myth-software',
+  projectName: 'mountnotion',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
-
   presets: [
     [
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          path: 'docs',
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          // editUrl:
+          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -64,23 +45,38 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'mount notion',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'mount notion',
           src: 'img/logo.svg',
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            label: 'cli',
             position: 'left',
-            label: 'Tutorial',
+            to: '/cli',
           },
-          { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            label: 'sdk',
+            position: 'left',
+            to: '/sdk',
+          },
+          {
+            label: 'schematics',
+            position: 'left',
+            to: '/schematics',
+            sidebarId: 'schematicsSidebar',
+          },
+          // {
+          //   type: 'docSidebar',
+
+          //   position: 'left',
+          //   label: 'Tutorial',
+          // },
           {
             href: 'https://github.com/facebook/docusaurus',
             label: 'GitHub',
-            position: 'right',
+            position: 'left',
           },
         ],
       },
@@ -127,7 +123,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: '© 2022-2023 myth software, llc. all rights reserved.',
       },
       prism: {
         theme: lightCodeTheme,
