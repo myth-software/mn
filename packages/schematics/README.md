@@ -5,5 +5,5 @@ this repository is a Schematic implementation that scaffolds code from @mountnot
 ## installation
 
 ```
-yarn add @mountnotion/schematics -D
+npm i -D @mountnotion/schematics
 ```
