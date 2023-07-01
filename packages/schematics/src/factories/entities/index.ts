@@ -24,6 +24,7 @@ export function entities(options: BasicOptions): Rule {
     const entitiesRules = includedCaches.map((cache) => {
       return applyWithOverwrite(url('./files/all'), [
         template({
+          title: cache.title,
           cache,
           options,
           logDebug,
@@ -35,7 +36,7 @@ export function entities(options: BasicOptions): Rule {
     const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles,
-        debug: options.debug,
+        options,
         logDebug,
         ...strings,
       }),
