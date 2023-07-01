@@ -1,6 +1,6 @@
 {
   "name": "mountnotion",
-  "version": "1.4.76",
+  "version": "1.4.77",
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -16,6 +16,7 @@
     "markdown-table": "^3.0.3",
     "openai": "^3.2.1",
     "prettier-plugin-organize-imports": "^3.2.2",
+    "rimraf": "^5.0.1",
     "symbol-observable": "^4.0.0",
     "unique-names-generator": "^4.7.1"
   },
