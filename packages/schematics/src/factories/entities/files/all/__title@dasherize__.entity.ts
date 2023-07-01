@@ -1,11 +1,11 @@
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: `entity: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+  <%= logDebug({ action: 'debugging', message: `entity: title ${cache.title ? 'is ' + cache.title : 'is not defined'}` }) %>
 <% } %>
 
 import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
 
-export const <%= underscore(title).toUpperCase() %> = {
-  title: '<%= title %>',
+export const <%= underscore(cache.title).toUpperCase() %> = {
+  title: '<%= cache.cache.title %>',
   id: '<%= cache.id %>',
   icon: '<%= cache.icon %>',
   cover: '<%= cache.cover %>',
@@ -47,11 +47,11 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% }  %>
 } as const;
 
-export declare type <%= classify(title) %>Index = typeof <%= underscore(title).toUpperCase() %>;
-export declare type <%= classify(title) %>QueryParameters = MountNotionQueryParameters<<%= classify(title) %>Index>;
-export declare type <%= classify(title) %>Readonly = InferReadonly<<%= classify(title) %>Index>;
-export declare type <%= classify(title) %>Writeonly = InferWriteonly<<%= classify(title) %>Index>;
+export declare type <%= classify(cache.title) %>Index = typeof <%= underscore(cache.title).toUpperCase() %>;
+export declare type <%= classify(cache.title) %>QueryParameters = MountNotionQueryParameters<<%= classify(cache.title) %>Index>;
+export declare type <%= classify(cache.title) %>Readonly = InferReadonly<<%= classify(cache.title) %>Index>;
+export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= classify(cache.title) %>Index>;
 <% if(cache.description) { %>
 /** <%= cache.description %> */
 <% } %>
-export declare type <%= classify(title) %> = <%= classify(title) %>Readonly & <%= classify(title) %>Writeonly;
+export declare type <%= classify(cache.title) %> = <%= classify(cache.title) %>Readonly & <%= classify(cache.title) %>Writeonly;
