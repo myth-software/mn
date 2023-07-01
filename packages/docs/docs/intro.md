@@ -12,7 +12,7 @@ let's discover **mount notion in less than 5 minutes**
 get started by **installing**
 
 ```sh
-npm i -D @mountnotion/{cli,types,schematics,sdk,utils}
+npm i --save-dev @mountnotion/{cli,types,schematics,sdk,utils}
 ```
 
 or **try mount notion immediately** with **[sandbox](https://sandbox.mountnotion.com)**.

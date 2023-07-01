@@ -28,7 +28,6 @@ export function express(options: ControllersOptions): Rule {
           template({
             title,
             cache,
-            org: options.org,
             entities: options.entities,
             locals: options.locals,
             strategies: options.strategies,
