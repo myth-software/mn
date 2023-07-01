@@ -165,7 +165,7 @@ export default {
           message:
             'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable',
         });
-        throw new Error();
+        throw new Error('bailing out');
       }
 
       for (const schematic of config.schematics) {

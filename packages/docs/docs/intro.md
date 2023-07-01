@@ -3,26 +3,30 @@ slug: /
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# tutorial intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+let's discover **mount notion in less than 5 minutes**
 
-## Getting Started
+## getting started
 
-Get started by **creating a new site**.
+get started by **installing**
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+```sh
+npm i -S @mountnotion/{cli,types,schematics,sdk,utils}
+```
 
-### What you'll need
+or **try mount notion immediately** with **[mountnotion.new](https://mountnotion.new)**.
 
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+### what you'll need
 
-## Generate a new site
+- [nx monorepo](https://nx.dev//) version 16 or above
+- [notion account](https://affiliate.notion.so/xysfb04gkht8) (affiliate link)
 
-Generate a new Docusaurus site using the **classic template**.
+## setup a new page
 
-The classic template will automatically be added to your project after you run the command:
+generate a new mountnotion page using the **starter template**
+
+the starter template will automatically be added to your notion workspace after you copy it
 
 ```bash
 npm init docusaurus@latest my-website classic
