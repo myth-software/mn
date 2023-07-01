@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/utils",
-  "version": "1.4.86",
+  "version": "1.4.87",
   "type": "commonjs",
   "peerDependencies": {
     "prettier-plugin-organize-imports": "^3.2.2"
