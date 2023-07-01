@@ -2,6 +2,7 @@ import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ExpressOptions } from '@mountnotion/types';
 import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { addPackageToPackageJson } from '../../utils';
 import { validateInputs } from './validate-inputs';
@@ -15,6 +16,7 @@ export function express(options: ExpressOptions): Rule {
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
   return async (tree) => {
+    await rimraf(outDir);
     addPackageToPackageJson(tree, 'helmet', '7.0.0');
     addPackageToPackageJson(tree, 'cors', '2.8.5');
     const caches = await createDatabaseCaches(pageIds, options);

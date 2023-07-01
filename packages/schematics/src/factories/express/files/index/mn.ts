@@ -4,7 +4,7 @@
 
 import { indicies } from '<%= options.entities %>';
 import { indicies as drizzle } from '<%= options.drizzle %>'
-import { configure } from '@mountnotion/sdk';
+import { configure, configureDrizzle } from '@mountnotion/sdk';
 
 
 export const mn =

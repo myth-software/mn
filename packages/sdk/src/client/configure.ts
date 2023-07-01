@@ -96,6 +96,10 @@ export function configure<Config extends MountNotionClientConfig>(
 
           return instanceMapper(instance, index.mappings);
         },
+        delete: async ({ id }: { id: string }) =>
+          notion.blocks.delete({
+            block_id: id,
+          }),
       },
     ];
   });
@@ -103,10 +107,6 @@ export function configure<Config extends MountNotionClientConfig>(
   const configured = Object.fromEntries(databases);
   return {
     ...configured,
-    delete: async ({ id }: { id: string }) =>
-      notion.blocks.delete({
-        block_id: id,
-      }),
     search: async (body: SearchBodyParameters) => notion.search(body),
   };
 }
