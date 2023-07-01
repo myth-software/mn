@@ -2,7 +2,6 @@
   <%= logDebug({ action: 'debugging', message: `entity: title ${cache.title ? 'is ' + cache.title : 'is not defined'}` }) %>
 <% } %>
 
-import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
 
 export const <%= underscore(cache.title).toUpperCase() %> = {
   title: '<%= cache.title %>',
