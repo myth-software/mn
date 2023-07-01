@@ -5,7 +5,7 @@
 import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
 
 export const <%= underscore(cache.title).toUpperCase() %> = {
-  title: '<%= cache.cache.title %>',
+  title: '<%= cache.title %>',
   id: '<%= cache.id %>',
   icon: '<%= cache.icon %>',
   cover: '<%= cache.cover %>',
