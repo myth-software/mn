@@ -55,3 +55,7 @@ export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= c
 /** <%= cache.description %> */
 <% } %>
 export declare type <%= classify(cache.title) %> = <%= classify(cache.title) %>Readonly & <%= classify(cache.title) %>Writeonly;
+
+<% if (options.debug) { %>
+  <%= logDebug({ action: 'debugging', message: 'entity: end' }) %>
+<% } %>

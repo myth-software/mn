@@ -20,7 +20,7 @@ export function entities(options: BasicOptions): Rule {
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );
-    const titles = includedCaches.map(({ title: title_1 }) => title_1);
+    const titles = includedCaches.map((cache) => cache.title);
     const entitiesRules = includedCaches.map((cache) => {
       return applyWithOverwrite(url('./files/all'), [
         template({
