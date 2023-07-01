@@ -10,6 +10,7 @@ dotenv.config();
 
 export function reactQuery(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'react query schematic' });
+  logSuccess({ action: '-------', message: '---------------------' });
   validateBasicInputs(options);
 
   const { outDir, entities, baseUrl } = options;

@@ -7,6 +7,7 @@ import { validateInputs } from './validate-inputs';
 
 export function controllers(options: ControllersOptions): Rule {
   logSuccess({ action: 'running', message: 'controllers schematic' });
+  logSuccess({ action: '-------', message: '---------------------' });
   validateInputs(options);
 
   const outDir = options.outDir;

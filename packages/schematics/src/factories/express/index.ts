@@ -8,6 +8,7 @@ import { validateInputs } from './validate-inputs';
 
 export function express(options: ControllersOptions): Rule {
   logSuccess({ action: 'running', message: 'express schematic' });
+  logSuccess({ action: '-------', message: '-----------------' });
   validateInputs(options);
 
   const outDir = options.outDir;

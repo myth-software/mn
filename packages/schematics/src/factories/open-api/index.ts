@@ -7,6 +7,7 @@ import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
   logSuccess({ action: 'running', message: 'open api schematic' });
+  logSuccess({ action: '-------', message: '------------------' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 

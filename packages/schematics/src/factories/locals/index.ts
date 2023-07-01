@@ -12,6 +12,7 @@ import { getlocals } from '../../utils';
  */
 export function locals(options: LocalsOptions): Rule {
   logSuccess({ action: 'running', message: 'locals schematic' });
+  logSuccess({ action: '-------', message: '----------------' });
   const { outDir, entities } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];

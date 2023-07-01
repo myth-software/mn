@@ -1,4 +1,5 @@
-import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json } from "drizzle-orm/pg-core";
+import { InferModel } from 'drizzle-orm';
+import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, timestamp } from "drizzle-orm/pg-core";
  
 export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -11,6 +12,8 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
       <% } %>
       <% if(type === 'relation') { %>
         text('<%= property %>').array()
+      <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
+        timestamp('<%= property %>').defaultNow()
       <% } else if(type === 'checkbox') { %>
         boolean('<%= property %>')
       <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
@@ -36,3 +39,9 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
     ,
   <% } %>
 });
+
+<% if(description) { %>
+/** <%= description %> */
+<% } %>
+export declare type <%= classify(title) %> = InferModel<typeof <%= camelize(title) %>>;
+export declare type New<%= classify(title) %> = InferModel<typeof <%= camelize(title) %>, 'insert'>;

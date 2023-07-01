@@ -9,6 +9,7 @@ import { validateInputs } from './validate-inputs';
 dotenv.config();
 export function drizzle(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'drizzle schematic' });
+  logSuccess({ action: '-------', message: '-----------------' });
   validateInputs(options);
   const { outDir } = options;
 

@@ -10,6 +10,7 @@ import { validateInputs } from './validate-inputs';
 
 export function rtkQuery(options: RtkQueryOptions): Rule {
   logSuccess({ action: 'running', message: 'rtk query schematic' });
+  logSuccess({ action: '-------', message: '-------------------' });
   validateInputs(options);
   const { outDir, entities, baseUrl } = options;
   const excludes = options.excludes ?? [];

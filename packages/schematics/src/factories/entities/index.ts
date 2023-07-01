@@ -9,6 +9,7 @@ import { validateInputs } from './validate-inputs';
 dotenv.config();
 export function entities(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'entities schematic' });
+  logSuccess({ action: '-------', message: '------------------' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();

@@ -9,6 +9,7 @@ dotenv.config();
 
 export function mockApi(options: MockApiOptions): Rule {
   logSuccess({ action: 'running', message: 'mock api schematic' });
+  logSuccess({ action: '-------', message: '------------------' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 
