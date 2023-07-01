@@ -67,16 +67,10 @@ const config = {
             to: '/schematics',
             sidebarId: 'schematicsSidebar',
           },
-          // {
-          //   type: 'docSidebar',
-
-          //   position: 'left',
-          //   label: 'Tutorial',
-          // },
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
-            position: 'left',
+            href: 'https://github.com/myth-software/mountnotion',
+            label: 'github',
+            position: 'right',
           },
         ],
       },
@@ -84,41 +78,41 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'home',
+                to: '/',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'stack overflow',
+                href: 'https://stackoverflow.com/questions/tagged/mountnotion',
               },
               {
-                label: 'Discord',
+                label: 'notion developers slack',
                 href: 'https://discordapp.com/invite/docusaurus',
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                label: 'reddit',
+                href: 'https://reddit.com/r/mountnotion',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'more',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'myth software',
+                href: 'https://myth.software',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'github',
+                href: 'https://github.com/myth-software/mountnotion',
               },
             ],
           },

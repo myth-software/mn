@@ -1,3 +1,35 @@
 # entities
 
 databases as code
+
+## output
+
+```typescript
+import {
+  InferReadonly,
+  InferWriteonly,
+  MountNotionQueryParameters,
+} from '@mountnotion/types';
+export const EQUIPMENT = {
+  title: 'equipment',
+  id: '0ccf3301-bc91-4657-a3d4-e0b31a240e9c',
+  icon: '💄',
+  cover: '',
+  description: '',
+  columns: { type: 'select', name: 'title' },
+  options: {
+    type: ['saddle', 'reigns', 'boots', 'jodphurs', 'bridle', 'grooming'],
+  },
+  relations: null,
+  mappings: {
+    /** [notion docs for select](https://developers.notion.com/reference/property-object#select) */ type: 'type',
+    /** [notion docs for title](https://developers.notion.com/reference/property-object#title) */ name: 'name',
+  },
+} as const;
+export declare type EquipmentIndex = typeof EQUIPMENT;
+export declare type EquipmentQueryParameters =
+  MountNotionQueryParameters<EquipmentIndex>;
+export declare type EquipmentReadonly = InferReadonly<EquipmentIndex>;
+export declare type EquipmentWriteonly = InferWriteonly<EquipmentIndex>;
+export declare type Equipment = EquipmentReadonly & EquipmentWriteonly;
+```

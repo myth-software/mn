@@ -20,6 +20,7 @@
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
+    "@docusaurus/types": "^2.4.1",
     "@nrwl/devkit": "^15.8.5",
     "@nrwl/eslint-plugin-nx": "15.8.5",
     "@nrwl/js": "15.8.5",

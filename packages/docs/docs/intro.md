@@ -3,7 +3,7 @@ slug: /
 sidebar_position: 1
 ---
 
-# tutorial intro
+# documenation
 
 let's discover **mount notion in less than 5 minutes**
 
@@ -12,10 +12,10 @@ let's discover **mount notion in less than 5 minutes**
 get started by **installing**
 
 ```sh
-npm i -S @mountnotion/{cli,types,schematics,sdk,utils}
+npm i -D @mountnotion/{cli,types,schematics,sdk,utils}
 ```
 
-or **try mount notion immediately** with **[mountnotion.new](https://mountnotion.new)**.
+or **try mount notion immediately** with **[sandbox](https://sandbox.mountnotion.com)**.
 
 ### what you'll need
 
@@ -36,7 +36,7 @@ You can type this command into Command Prompt, Powershell, Terminal, or any othe
 
 The command also installs all necessary dependencies you need to run Docusaurus.
 
-## Start your site
+## start your site
 
 Run the development server:
 
@@ -49,4 +49,4 @@ The `cd` command changes the directory you're working with. In order to work wit
 
 The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
 
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
