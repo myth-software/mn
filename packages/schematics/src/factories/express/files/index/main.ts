@@ -1,4 +1,4 @@
-<% if (debug) { %>
+<% if (options.debug) { %>
   <%= logDebug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
 <% } %>
 

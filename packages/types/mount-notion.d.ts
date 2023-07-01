@@ -41,6 +41,12 @@ export declare type ControllersOptions = {
 } & BasicOptions &
   AuthOptions;
 
+export declare type ExpressOptions = {
+  drizzle: string;
+} & ControllersOptions &
+  BasicOptions &
+  AuthOptions;
+
 export declare type LocalsOptions = BasicOptions & {
   all?: string[];
 };

@@ -1,4 +1,4 @@
-<% if (debug) { %>
+<% if (options.debug) { %>
   <%= logDebug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
@@ -7,19 +7,11 @@ import {
   <%= classify(title) %>,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>Index,
-  <%= underscore(title).toUpperCase() %>,
-  indicies 
+  <%= underscore(title).toUpperCase() %>
 } from '<%= entities %>';
-import {
-    configure
-} from '@mountnotion/sdk';
 import { MountNotionQueryParameters } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-
-const mn = configure({
-  integrationKey: process.env.INTEGRATION_KEY,
-  indicies
-});
+import { mn } from './mn';
 
 export const <%= camelize(title) %>Router = express.Router();
 

@@ -1,11 +1,11 @@
-import { ControllersOptions } from '@mountnotion/types';
+import { ExpressOptions } from '@mountnotion/types';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
-export function validateInputs(options: ControllersOptions): void {
+export function validateInputs(options: ExpressOptions): void {
   validateBasicInputs(options);
   validateAuthInputs(options);
 
-  if (!options.entities) {
-    throw Error('missing entities');
+  if (!options.drizzle) {
+    throw Error('missing drizzle');
   }
 }

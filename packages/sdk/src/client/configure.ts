@@ -21,10 +21,11 @@ export function configure<Config extends MountNotionClientConfig>(
   const notion = client(config.integrationKey);
 
   const databases = Object.entries(config.indicies).map(([title, index]) => {
+    type Database = typeof index;
     return [
       title,
       {
-        query: async (args: MountNotionQueryParameters<typeof index>) => {
+        query: async (args: MountNotionQueryParameters<Database>) => {
           const query = args ? queryMapper(args, index.mappings) : {};
           const response = await notion.databases.query({
             database_id: index.id,
@@ -33,7 +34,7 @@ export function configure<Config extends MountNotionClientConfig>(
 
           const results = response.results as PageObjectResponse[];
           const [instances] = flattenPageResponses<
-            InferReadonly<typeof index> & InferWriteonly<typeof index>
+            InferReadonly<Database> & InferWriteonly<Database>
           >(results);
 
           return instances.map((instance) =>
@@ -45,7 +46,7 @@ export function configure<Config extends MountNotionClientConfig>(
             page_id: id,
           })) as PageObjectResponse;
           const [instance] = flattenPageResponse<
-            InferReadonly<typeof index> & InferWriteonly<typeof index>
+            InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
           return instanceMapper(instance, index.mappings);
@@ -53,9 +54,9 @@ export function configure<Config extends MountNotionClientConfig>(
         update: async ({
           id,
           ...body
-        }: { id: string } & Partial<InferWriteonly<typeof index>>) => {
+        }: { id: string } & Partial<InferWriteonly<Database>>) => {
           const properties = expandProperties<
-            Partial<InferWriteonly<typeof index>>
+            Partial<InferWriteonly<Database>>
           >(body, {
             columns: index.columns,
             mappings: index.mappings,
@@ -66,14 +67,14 @@ export function configure<Config extends MountNotionClientConfig>(
             properties,
           })) as PageObjectResponse;
           const [instance] = flattenPageResponse<
-            InferReadonly<typeof index> & InferWriteonly<typeof index>
+            InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
           return instanceMapper(instance, index.mappings);
         },
-        create: async (body: Partial<InferWriteonly<typeof index>>) => {
+        create: async (body: Partial<InferWriteonly<Database>>) => {
           const properties = expandProperties<
-            Partial<InferWriteonly<typeof index>>
+            Partial<InferWriteonly<Database>>
           >(body, {
             columns: index.columns,
             mappings: index.mappings,
@@ -90,7 +91,7 @@ export function configure<Config extends MountNotionClientConfig>(
             properties,
           })) as PageObjectResponse;
           const [instance] = flattenPageResponse<
-            InferReadonly<typeof index> & InferWriteonly<typeof index>
+            InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
           return instanceMapper(instance, index.mappings);
