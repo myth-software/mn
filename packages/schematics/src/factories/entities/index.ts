@@ -15,38 +15,32 @@ export function entities(options: BasicOptions): Rule {
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
 
-  return () => {
-    return createDatabaseCaches(pageIds, options).then((caches) => {
-      const includedCaches = caches.filter(
-        ({ title }) => title && !excludes.includes(title)
-      );
-      const titles = includedCaches.map(({ title }) => title);
-
-      const entitiesRules = includedCaches.map((cache) => {
-        return applyWithOverwrite(url('./files/all'), [
-          template({
-            ...cache,
-            cache,
-            options,
-            debug: options.debug,
-            logDebug,
-            ...strings,
-          }),
-          move(outDir),
-        ]);
-      });
-
-      const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
+  return async () => {
+    const caches = await createDatabaseCaches(pageIds, options);
+    const includedCaches = caches.filter(
+      ({ title }) => title && !excludes.includes(title)
+    );
+    const titles = includedCaches.map(({ title: title_1 }) => title_1);
+    const entitiesRules = includedCaches.map((cache) => {
+      return applyWithOverwrite(url('./files/all'), [
         template({
-          titles,
-          debug: options.debug,
+          cache,
+          options,
           logDebug,
           ...strings,
         }),
         move(outDir),
       ]);
-
-      return chain([...entitiesRules, entitiesIndexRule]);
     });
+    const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
+      template({
+        titles,
+        debug: options.debug,
+        logDebug,
+        ...strings,
+      }),
+      move(outDir),
+    ]);
+    return chain([...entitiesRules, entitiesIndexRule]);
   };
 }
