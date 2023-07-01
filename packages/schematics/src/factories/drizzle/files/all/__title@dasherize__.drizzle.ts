@@ -40,8 +40,8 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   <% } %>
 });
 
-<% if(description) { %>
-/** <%= description %> */
+<% if(cache.description) { %>
+/** <%= cache.description %> */
 <% } %>
 export declare type <%= classify(title) %> = InferModel<typeof <%= camelize(title) %>>;
 export declare type New<%= classify(title) %> = InferModel<typeof <%= camelize(title) %>, 'insert'>;

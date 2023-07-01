@@ -20,13 +20,14 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
         ({ title }) => title && !excludes.includes(title)
       );
       const titles = includedCaches.map(({ title }) => title);
-      const controllersRules = includedCaches.map((index) => {
-        const { title } = index;
+      const controllersRules = includedCaches.map((cache) => {
+        const { title } = cache;
 
         return applyWithOverwrite(url('./files/all'), [
           template({
             title,
-            index,
+            cache,
+            options,
             entities: options.entities,
             strategies: options.strategies,
             userColumn: options.userColumn,

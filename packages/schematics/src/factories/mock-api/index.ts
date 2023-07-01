@@ -24,10 +24,12 @@ export function mockApi(options: MockApiOptions): Rule {
       const titles = includedCaches.map(({ title }) => title);
       const files = './files';
 
-      const endpointsRules = includedCaches.map(({ title }) => {
+      const endpointsRules = includedCaches.map((cache) => {
         return applyWithOverwrite(url(`${files}/endpoints-all`), [
           template({
-            title,
+            cache,
+            options,
+            title: cache.title,
             entities,
             baseUrl,
             locals,

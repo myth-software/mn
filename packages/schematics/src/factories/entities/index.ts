@@ -26,6 +26,8 @@ export function entities(options: BasicOptions): Rule {
         return applyWithOverwrite(url('./files/all'), [
           template({
             ...cache,
+            cache,
+            options,
             debug: options.debug,
             logDebug,
             ...strings,

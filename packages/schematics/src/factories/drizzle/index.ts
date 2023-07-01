@@ -28,6 +28,7 @@ export function drizzle(options: BasicOptions): Rule {
           template({
             title: cache.title,
             cache,
+            options,
             ...strings,
           }),
           move(outDir),

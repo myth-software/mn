@@ -16,7 +16,7 @@ export const oasSchema = {
       readOnly: true,
       nullable: true
     },
-      <% for(const [property, type] of Object.entries(index.types)) { const dbProperty = index.database.properties[property]; %>
+      <% for(const [property, type] of Object.entries(cache.types)) { const dbProperty = cache.database.properties[property]; %>
         '<%= property %>': {
         nullable: true,
       <% if(dbProperty.rollup || dbProperty.last_edited_by || dbProperty.last_edited_time || dbProperty.created_by || dbProperty.created_time ) { %>
@@ -44,7 +44,7 @@ export const oasSchema = {
           type: 'string',
           enum: [
       
-      <% index.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
+      <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
           ]
         }
       <% } else if(type === 'select' && dbProperty.select) {  %>
@@ -55,7 +55,7 @@ export const oasSchema = {
       <% } else if(type === 'select' && !dbProperty.select) {  %>
         type: 'string',
         enum: [
-          <% index.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
+          <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
         ],
       <% } else if(type === 'status' && dbProperty.status) {  %>
         type: 'string',
@@ -65,7 +65,7 @@ export const oasSchema = {
       <% } else if(type === 'status' && !dbProperty.status) {  %>
         type: 'string',
         enum: [
-          <% index.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
+          <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
         ]
       <% } else if(type === 'rollup') { %>
         anyOf: [

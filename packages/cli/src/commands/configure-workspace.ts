@@ -4,7 +4,7 @@ import { prompt } from 'enquirer';
 export type WorkspaceConfig = {
   entities: string | null;
   baseUrl: string | null;
-  authStrategies: Array<'notion' | 'sms'> | null;
+  authStrategies: Array<'email' | 'sms'> | null;
   usersDatabase: 'people' | 'companies' | 'users' | null;
   userColumn: string | null;
 };
@@ -55,7 +55,7 @@ export const promptConfigureWorkspace = async (
         type: 'multiselect',
         message: 'authentication strategies:',
         name: 'authStrategies',
-        choices: ['notion', 'sms'],
+        choices: ['email', 'sms'],
       },
     ]);
     currentConfig.authStrategies = results.authStrategies;

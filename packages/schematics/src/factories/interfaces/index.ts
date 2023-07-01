@@ -26,6 +26,8 @@ export function interfaces(options: BasicOptions): Rule {
           template({
             title: cache.title,
             index: cache,
+            cache,
+            options,
             ...strings,
           }),
           move(options.outDir ?? 'out/interfaces'),

@@ -25,10 +25,12 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
 
       const apisRules = includedCaches
         .filter(({ title }) => title !== options.usersDatabase)
-        .map(({ title }) => {
+        .map((cache) => {
           return applyWithOverwrite(url(`${files}/apis-all`), [
             template({
-              title,
+              title: cache.title,
+              cache,
+              options,
               entities,
               baseUrl,
               strategies: options.strategies,

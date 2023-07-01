@@ -14,7 +14,7 @@ export const authApi = createApi({
     }
   }),
   endpoints: build => ({
-    <% if (strategies.includes('notion')) { %>
+    <% if (strategies.includes('email')) { %>
       postALogin: build.mutation<TokenObjectResponse, {
         email: string;
         password?: string;
@@ -113,7 +113,7 @@ export type TokenObjectResponse = {
 };
 
 export const {
-  <% if (strategies.includes('notion')) { %>
+  <% if (strategies.includes('email')) { %>
     usePostALoginMutation,
     useGetAMeQuery,
     usePostASignupMutation,

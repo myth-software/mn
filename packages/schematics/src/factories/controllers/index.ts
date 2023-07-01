@@ -26,6 +26,7 @@ export function controllers(options: ControllersOptions): Rule {
           template({
             title,
             cache,
+            options,
             org: options.org,
             entities: options.entities,
             locals: options.locals,
