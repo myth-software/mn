@@ -93,7 +93,7 @@ export const oasSchema = {
         type: 'number',
       <% } else { %>
         type: 'string',
-      <% } %>    
+      <% } %>
     },
   <% } %>
   }
