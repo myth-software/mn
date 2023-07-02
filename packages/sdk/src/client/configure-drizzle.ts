@@ -53,9 +53,9 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
       title,
       {
         query: async (args: MountNotionQueryParameters<any>) => {
-          const where = notionToDrizzleWhereMapper(database, args);
+          const { filter } = notionToDrizzleWhereMapper(database, args);
 
-          const response = await db.select().from(database).where(where);
+          const response = await db.select().from(database).where(filter);
 
           return response;
         },

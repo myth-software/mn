@@ -16,7 +16,12 @@ export default {
   options: [
     { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
   ],
-  actionFactory: (config) => async () => {
+  actionFactory: (config) => async (options) => {
+    if (options) {
+      console.log(options);
+      console.log(__dirname);
+    }
+
     logSuccess({ action: 'starting', message: 'apply-schematics command' });
     function findUp(names: string | string[], from: string) {
       if (!Array.isArray(names)) {
