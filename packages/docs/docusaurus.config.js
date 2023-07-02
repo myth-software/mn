@@ -27,9 +27,10 @@ const config = {
         docs: {
           path: 'docs',
           routeBasePath: '/',
-          sidebarPath: require.resolve('./sidebars.js'),
-          // editUrl:
-          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          sidebarPath: 'sidebars.js',
+          editUrl:
+            'https://github.com/myth-software/mountnotion/tree/main/packages/',
+          breadcrumbs: true,
         },
         blog: false,
         theme: {
@@ -42,7 +43,12 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+          hideable: false,
+        },
+      },
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
         title: 'mount notion',

@@ -11,6 +11,14 @@
         "cwd": "packages/docs"
       },
       "outputs": ["packages/docs/build"]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run serve",
+        "cwd": "packages/docs"
+      },
+      "dependsOn": ["build"]
     }
   },
   "tags": []

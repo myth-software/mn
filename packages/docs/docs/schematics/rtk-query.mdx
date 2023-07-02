@@ -9,9 +9,9 @@ redux
 
 ## output
 
-### auth.api.ts
+### auth
 
-```typescript
+```typescript title="auth.api.ts"
 import { Users, UsersWriteonly } from '@pferd/domain-pferd-entities';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
@@ -71,9 +71,9 @@ export const {
 } = authApi;
 ```
 
-### \*.api.ts
+### api
 
-```typescript
+```typescript title="equipment.api.ts"
 import {
   Equipment,
   EquipmentQueryParameters,
@@ -183,9 +183,9 @@ export const equipmentApi = {
 };
 ```
 
-### store.ts
+### store
 
-```typescript
+```typescript title="store.ts"
 import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import {
@@ -222,4 +222,32 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export type RootState = ReturnType<typeof store.getState>;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+```
+
+### tokens
+
+```typescript title="tokens.slice.ts"
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from './store';
+const slice = createSlice({
+  name: 'tokens',
+  initialState: { accessToken: '', refreshToken: '', exp: 0 },
+  reducers: {
+    setTokens: (
+      state,
+      {
+        payload: { tokens },
+      }: PayloadAction<{
+        tokens: { accessToken: string; exp: number; refreshToken: string };
+      }>
+    ) => {
+      state.accessToken = tokens.accessToken;
+      state.refreshToken = tokens.refreshToken;
+      state.exp = tokens.exp;
+    },
+  },
+});
+export const { setTokens } = slice.actions;
+export default slice.reducer;
+export const selectTokens = (state: RootState) => state.tokens;
 ```
