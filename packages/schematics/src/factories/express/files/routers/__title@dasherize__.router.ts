@@ -18,10 +18,9 @@ export const <%= camelize(title) %>Router = express.Router();
 <%= camelize(title) %>Router.get('/', async (req: Request, res: Response) => {
   const where = req.query.where as MountNotionQueryParameters<<%= classify(title) %>Index>;
   try {
-    const <%= camelize(title) %>: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query(where);
+    const items: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query(where);
     
-
-    res.status(200).send(<%= camelize(title) %>);
+    res.status(200).send(items);
   } catch (e) {
     res.status(500).send({ status: 500, message: e.message });
   }
@@ -53,12 +52,12 @@ export const <%= camelize(title) %>Router = express.Router();
       length: 2,
     });
 
-    const new<%= classify(title) %> = await mn.<%= camelize(title) %>.create({
+    const newItem = await mn.<%= camelize(title) %>.create({
       name,
       ...item,
     });
 
-    res.status(201).json(new<%= classify(title) %>);
+    res.status(201).json(newItem);
   } catch (e) {
     res.status(500).send({ status: 500, message: e.message });
   }
@@ -70,12 +69,12 @@ export const <%= camelize(title) %>Router = express.Router();
   try {
     const item: Partial<<%= classify(title) %>Writeonly> = req.body;
 
-    const updated<%= classify(title) %> = mn.<%= camelize(title) %>.update({
+    const updatedItem = mn.<%= camelize(title) %>.update({
       id,
       ...item,
     });;
 
-    res.status(200).json(updated<%= classify(title) %>);
+    res.status(200).json(updatedItem);
   } catch (e) {
     res.status(500).send({ status: 500, message: e.message });
   }

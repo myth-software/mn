@@ -46,7 +46,7 @@ const config = {
       docs: {
         sidebar: {
           autoCollapseCategories: true,
-          hideable: false,
+          hideable: true,
         },
       },
       image: 'img/docusaurus-social-card.jpg',
@@ -57,22 +57,22 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
-          {
-            label: 'cli',
-            position: 'left',
-            to: '/cli',
-          },
-          {
-            label: 'sdk',
-            position: 'left',
-            to: '/sdk',
-          },
-          {
-            label: 'schematics',
-            position: 'left',
-            to: '/schematics',
-            sidebarId: 'schematicsSidebar',
-          },
+          // {
+          //   label: 'cli',
+          //   position: 'left',
+          //   to: '/cli',
+          // },
+          // {
+          //   label: 'sdk',
+          //   position: 'left',
+          //   to: '/sdk',
+          // },
+          // {
+          //   label: 'schematics',
+          //   position: 'left',
+          //   to: '/schematics',
+          //   sidebarId: 'schematicsSidebar',
+          // },
           {
             href: 'https://github.com/myth-software/mountnotion',
             label: 'github',
