@@ -1,8 +1,8 @@
 <% for(const title of titles) { %>
-  export * from  './<%= dasherize(title) %>.drizzle';
+  export * from  './schema/<%= dasherize(title) %>.drizzle';
 <% } %>
 <% for(const title of titles) { %>
-  import { <%= camelize(title) %> } from  './<%= dasherize(title) %>.drizzle';
+  import { <%= camelize(title) %> } from  './schema/<%= dasherize(title) %>.drizzle';
 <% } %>
 
 export const indicies = {

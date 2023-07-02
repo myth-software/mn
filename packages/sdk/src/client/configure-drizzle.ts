@@ -44,7 +44,7 @@ type MountNotionDrizzleClient<T extends MountNotionClientDrizzleConfig> = {
 export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
   config: Config
 ): MountNotionDrizzleClient<Config> {
-  const client = postgres(config.connectionString);
+  const client = postgres(config.connectionString, { ssl: true });
   const db: PostgresJsDatabase = drizzle(client);
 
   const databases = Object.entries(config.indicies).map(([title, database]) => {
