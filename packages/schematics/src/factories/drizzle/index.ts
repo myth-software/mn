@@ -24,14 +24,14 @@ export function drizzle(options: BasicOptions): Rule {
     );
     const titles = includedCaches.map((cache) => cache.title);
     const drizzleRules = includedCaches.map((cache) => {
-      return applyWithOverwrite(url('./files/all'), [
+      return applyWithOverwrite(url('./files/schema'), [
         template({
           title: cache.title,
           cache,
           options,
           ...strings,
         }),
-        move(outDir),
+        move(`${outDir}/schema`),
       ]);
     });
     const drizzleIndexRule = applyWithOverwrite(url('./files/index'), [

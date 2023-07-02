@@ -32,8 +32,8 @@ export function locals(options: LocalsOptions): Rule {
     );
     const locals = await Promise.all(localsPromises);
     const rules = locals
-      .map(({ title: title_1, locals: locals_1 }) => {
-        titlesRef = cachesRef.map(({ title: title_2 }) => title_2) as string[];
+      .map(({ title, locals: locals_1 }) => {
+        titlesRef = cachesRef.map((cache) => cache.title) as string[];
         const localsRules = locals_1.map((local) => {
           const { title: localTitle, ...rest } = local;
           const formattedTitle = strings.titlize(localTitle);
@@ -42,10 +42,10 @@ export function locals(options: LocalsOptions): Rule {
               title: formattedTitle,
               local: rest,
               entities,
-              databaseName: title_1,
+              databaseName: title,
               ...strings,
             }),
-            move(`${outDir}/${strings.dasherize(title_1)}`),
+            move(`${outDir}/${strings.dasherize(title)}`),
           ]);
         });
 
@@ -59,10 +59,10 @@ export function locals(options: LocalsOptions): Rule {
               })),
               titles: titlesRef,
               entities,
-              databaseName: title_1,
+              databaseName: title,
               ...strings,
             }),
-            move(`${outDir}/${strings.dasherize(title_1)}`),
+            move(`${outDir}/${strings.dasherize(title)}`),
           ]
         );
 
