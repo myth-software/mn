@@ -373,6 +373,6 @@ export class <%= classify(title) %>Controller {
     @authorize(ACL.modifyOne)
   <% } %>
   async deleteById(@param.path.string('id') id: string): Promise<DeleteBlockResponse> {
-    return mountn.delete({ id });
+    return mountn.<%= camelize(title) %>.delete({ id });
   }
 }

@@ -84,7 +84,7 @@ export const <%= camelize(title) %>Router = express.Router();
 <%= camelize(title) %>Router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const deleted = await mn.delete({ id });
+    const deleted = await mn.<%= camelize(title) %>.delete({ id });
 
     res.status(204).send(deleted);
   } catch (e) {

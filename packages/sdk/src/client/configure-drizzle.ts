@@ -1,4 +1,7 @@
-import { InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
+import {
+  MountNotionQueryParameters,
+  ReadonlyColumnTypes,
+} from '@mountnotion/types';
 import { eq, InferModel } from 'drizzle-orm';
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as postgres from 'postgres';
@@ -21,10 +24,10 @@ type MountNotionDrizzleClient<T extends MountNotionClientDrizzleConfig> = {
         update: (
           body: {
             id: string;
-          } & InferModel<Database, 'insert'>
+          } & Omit<InferModel<Database, 'insert'>, ReadonlyColumnTypes>
         ) => Promise<InferModel<Database>>;
         create: (
-          body: InferModel<Database, 'insert'>
+          body: Omit<InferModel<Database, 'insert'>, ReadonlyColumnTypes>
         ) => Promise<InferModel<Database>>;
         delete: (body: { id: string }) => Promise<InferModel<Database>>;
       }
@@ -60,7 +63,10 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
         update: async ({
           id,
           ...body
-        }: { id: string } & Partial<InferWriteonly<Database>>) => {
+        }: { id: string } & Omit<
+          InferModel<Database, 'insert'>,
+          ReadonlyColumnTypes
+        >) => {
           const [response] = await db
             .update(database)
             .set(body)
@@ -69,7 +75,9 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
 
           return response;
         },
-        create: async (body: InferModel<Database, 'insert'>) => {
+        create: async (
+          body: Omit<InferModel<Database, 'insert'>, ReadonlyColumnTypes>
+        ) => {
           return await db.insert(database).values(body).returning();
         },
         delete: async ({ id }: { id: string }) => {
