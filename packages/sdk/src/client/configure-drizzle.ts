@@ -19,7 +19,7 @@ type MountNotionDrizzleClient<T extends MountNotionClientDrizzleConfig> = {
   [Property in keyof T['indicies']]: T['indicies'][Property] extends infer Database extends T['indicies'][Property]
     ? {
         query: (
-          query?: MountNotionQueryParameters<Database>
+          query?: MountNotionQueryParameters<any>
         ) => Promise<InferModel<Database>[]>;
         retrieve: (body: { id: string }) => Promise<InferModel<Database>>;
         update: (
@@ -52,7 +52,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
     return [
       title,
       {
-        query: async (args: MountNotionQueryParameters<Database>) => {
+        query: async (args: MountNotionQueryParameters<any>) => {
           const where = notionToDrizzleWhereMapper(database, args);
 
           const response = await db.select().from(database).where(where);
