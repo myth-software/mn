@@ -10,7 +10,6 @@ export declare type AuthOptions = {
 export declare type BasicOptions = {
   pageId: string;
   excludes: Array<string>;
-  cacheFile: string;
   outDir: string;
   baseUrl: string;
   entities: string;
