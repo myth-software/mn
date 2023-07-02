@@ -11,7 +11,7 @@ import {
 } from '<%= options.entities %>';
 import { MountNotionQueryParameters } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-import { mn } from './mn';
+import { mn } from '../mn';
 
 export const <%= camelize(title) %>Router = express.Router();
 
