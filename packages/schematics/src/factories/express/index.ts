@@ -33,7 +33,7 @@ export function express(options: ExpressOptions): Rule {
           logDebug,
           ...strings,
         }),
-        move(outDir),
+        move(`${outDir}/routers`),
       ]);
     });
     const expressIndexRule = applyWithOverwrite(url('./files/index'), [

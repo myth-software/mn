@@ -1,3 +1,4 @@
+export * from './add-dev-package-to-package-json.util';
 export * from './add-package-to-package-json.util';
 export * from './get-locals.util';
 export * from './prettier';

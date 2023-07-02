@@ -8,6 +8,7 @@ import { logError, logInfo, logSuccess } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
+import { rimraf } from 'rimraf';
 dotenv.config();
 
 export default {
@@ -17,12 +18,13 @@ export default {
     { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
   ],
   actionFactory: (config) => async (options) => {
-    if (options as { clearCache: string }) {
-      console.log(options);
-      console.log(process.cwd());
+    logSuccess({ action: 'starting', message: 'apply-schematics command' });
+
+    const o = options as { clearCache: string };
+    if (o.clearCache) {
+      await rimraf(`${process.cwd()}/.mountnotion`);
     }
 
-    logSuccess({ action: 'starting', message: 'apply-schematics command' });
     function findUp(names: string | string[], from: string) {
       if (!Array.isArray(names)) {
         names = [names];

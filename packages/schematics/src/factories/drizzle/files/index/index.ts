@@ -1,3 +1,4 @@
+import { configureDrizzle } from '@mountnotion/sdk';
 <% for(const title of titles) { %>
   export * from  './schema/<%= dasherize(title) %>.drizzle';
 <% } %>
@@ -10,3 +11,8 @@ export const indicies = {
     <%= camelize(title) %>,
   <% } %>
 };
+
+export const client = configureDrizzle({
+  connectionString: process.env.CONNECTION_STRING,
+  indicies,
+});

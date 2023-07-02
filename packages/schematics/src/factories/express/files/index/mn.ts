@@ -3,16 +3,13 @@
 <% } %>
 
 import { indicies } from '<%= options.entities %>';
-import { indicies as drizzle } from '<%= options.drizzle %>'
-import { configure, configureDrizzle } from '@mountnotion/sdk';
+import { client } from '<%= options.drizzle %>'
+import { configure } from '@mountnotion/sdk';
 
 
 export const mn =
   process.env.NODE_ENV === 'production'
-    ? configureDrizzle({
-      connectionString: process.env.CONNECTION_STRING,
-      indicies: drizzle
-    })
+    ? client
     : configure({
         integrationKey: process.env.INTEGRATION_KEY,
         indicies,

@@ -5,6 +5,10 @@ import { logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
+import {
+  addDevPackageToPackageJson,
+  addPackageToPackageJson,
+} from '../../utils';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
@@ -13,11 +17,13 @@ export function drizzle(options: BasicOptions): Rule {
   logSuccess({ action: '-------', message: '-----------------' });
   validateInputs(options);
   const { outDir } = options;
-
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
-  return async () => {
+
+  return async (tree) => {
     await rimraf(outDir);
+    addPackageToPackageJson(tree, 'drizzle-orm', '0.27.0');
+    addDevPackageToPackageJson(tree, 'drizzle-kit', '0.19.3');
     const caches = await createDatabaseCaches(pageIds, options);
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
