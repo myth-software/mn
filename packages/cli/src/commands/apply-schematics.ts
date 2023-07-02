@@ -179,7 +179,7 @@ export default {
         if (!schematic.disable) {
           await workflow
             .execute({
-              collection: schematic.collection,
+              collection: '@mountnotion/schematics',
               schematic: schematic.name,
               options: {
                 ...config.options?.auth,
