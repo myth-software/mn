@@ -25,7 +25,7 @@ export function express(options: ExpressOptions): Rule {
     );
     const titles = includedCaches.map((cache) => cache.title);
     const expressRules = includedCaches.map((cache) => {
-      return applyWithOverwrite(url('./files/all'), [
+      return applyWithOverwrite(url('./files/routers'), [
         template({
           title: cache.title,
           cache,

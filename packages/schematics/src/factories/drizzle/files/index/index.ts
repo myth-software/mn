@@ -13,6 +13,6 @@ export const indicies = {
 };
 
 export const client = configureDrizzle({
-  connectionString: process.env.CONNECTION_STRING,
+  connectionString: process.env['CONNECTION_STRING']!,
   indicies,
 });
