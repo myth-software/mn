@@ -17,9 +17,9 @@ export default {
     { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
   ],
   actionFactory: (config) => async (options) => {
-    if (options) {
+    if (options as { clearCache: string }) {
       console.log(options);
-      console.log(__dirname);
+      console.log(process.cwd());
     }
 
     logSuccess({ action: 'starting', message: 'apply-schematics command' });

@@ -1,3 +1,7 @@
+<% if (debug) { %>
+  <%= logDebug({ action: 'debugging', message: `schema: cache ${cache ? 'is defined': 'is not defined'}` }) %>
+<% } %>
+
 export const oasSchema = {  
   type: 'object', 
   properties: {
@@ -16,10 +20,10 @@ export const oasSchema = {
       readOnly: true,
       nullable: true
     },
-      <% for(const [property, type] of Object.entries(cache.types)) { const dbProperty = cache.database.properties[property]; %>
+      <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
         '<%= property %>': {
         nullable: true,
-      <% if(dbProperty.rollup || dbProperty.last_edited_by || dbProperty.last_edited_time || dbProperty.created_by || dbProperty.created_time ) { %>
+      <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
         readOnly: true,
       <% } %>
       <% if(type === 'relation') { %>
@@ -29,44 +33,27 @@ export const oasSchema = {
         }
       <% } else if(type === 'checkbox') { %>
         type: 'boolean',
-      <% } else if(type === 'multi_select' && dbProperty.multi_select) {  %>
+      <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
         type: 'array',
         items: {
           type: 'string',
           enum: [
-      
-      <% dbProperty.multi_select.options.forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
+            <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
           ]
         }
-      <% } else if(type === 'multi_select' && !dbProperty.multi_select) {  %>
+      <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
+        type: 'string',
+          enum: [
+            <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
+          ]
+      <% } else if(cache.rollupsOptions?.[property]) {  %>
         type: 'array',
         items: {
           type: 'string',
           enum: [
-      
-      <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
+            <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
           ]
         }
-      <% } else if(type === 'select' && dbProperty.select) {  %>
-        type: 'string',
-        enum: [
-          <% dbProperty.select.options.forEach((option, i, arr) => {%>'<%= option.name %>', <% }) %>
-        ]
-      <% } else if(type === 'select' && !dbProperty.select) {  %>
-        type: 'string',
-        enum: [
-          <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
-        ],
-      <% } else if(type === 'status' && dbProperty.status) {  %>
-        type: 'string',
-        enum: [
-          <% dbProperty.status.options.forEach((option, i, arr) => {%>'<%= option.name %>', <% }) %>
-        ]
-      <% } else if(type === 'status' && !dbProperty.status) {  %>
-        type: 'string',
-        enum: [
-          <% cache.rollup[property].forEach((option, i, arr) => { %>'<%= option.name %>', <% }) %>
-        ]
       <% } else if(type === 'rollup') { %>
         anyOf: [
           {
@@ -106,7 +93,7 @@ export const oasSchema = {
         type: 'number',
       <% } else { %>
         type: 'string',
-      <% } %>    
+      <% } %>
     },
   <% } %>
   }
