@@ -10,7 +10,12 @@ const db = drizzle(sql);
 async function run() {
   const outDir = process.argv[2];
 
-  return await migrate(db, { migrationsFolder: `${outDir}/../drizzle` });
+  await migrate(db, { migrationsFolder: `${outDir}/../drizzle` });
+  return 0;
 }
 
-run();
+run()
+  .then((exitCode) => (process.exitCode = exitCode))
+  .catch((e) => {
+    throw e;
+  });
