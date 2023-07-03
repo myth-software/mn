@@ -192,8 +192,10 @@ export default {
               collection: '@mountnotion/schematics',
               schematic: schematic.name,
               options: {
+                ...config.options,
                 ...config.options?.auth,
                 ...config.options?.basic,
+                ...schematic.options,
                 ...schematic.options?.auth,
                 ...schematic.options?.basic,
               },

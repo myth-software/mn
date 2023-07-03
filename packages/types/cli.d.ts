@@ -49,6 +49,7 @@ export declare type I18nOptions = BasicOptions & {
 
 export declare type Schematics = {
   name: string;
+  disable?: boolean;
   options: { auth: AuthOptions; basic: BasicOptions };
 };
 
