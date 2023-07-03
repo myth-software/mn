@@ -4,15 +4,15 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
  
 <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
   <% if(cache.options?.[column] && type === 'multi_select') {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
+    export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
       <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
+    export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
       <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } else if(cache.rollupsOptions?.[property]) {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
+    export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
       <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } %>  
@@ -34,11 +34,11 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
       <% } else if(type === 'checkbox') { %>
         boolean('<%= property %>')
       <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
-        <%= camelize(title) %><%= classify(property) %>('<%= property %>').array()
+        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
       <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
-        <%= camelize(title) %><%= classify(property) %>('<%= property %>')
+        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>')
       <% } else if(cache.rollupsOptions?.[property]) {  %>
-        <%= camelize(title) %><%= classify(property) %>('<%= property %>').array()
+        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
       <% } else if(type === 'rollup') { %>
       <% } else if(type === 'files') { %>
         text('<%= property %>').array()

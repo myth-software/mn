@@ -6,7 +6,7 @@ import {
 import { execSync } from 'child_process';
 
 type MigrationsOptions = {
-  command: 'check' | 'drop' | 'generate' | 'up';
+  command: 'check' | 'drop' | 'generate' | 'up' | 'migrate';
 };
 
 function assert(
@@ -72,6 +72,16 @@ export default {
         const result = execSync(
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
         ).toString();
+        console.log(result);
+      } catch (e) {
+        console.error(e);
+      }
+      return;
+    }
+
+    if (options.command === 'migrate') {
+      try {
+        const result = execSync(`npx ts-node ${outDir}/migrate.ts`).toString();
         console.log(result);
       } catch (e) {
         console.error(e);
