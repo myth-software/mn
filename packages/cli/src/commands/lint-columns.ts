@@ -9,7 +9,6 @@ import {
 import { ensure } from '@mountnotion/utils';
 import { EMOJI, printPhraseList } from '../utils';
 
-type Message = { database: string; from?: string | null; to: string };
 type LintColumnsOptions = {
   pageId: string;
 };
@@ -52,9 +51,9 @@ export default {
       .map(({ id }) => id);
     const missingName: LogInput[] = [];
     const missingLastEditedTime: LogInput[] = [];
-    const missingCreatedTime: Message[] = [];
-    const missingLastEditedBy: Message[] = [];
-    const missingCreatedBy: Message[] = [];
+    const missingCreatedTime: LogInput[] = [];
+    const missingLastEditedBy: LogInput[] = [];
+    const missingCreatedBy: LogInput[] = [];
     const missingEmojis: { database: string; relations: string[] }[] = [];
     const mismatchedSelects: { database: string; name: string }[] = [];
     const mismatchedMultiselects: { database: string; name: string }[] = [];
@@ -150,49 +149,67 @@ export default {
 
       if (createdTime && createdTime !== 'created time') {
         missingCreatedTime.push({
-          database: database.title[0].plain_text,
-          from: createdTime,
-          to: 'created time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_time "${createdTime}" has consistent column name as "created time"`,
         });
       }
 
       if (!createdTime) {
         missingCreatedTime.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'created time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_time does not exist`,
         });
       }
 
       if (lastEditedBy && lastEditedBy !== 'last edited by') {
         missingLastEditedBy.push({
-          database: database.title[0].plain_text,
-          from: lastEditedBy,
-          to: 'last edited by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_by "${lastEditedBy}" has consistent column name as "last edited by"`,
         });
       }
 
       if (!lastEditedBy) {
         missingLastEditedBy.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'last edited by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_by does not exist`,
         });
       }
 
       if (createdBy && createdBy !== 'created by') {
         missingCreatedBy.push({
-          database: database.title[0].plain_text,
-          from: createdBy,
-          to: 'created by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_by "${lastEditedBy}" has consistent column name as "created by"`,
         });
       }
 
       if (!createdBy) {
         missingCreatedBy.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'created by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_by does not exist`,
         });
       }
 
@@ -233,9 +250,6 @@ export default {
       }
     }
 
-    console.log(missingCreatedTime);
-    console.log(missingLastEditedBy);
-    console.log(missingCreatedBy);
     console.log(missingEmojis);
     console.log(mismatchedSelects);
     console.log(mismatchedMultiselects);
@@ -245,6 +259,9 @@ export default {
     const phraseList: LogInput[] = [
       ...missingName,
       ...missingLastEditedTime,
+      ...missingCreatedTime,
+      ...missingLastEditedBy,
+      ...missingCreatedBy,
       {
         action: 'pass',
         page: { emoji: '🔢', title: 'sets' },
