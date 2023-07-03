@@ -1,10 +1,11 @@
 import { MountnCommand } from '@mountnotion/types';
+import { logError } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 
-export type WorkspaceConfig = {
+export type WorkspaceOptions = {
   entities: string | null;
   baseUrl: string | null;
-  authStrategies: Array<'notion' | 'sms'> | null;
+  authStrategies: Array<'email' | 'sms'> | null;
   usersDatabase: 'people' | 'companies' | 'users' | null;
   userColumn: string | null;
 };
@@ -12,139 +13,106 @@ export type WorkspaceConfig = {
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is WorkspaceConfig {
+): asserts condition is WorkspaceOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
 }
 
-export const promptConfigureWorkspace = async (
-  newConfig: WorkspaceConfig,
-  currentConfig: WorkspaceConfig
-): Promise<WorkspaceConfig> => {
-  // combine these individual xxResults variables into one more complex results variable
+function dependencies() {
+  const cache = [];
+  const hasCache = cache.length > 1;
+  if (!hasCache) {
+    logError({
+      action: 'erroring',
+      message: 'missing mount notion cache',
+    });
+    throw new Error('missing mount notion cache');
+  }
+}
 
-  if (newConfig.entities === undefined) {
-    const results = await prompt<WorkspaceConfig>([
-      {
-        type: 'input',
-        message: 'name of entities package:',
-        name: 'entities',
-      },
-    ]);
-    currentConfig.entities = results.entities;
-  } else {
-    currentConfig.entities = newConfig.entities;
+export async function optionsPrompt(options: WorkspaceOptions) {
+  const prompts = [];
+
+  if (!options.entities) {
+    prompts.push({
+      type: 'input',
+      message: 'name of entities package:',
+      name: 'entities',
+    });
   }
 
-  if (newConfig.baseUrl === undefined) {
-    const results = await prompt<WorkspaceConfig>([
-      {
-        type: 'input',
-        message: 'base url for api:',
-        name: 'baseUrl',
-      },
-    ]);
-    currentConfig.baseUrl = results.baseUrl;
-  } else {
-    currentConfig.baseUrl = newConfig.baseUrl;
+  if (!options.baseUrl) {
+    prompts.push({
+      type: 'input',
+      message: 'base url for api:',
+      name: 'baseUrl',
+    });
   }
-  if (newConfig.authStrategies === undefined) {
-    const results = await prompt<WorkspaceConfig>([
-      {
-        type: 'multiselect',
-        message: 'authentication strategies:',
-        name: 'authStrategies',
-        choices: ['notion', 'sms'],
-      },
-    ]);
-    currentConfig.authStrategies = results.authStrategies;
-  } else {
-    currentConfig.authStrategies = newConfig.authStrategies;
+
+  if (!options.authStrategies) {
+    prompts.push({
+      type: 'multiselect',
+      message: 'authentication strategies:',
+      name: 'authStrategies',
+      choices: ['email', 'sms'],
+    });
   }
-  if (newConfig.usersDatabase === undefined) {
-    const results = await prompt<WorkspaceConfig>([
-      {
-        type: 'list',
-        message: 'users database:',
-        name: 'usersDatabase',
-        choices: ['people', 'companies', 'users'],
-      },
-    ]);
-    currentConfig.usersDatabase = results.usersDatabase;
-  } else {
-    currentConfig.usersDatabase = newConfig.usersDatabase;
+
+  if (!options.usersDatabase) {
+    prompts.push({
+      type: 'list',
+      message: 'users database:',
+      name: 'usersDatabase',
+      choices: ['people', 'companies', 'users'],
+    });
   }
-  if (newConfig.userColumn === undefined) {
-    const results = await prompt<WorkspaceConfig>([
-      {
-        type: 'input',
-        message: 'user column:',
-        name: 'userColumn',
-      },
-    ]);
-    currentConfig.userColumn = results.userColumn;
-  } else {
-    currentConfig.userColumn = newConfig.userColumn;
+
+  if (!options.userColumn) {
+    prompts.push({
+      type: 'input',
+      message: 'user column:',
+      name: 'userColumn',
+    });
   }
-  console.log('You selected:', currentConfig);
-  return currentConfig;
-};
+
+  if (prompts.length) {
+    const results = await prompt<WorkspaceOptions>(prompts);
+    return { ...options, ...results };
+  }
+  return options;
+}
 
 export default {
   name: 'configure-workspace',
   description: '',
   options: [
     {
-      name: '-e, --entities [configure-workspace]',
+      name: '-e, --entities [name]',
       description: 'name of entities package',
     },
+    {
+      name: '-b, --base-url [url]',
+      description: 'base url for api',
+    },
+    {
+      name: '-a, --auth-strategies [strategy]',
+      description: 'authentication strategy',
+    },
+    {
+      name: '-d, --users-database [name]',
+      description: 'users database',
+    },
+    {
+      name: '-c, --user-column	 [name]',
+      description: 'user column',
+    },
   ],
-  actionFactory: () => (options) => {
-    assert(options);
-    let workspaceConfig: WorkspaceConfig = {
-      entities: null,
-      baseUrl: null,
-      authStrategies: null,
-      usersDatabase: null,
-      userColumn: null,
-    };
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
-    const selectedConfig: WorkspaceConfig = {
-      entities: options['entities'],
-      baseUrl: options['baseUrl'],
-      authStrategies: options['authStrategies'],
-      usersDatabase: options['usersDatabase'],
-      userColumn: options['userColumn'],
-    };
-
-    if (
-      options['entities'] &&
-      options['baseUrl'] &&
-      options['authStrategies'] &&
-      options['usersDatabase'] &&
-      options['userColumn']
-    ) {
-      promptConfigureWorkspace(selectedConfig, workspaceConfig);
-    } else {
-      if (
-        options['entities'] === undefined ||
-        options['baseUrl'] === undefined ||
-        options['authStrategies'] === undefined ||
-        options['usersDatabase'] === undefined ||
-        options['userColumn'] === undefined
-      ) {
-        promptConfigureWorkspace(selectedConfig, workspaceConfig);
-      } else {
-        workspaceConfig = {
-          entities: options['entities'],
-          baseUrl: options['baseUrl'],
-          authStrategies: options['authStrategies'],
-          usersDatabase: options['usersDatabase'],
-          userColumn: options['userColumn'],
-        };
-        console.log('You selected:', workspaceConfig);
-      }
-    }
+    return;
   },
 } satisfies MountnCommand;

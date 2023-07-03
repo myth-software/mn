@@ -14,12 +14,19 @@
         "assets": ["packages/cli/*.md"]
       }
     },
+    "version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm version patch --force",
+        "cwd": "packages/cli"
+      }
+    },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
         "command": "cd dist/packages/cli && npm publish --access public --tag next"
       },
-      "dependsOn": ["build"]
+      "dependsOn": ["version", "build"]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

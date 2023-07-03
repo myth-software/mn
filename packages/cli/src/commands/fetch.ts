@@ -1,10 +1,26 @@
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import { createDatabaseCaches } from '@mountnotion/sdk';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { logSuccess } from '@mountnotion/utils';
+
+function dependencies(config: MountNotionConfig) {
+  const pagesSelected = config.workspace.selectedPages.length > 0;
+
+  if (!pagesSelected) {
+    throw new Error('no pages selected');
+  }
+}
 
 export default {
   name: 'fetch',
   description: 'fetches databases and builds cache',
-  actionFactory: () => async () => {
+
+  actionFactory: (config) => async () => {
+    dependencies(config);
+
+    await createDatabaseCaches(
+      config.workspace.selectedPages,
+      config.options.basic
+    );
     const phraseList: LogInput[] = [
       {
         action: 'listing',

@@ -1,14 +1,35 @@
 import { notion } from '@mountnotion/sdk';
 import { MountnCommand } from '@mountnotion/types';
+import { logDebug } from '@mountnotion/utils';
+
+export type DeleteRecursiveOptions = {
+  pageId: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is DeleteRecursiveOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
 
 export default {
   name: 'delete-recursive',
   description: 'delete page and relations recursively',
-  options: [],
-  actionFactory: () => async () => {
-    const page_id = '';
+  options: [
+    {
+      name: '--page-id <id>',
+      description: 'page id for deleting',
+    },
+  ],
+  actionFactory: () => async (options) => {
+    assert(options);
+    const { pageId } = options;
+    logDebug({ action: 'debugging', message: `page_id: ${pageId}` });
     const foundPages: string[] = [];
-    return deleteRecursive(page_id);
+    return deleteRecursive(pageId);
 
     async function deleteRecursive(pageId: string) {
       if (foundPages.includes(pageId)) {

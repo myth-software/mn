@@ -1,0 +1,23 @@
+# drizzle
+
+orm
+
+## output
+
+```typescript title="horses.drizzle.ts"
+import { ReadonlyColumnTypes } from '@mountnotion/types';
+import { InferModel } from 'drizzle-orm';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+export const horses = pgTable('horses', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  icon: text('icon').notNull(),
+  cover: text('cover').notNull(),
+  description: text('description').notNull(),
+  recordings: text('recordings').array(),
+  age: text('age'),
+  name: text('name'),
+});
+export declare type Horses = InferModel<typeof horses>;
+export declare type HorsesWriteOnly = Omit<Horses, ReadonlyColumnTypes>;
+export declare type NewHorses = InferModel<typeof horses, 'insert'>;
+```

@@ -19,6 +19,7 @@ type FormattedTranslations = {
 };
 export function i18n(options: I18nOptions): Rule {
   logSuccess({ action: 'running', message: 'i18n schematic' });
+  logSuccess({ action: '-------', message: '--------------' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();

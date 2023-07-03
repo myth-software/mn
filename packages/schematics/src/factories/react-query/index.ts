@@ -10,6 +10,7 @@ dotenv.config();
 
 export function reactQuery(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'react query schematic' });
+  logSuccess({ action: '-------', message: '---------------------' });
   validateBasicInputs(options);
 
   const { outDir, entities, baseUrl } = options;
@@ -23,10 +24,12 @@ export function reactQuery(options: BasicOptions): Rule {
       const titles = includedCaches.map(({ title }) => title);
       const files = './files';
 
-      const infrastructuresRules = includedCaches.map(({ title }) => {
+      const infrastructuresRules = includedCaches.map((cache) => {
         return applyWithOverwrite(url(`${files}/infrastructure-all`), [
           template({
-            title,
+            title: cache.title,
+            cache,
+            options,
             entities,
             ...strings,
           }),
@@ -50,11 +53,13 @@ export function reactQuery(options: BasicOptions): Rule {
         [move(`${outDir}/infrastructure`)]
       );
 
-      const statesRules = includedCaches.map(({ title, icon }) => {
+      const statesRules = includedCaches.map((cache) => {
         return applyWithOverwrite(url(`${files}/+state-all`), [
           template({
-            title,
-            icon,
+            title: cache.title,
+            icon: cache.icon,
+            cache,
+            options,
             entities,
             ...strings,
           }),
@@ -66,6 +71,7 @@ export function reactQuery(options: BasicOptions): Rule {
         template({
           titles,
           baseUrl,
+          options,
           ...strings,
         }),
         move(`${outDir}/+state`),

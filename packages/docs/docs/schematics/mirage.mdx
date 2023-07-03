@@ -1,0 +1,94 @@
+# mirage
+
+mock api
+
+## output
+
+### endpoints
+
+```typescript title="equipment.endpoints.ts"
+import { localEquipment } from '@pferd/domain-pferd-locals';
+import { Response, Server } from 'miragejs';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+export function equipmentEndpoints(server: Server) {
+  let db: any[] = localEquipment.list;
+  server.get('/equipment', () => {
+    return new Response(200, {}, db);
+  });
+  server.post('/equipment', (schema, request) => {
+    const partial = JSON.parse(request.requestBody);
+    const full = {
+      page_id: uuidv4(),
+      'created time': new Date().toISOString(),
+      ...partial,
+    };
+    db.unshift(full);
+    return new Response(201, {}, full);
+  });
+  server.get('/equipment/:id', (schema, request) => {
+    const page_id = request.params['id'];
+    const response = db.find((item) => item.page_id === page_id);
+    return new Response(200, {}, response);
+  });
+  server.patch('/equipment/:id', (schema, request) => {
+    const page_id = request.params['id'];
+    const response = db.find((item) => item.page_id === page_id);
+    const update = JSON.parse(request.requestBody);
+    const updated = { ...response, ...update };
+    db = db.map((item) => (item.page_id !== updated.page_id ? item : updated));
+    return new Response(200, {}, updated);
+  });
+  server.delete('/equipment/:id', (schema, request) => {
+    const page_id = request.params['id'];
+    const index = db.findIndex((item) => item.page_id === page_id);
+    if (index > -1) {
+      db.splice(index, 1);
+      return new Response(204, {});
+    } else {
+      return new Response(500, {});
+    }
+  });
+}
+```
+
+### models
+
+```typescript title="equipment.model.ts"
+import { Equipment } from '@pferd/domain-pferd-entities';
+import { Model } from 'miragejs';
+import { ModelDefinition } from 'miragejs/-types';
+export const equipmentModel: ModelDefinition<Equipment> = Model.extend({});
+```
+
+### types
+
+```typescript title="types.ts"
+import { Registry } from 'miragejs';
+import Schema from 'miragejs/orm/schema';
+import { models } from './models';
+type AppRegistry = Registry<typeof models, never>;
+export type AppSchema = Schema<AppRegistry>;
+```
+
+### start-mirage
+
+```typescript title="start-mirage.ts"
+import { createServer } from 'miragejs';
+import { endpoints } from './endpoints';
+import { models } from './models';
+export function startMirage() {
+  const server = createServer({ models });
+  server.logging = true;
+  server.urlPrefix = 'https://api.pferd.ai';
+  for (const namespace of Object.keys(endpoints)) {
+    endpoints[namespace](server);
+  }
+  server.namespace = '';
+  server.passthrough();
+  server.passthrough(
+    (request) => !request.url.startsWith('https://api.pferd.ai')
+  );
+  return server;
+}
+```

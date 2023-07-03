@@ -1,17 +1,21 @@
+<% if (options.debug) { %>
+  <%= logDebug({ action: 'debugging', message: `entity: title ${cache.title ? 'is ' + cache.title : 'is not defined'}` }) %>
+<% } %>
+
 import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
 
-export const <%= underscore(title).toUpperCase() %> = {
-  title: '<%= title %>',
-  id: '<%= id %>',
-  icon: '<%= icon %>',
-  cover: '<%= cover %>',
-  description: '<%= description %>',
-  columns: { <% for(const [column, type] of Object.entries(columns)) { %>
+export const <%= underscore(cache.title).toUpperCase() %> = {
+  title: '<%= cache.title %>',
+  id: '<%= cache.id %>',
+  icon: '<%= cache.icon %>',
+  cover: '<%= cache.cover %>',
+  description: '<%= cache.description %>',
+  columns: { <% for(const [column, type] of Object.entries(cache.columns)) { %>
     '<%= column %>': '<%= type %>',
   <% } %> },
-  <% if(options) { %>
+  <% if(cache.options) { %>
     options: {
-      <% for(const [property, values] of Object.entries(options)) { %>
+      <% for(const [property, values] of Object.entries(cache.options)) { %>
         '<%= property %>': [
           <% values.map((option) => { %>
             '<%= option %>',
@@ -22,19 +26,19 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% } else { %>
     options: null,
   <% }  %>  
-  <% if(relations) { %>
+  <% if(cache.relations) { %>
     relations: {
-      <% for(const [property, relation] of Object.entries(relations)) { %>
+      <% for(const [property, relation] of Object.entries(cache.relations)) { %>
         '<%= property %>': '<%= relation %>',
       <% } %>
     },
   <% } else { %>
     relations: null,
   <% }  %>
-  <% if(mappings) { %>
+  <% if(cache.mappings) { %>
     mappings: {
-      <% for(const [property, mapping] of Object.entries(mappings)) { %>
-        /** [notion docs for <%= columns[mapping] %>](https://developers.notion.com/reference/property-object#<%= columns[mapping].replace('_', '-') %>) */
+      <% for(const [property, mapping] of Object.entries(cache.mappings)) { %>
+        /** [notion docs for <%= cache.columns[mapping] %>](https://developers.notion.com/reference/property-object#<%= cache.columns[mapping].replace('_', '-') %>) */
         '<%= property %>': '<%= mapping %>',
       <% } %>
     },
@@ -43,11 +47,15 @@ export const <%= underscore(title).toUpperCase() %> = {
   <% }  %>
 } as const;
 
-export declare type <%= classify(title) %>Index = typeof <%= underscore(title).toUpperCase() %>;
-export declare type <%= classify(title) %>QueryParameters = MountNotionQueryParameters<<%= classify(title) %>Index>;
-export declare type <%= classify(title) %>Readonly = InferReadonly<<%= classify(title) %>Index>;
-export declare type <%= classify(title) %>Writeonly = InferWriteonly<<%= classify(title) %>Index>;
-<% if(description) { %>
-/** <%= description %> */
+export declare type <%= classify(cache.title) %>Index = typeof <%= underscore(cache.title).toUpperCase() %>;
+export declare type <%= classify(cache.title) %>QueryParameters = MountNotionQueryParameters<<%= classify(cache.title) %>Index>;
+export declare type <%= classify(cache.title) %>Readonly = InferReadonly<<%= classify(cache.title) %>Index>;
+export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= classify(cache.title) %>Index>;
+<% if(cache.description) { %>
+/** <%= cache.description %> */
 <% } %>
-export declare type <%= classify(title) %> = <%= classify(title) %>Readonly & <%= classify(title) %>Writeonly;
+export declare type <%= classify(cache.title) %> = <%= classify(cache.title) %>Readonly & <%= classify(cache.title) %>Writeonly;
+
+<% if (options.debug) { %>
+  <%= logDebug({ action: 'debugging', message: 'entity: end' }) %>
+<% } %>

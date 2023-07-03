@@ -15,6 +15,13 @@
         "rootDir": "packages/schematics"
       }
     },
+    "version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm version patch --force",
+        "cwd": "packages/schematics"
+      }
+    },
     "prepublish": {
       "executor": "nx:run-commands",
       "options": {
@@ -29,7 +36,7 @@
         "command": "npm publish --access public --tag next",
         "cwd": "dist/packages/schematics"
       },
-      "dependsOn": ["prepublish"]
+      "dependsOn": ["version", "prepublish"]
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",

@@ -1,0 +1,41 @@
+# fix-columns
+
+fixes columns that failed lint rules
+
+**dependencies**
+
+```typescript
+const databasesWithColumnsFails = cache.filter(
+  (database) => database.lintFails.columns.length > 0
+);
+databasesWithColumnsFails.length > 1;
+```
+
+**arguments**
+
+none
+
+**cli example**
+
+```sh title="terminal"
+npx mn fix-columns
+```
+
+```sh
+2 databases columns to fix: 🔢 sets, 📝 logs
+
+create 🔵 overlays created_time as "created time"
+update 📝 logs title "Title" to "name"
+create 📝 logs created_by as "created by"
+create 📝 logs created_time as "created time"
+create 📝 logs created_last_edited_by as "last edited by"
+create 📝 logs last_edited_time as "last edited time"
+update 📝 logs select "method" colors to brown
+update 📝 logs multi_select "Tags" colors to green
+update 📝 logs multi_select "Tags" to "tags"
+warn   📝 logs relation "user" cannot automatically be updated to "🙂 user". manual update in notion is required.
+```
+
+**prompt example**
+
+none

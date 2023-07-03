@@ -3,21 +3,49 @@ import 'symbol-observable';
 
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
-import { LogInput, MountnCommand } from '@mountnotion/types';
-import { logError, logInfo, logSuccess } from '@mountnotion/utils';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { logError, logInfo } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
+import { rimraf } from 'rimraf';
 dotenv.config();
+
+type SchematicsOptions = {
+  clearCache: boolean;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is SchematicsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
+
+function dependencies(config: MountNotionConfig) {
+  if (!config) {
+    logError({
+      action: 'erroring',
+      message: 'missing mount notion config file',
+    });
+    throw new Error('missing mount notion config file');
+  }
+}
 
 export default {
   name: 'apply-schematics',
   description: 'applies schematics',
-  options: [
-    { name: '-c, --clear-cache <yes>', description: 'clear the cache' },
-  ],
-  actionFactory: (config) => async () => {
-    logSuccess({ action: 'starting', message: 'apply-schematics command' });
+  options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
+  actionFactory: (config) => async (options) => {
+    assert(options);
+    dependencies(config);
+
+    if (options.clearCache) {
+      await rimraf(`${process.cwd()}/.mountnotion`);
+    }
+
     function findUp(names: string | string[], from: string) {
       if (!Array.isArray(names)) {
         names = [names];
@@ -57,15 +85,6 @@ export default {
       return 'npm';
     }
 
-    if (!config) {
-      logError({
-        action: 'erroring',
-        message: 'missing mount notion config file',
-      });
-
-      return;
-    }
-
     /** Create the workflow scoped to the working directory that will be executed with this run. */
     const workflow = new NodeWorkflow(process.cwd(), {
       resolvePaths: [process.cwd(), __dirname],
@@ -100,7 +119,7 @@ export default {
         : event.path;
 
       const desc =
-        (event as any).description == 'alreadyExist'
+        (event as { description: string }).description == 'alreadyExist'
           ? 'already exists'
           : 'does not exist';
 
@@ -165,18 +184,20 @@ export default {
           message:
             'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable',
         });
-        throw new Error();
+        throw new Error('bailing out');
       }
 
       for (const schematic of config.schematics) {
         if (!schematic.disable) {
           await workflow
             .execute({
-              collection: schematic.collection,
+              collection: '@mountnotion/schematics',
               schematic: schematic.name,
               options: {
+                ...config.options,
                 ...config.options?.auth,
                 ...config.options?.basic,
+                ...schematic.options,
                 ...schematic.options?.auth,
                 ...schematic.options?.basic,
               },

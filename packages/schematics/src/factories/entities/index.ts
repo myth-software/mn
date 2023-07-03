@@ -9,41 +9,39 @@ import { validateInputs } from './validate-inputs';
 dotenv.config();
 export function entities(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'entities schematic' });
+  logSuccess({ action: '-------', message: '------------------' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
 
-  return () => {
-    return createDatabaseCaches(pageIds, options).then((caches) => {
-      const includedCaches = caches.filter(
-        ({ title }) => title && !excludes.includes(title)
-      );
-      const titles = includedCaches.map(({ title }) => title);
-
-      const entitiesRules = includedCaches.map((cache) => {
-        return applyWithOverwrite(url('./files/all'), [
-          template({
-            ...cache,
-            debug: options.debug,
-            logDebug,
-            ...strings,
-          }),
-          move(outDir),
-        ]);
-      });
-
-      const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
+  return async () => {
+    const caches = await createDatabaseCaches(pageIds, options);
+    const includedCaches = caches.filter(
+      ({ title }) => title && !excludes.includes(title)
+    );
+    const titles = includedCaches.map((cache) => cache.title);
+    const entitiesRules = includedCaches.map((cache) => {
+      return applyWithOverwrite(url('./files/all'), [
         template({
-          titles,
-          debug: options.debug,
+          title: cache.title,
+          cache,
+          options,
           logDebug,
           ...strings,
         }),
         move(outDir),
       ]);
-
-      return chain([...entitiesRules, entitiesIndexRule]);
     });
+    const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
+      template({
+        titles,
+        options,
+        logDebug,
+        ...strings,
+      }),
+      move(outDir),
+    ]);
+    return chain([...entitiesRules, entitiesIndexRule]);
   };
 }

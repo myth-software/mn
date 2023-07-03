@@ -1,0 +1,118 @@
+# express
+
+## output
+
+### router
+
+```typescript title="horses.router.ts"
+import { MountNotionQueryParameters } from '@mountnotion/types';
+import {
+  Horses,
+  HorsesIndex,
+  HorsesWriteonly,
+} from '@pferd/domain-pferd-entities';
+import express, { Request, Response } from 'express';
+import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { mn } from './mn';
+export const horsesRouter = express.Router();
+horsesRouter.get('/', async (req: Request, res: Response) => {
+  const where = req.query.where as MountNotionQueryParameters<HorsesIndex>;
+  try {
+    const horses: Horses[] = await mn.horses.query(where);
+    res.status(200).send(horses);
+  } catch (e) {
+    res.status(500).send({ status: 500, message: e.message });
+  }
+});
+horsesRouter.get('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const item: Horses = await mn.horses.retrieve({ id });
+    if (item) {
+      return res.status(200).send(item);
+    }
+    res.status(404).send({ status: 404, message: 'horses not found' });
+  } catch (e) {
+    res.status(500).send({ status: 500, message: e.message });
+  }
+});
+horsesRouter.post('/', async (req: Request, res: Response) => {
+  try {
+    const item: Partial<HorsesWriteonly> = req.body;
+    const name = uniqueNamesGenerator({
+      dictionaries: [animals, colors],
+      separator: '-',
+      length: 2,
+    });
+    const newHorses = await mn.horses.create({ name, ...item });
+    res.status(201).json(newHorses);
+  } catch (e) {
+    res.status(500).send({ status: 500, message: e.message });
+  }
+});
+horsesRouter.patch('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const item: Partial<HorsesWriteonly> = req.body;
+    const updatedHorses = mn.horses.update({ id, ...item });
+    res.status(200).json(updatedHorses);
+  } catch (e) {
+    res.status(500).send({ status: 500, message: e.message });
+  }
+});
+horsesRouter.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const deleted = await mn.horses.delete({ id });
+    res.status(204).send(deleted);
+  } catch (e) {
+    res.status(500).send({ status: 500, message: e.message });
+  }
+});
+```
+
+### main
+
+```typescript title="main.ts"
+import cors from 'cors';
+import 'dotenv/config';
+import express from 'express';
+import helmet from 'helmet';
+import { equipmentRouter } from './routers/equipment.router';
+import { horsesRouter } from './routers/horses.router';
+import { peopleRouter } from './routers/people.router';
+import { recordingsRouter } from './routers/recordings.router';
+import { usersRouter } from './routers/users.router';
+const PORT: number = process.env.PORT
+  ? parseInt(process.env.PORT as string, 10)
+  : 3000;
+const app = express();
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use('/users', usersRouter);
+app.use('/horses', horsesRouter);
+app.use('/equipment', equipmentRouter);
+app.use('/recordings', recordingsRouter);
+app.use('/people', peopleRouter);
+const server = app.listen(PORT, () => {
+  console.log(`listening at http://localhost:${PORT}`);
+});
+server.on('error', console.error);
+```
+
+### mn
+
+```typescript title="mn.ts"
+import { configure } from '@mountnotion/sdk';
+import { client } from '@pferd/domain-pferd-drizzle';
+import { indicies } from '@pferd/domain-pferd-entities';
+export const mn =
+  process.env.NODE_ENV === 'production'
+    ? client
+    : configure({ integrationKey: process.env.INTEGRATION_KEY, indicies });
+```
+
+## options
+
+endpoints

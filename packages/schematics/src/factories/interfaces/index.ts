@@ -9,6 +9,7 @@ import { validateBasicInputs } from '../../utils';
 dotenv.config();
 export function interfaces(options: BasicOptions): Rule {
   logSuccess({ action: 'running', message: 'interfaces schematic' });
+  logSuccess({ action: '-------', message: '--------------------' });
   validateBasicInputs(options);
 
   const pageIds = [options.pageId].flat();
@@ -25,6 +26,8 @@ export function interfaces(options: BasicOptions): Rule {
           template({
             title: cache.title,
             index: cache,
+            cache,
+            options,
             ...strings,
           }),
           move(options.outDir ?? 'out/interfaces'),

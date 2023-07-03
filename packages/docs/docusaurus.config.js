@@ -7,50 +7,32 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'mount notion',
-  tagline: 'docs',
+  tagline: 'feel type-serenity, rise above the cloud, experience true peace',
   favicon: 'img/favicon.ico',
-
-  // Set the production url of your site here
-  url: 'https://docs.mountnotion.com',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  url: 'https://mountnotion.com',
   baseUrl: '/',
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'myth-software', // Usually your GitHub org/user name.
-  projectName: 'mountnotion', // Usually your repo name.
-
-  onBrokenLinks: 'throw',
+  organizationName: 'myth-software',
+  projectName: 'mountnotion',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
-
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
-
   presets: [
     [
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+          path: 'docs',
+          routeBasePath: '/',
+          sidebarPath: 'sidebars.js',
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/myth-software/mountnotion/tree/main/packages/',
+          breadcrumbs: true,
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -61,25 +43,39 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+          hideable: true,
+        },
+      },
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'My Site',
+        title: 'mount notion',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'mount notion',
           src: 'img/logo.svg',
         },
         items: [
+          // {
+          //   label: 'cli',
+          //   position: 'left',
+          //   to: '/cli',
+          // },
+          // {
+          //   label: 'sdk',
+          //   position: 'left',
+          //   to: '/sdk',
+          // },
+          // {
+          //   label: 'schematics',
+          //   position: 'left',
+          //   to: '/schematics',
+          //   sidebarId: 'schematicsSidebar',
+          // },
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Tutorial',
-          },
-          { to: '/blog', label: 'Blog', position: 'left' },
-          {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            href: 'https://github.com/myth-software/mountnotion',
+            label: 'github',
             position: 'right',
           },
         ],
@@ -88,46 +84,46 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'home',
+                to: '/',
               },
             ],
           },
           {
-            title: 'Community',
+            title: 'community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'stack overflow',
+                href: 'https://stackoverflow.com/questions/tagged/mountnotion',
               },
               {
-                label: 'Discord',
+                label: 'notion developers slack',
                 href: 'https://discordapp.com/invite/docusaurus',
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                label: 'reddit',
+                href: 'https://reddit.com/r/mountnotion',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'more',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'myth software',
+                href: 'https://myth.software',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'github',
+                href: 'https://github.com/myth-software/mountnotion',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: '© 2022-2023 myth software, llc. all rights reserved.',
       },
       prism: {
         theme: lightCodeTheme,

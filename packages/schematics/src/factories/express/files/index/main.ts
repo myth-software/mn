@@ -1,4 +1,4 @@
-<% if (debug) { %>
+<% if (options.debug) { %>
   <%= logDebug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
 <% } %>
 
@@ -10,7 +10,7 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 <% for(const title of titles) { %>
-  import { <%= camelize(title) %>Router } from './<%= dasherize(title) %>.router';
+  import { <%= camelize(title) %>Router } from './routers/<%= dasherize(title) %>.router';
 <% } %>
 
 
@@ -24,7 +24,7 @@ app.use(express.json());
 
 <% for(const title of titles) { %>
   app.use('/<%= dasherize(title) %>', <%= camelize(title) %>Router);
-  import * from './<%= dasherize(title) %>.router';
+  import * from './routers/<%= dasherize(title) %>.router';
 <% } %>
 
 const server = app.listen(PORT, () => {

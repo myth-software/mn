@@ -1,31 +1,63 @@
 import { notion } from '@mountnotion/sdk';
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import {
+  LogInput,
+  MountnCommand,
+  MountNotionConfig,
+  MultiSelectDatabasePropertyConfigResponse,
+  SelectDatabasePropertyConfigResponse,
+} from '@mountnotion/types';
+import { ensure } from '@mountnotion/utils';
 import { EMOJI, printPhraseList } from '../utils';
+
+type LintColumnsOptions = {
+  pageId: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is LintColumnsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
+
+function dependencies(config: MountNotionConfig) {
+  const hasRules = Object.keys(config.workspace.lint.columns).length > 0;
+
+  if (!hasRules) {
+    throw new Error('no rules configured');
+  }
+}
 
 export default {
   name: 'lint-columns',
   description:
-    'lint workspaces’s databases columns for pass or fail against standards',
-  options: [],
-  actionFactory: () => async () => {
-    const page_id = '';
+    "lint workspaces's databases columns for pass or fail against standards",
+  options: [
+    { name: '-p, --page-id', description: 'id of page with databases' },
+  ],
+  actionFactory: (config) => async (options) => {
+    assert(options);
+    dependencies(config);
+    const page_id = options.pageId;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
     });
     const ids = allResponses
-      .flatMap(({ results }) => results as any[])
+      .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const missingName: any[] = [];
-    const missingLastEditedTime: any[] = [];
-    const missingCreatedTime: any[] = [];
-    const missingLastEditedBy: any[] = [];
-    const missingCreatedBy: any[] = [];
-    const missingEmojis: any[] = [];
-    const mismatchedSelects: any[] = [];
-    const mismatchedMultiselects: any[] = [];
-    const missingAllLower: any[] = [];
+    const missingName: LogInput[] = [];
+    const missingLastEditedTime: LogInput[] = [];
+    const missingCreatedTime: LogInput[] = [];
+    const missingLastEditedBy: LogInput[] = [];
+    const missingCreatedBy: LogInput[] = [];
+    const missingEmojis: { database: string; relations: string[] }[] = [];
+    const mismatchedSelects: { database: string; name: string }[] = [];
+    const mismatchedMultiselects: { database: string; name: string }[] = [];
+    const missingAllLower: { database: string; allLower: string[] }[] = [];
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
@@ -42,9 +74,11 @@ export default {
       const createdBy = propertyNames.find((name) => {
         return database.properties[name].type === 'created_by';
       });
-      const title = propertyNames.find((name) => {
-        return database.properties[name].type === 'title';
-      });
+      const title = ensure(
+        propertyNames.find((name) => {
+          return database.properties[name].type === 'title';
+        })
+      );
       const relations = propertyNames
         .filter((name) => {
           return database.properties[name].type === 'relation';
@@ -58,8 +92,9 @@ export default {
           return database.properties[name].type === 'select';
         })
         .filter((name) => {
-          const options: any[] = (database.properties[name] as any).select
-            .options;
+          const options = (
+            database.properties[name] as SelectDatabasePropertyConfigResponse
+          ).select.options;
           const firstOptionColor = options[0].color;
 
           return !options.every((option) => option.color === firstOptionColor);
@@ -69,251 +104,127 @@ export default {
           return database.properties[name].type === 'multi_select';
         })
         .filter((name) => {
-          const options: any[] = (database.properties[name] as any).multi_select
-            .options;
+          const options = (
+            database.properties[
+              name
+            ] as MultiSelectDatabasePropertyConfigResponse
+          ).multi_select.options;
           const firstOptionColor = options[0].color;
 
           return !options.every((option) => option.color === firstOptionColor);
         });
 
       if (!database.properties['name']) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [title!]: {
-              name: 'name',
-            },
-          },
-        });
         missingName.push({
-          database: (database as any).title[0].plain_text,
-          from: title,
-          to: 'name',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `title "${title}" has consistent titles as "name"`,
         });
       }
 
       if (lastEditedTime && lastEditedTime !== 'last edited time') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [lastEditedTime]: {
-              name: 'last edited time',
-            },
-          },
-        });
         missingLastEditedTime.push({
-          database: (database as any).title[0].plain_text,
-          from: lastEditedTime,
-          to: 'last edited time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_time "${lastEditedTime}" has consistent column name as "last edited time"`,
         });
       }
 
       if (!lastEditedTime) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'last edited time': {
-              last_edited_time: {},
-              name: 'last edited time',
-              type: 'last_edited_time',
-            },
-          },
-        });
-
         missingLastEditedTime.push({
-          database: (database as any).title[0].plain_text,
-          from: null,
-          to: 'last edited time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_time does not exist`,
         });
       }
 
       if (createdTime && createdTime !== 'created time') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [createdTime]: {
-              name: 'created time',
-            },
-          },
-        });
-
         missingCreatedTime.push({
-          database: (database as any).title[0].plain_text,
-          from: createdTime,
-          to: 'created time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_time "${createdTime}" has consistent column name as "created time"`,
         });
       }
 
       if (!createdTime) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'created time': {
-              created_time: {},
-              name: 'created time',
-              type: 'created_time',
-            },
-          },
-        });
-
         missingCreatedTime.push({
-          database: (database as any).title[0].plain_text,
-          from: null,
-          to: 'created time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_time does not exist`,
         });
       }
 
       if (lastEditedBy && lastEditedBy !== 'last edited by') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [lastEditedBy]: {
-              name: 'last edited by',
-            },
-          },
-        });
         missingLastEditedBy.push({
-          database: (database as any).title[0].plain_text,
-          from: lastEditedBy,
-          to: 'last edited by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_by "${lastEditedBy}" has consistent column name as "last edited by"`,
         });
       }
 
       if (!lastEditedBy) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'last edited by': {
-              last_edited_by: {},
-              name: 'last edited by',
-              type: 'last_edited_by',
-            },
-          },
-        });
-
         missingLastEditedBy.push({
-          database: (database as any).title[0].plain_text,
-          from: null,
-          to: 'last edited by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_by does not exist`,
         });
       }
 
       if (createdBy && createdBy !== 'created by') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [createdBy]: {
-              name: 'created by',
-            },
-          },
-        });
-
         missingCreatedBy.push({
-          database: (database as any).title[0].plain_text,
-          from: createdBy,
-          to: 'created by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_by "${lastEditedBy}" has consistent column name as "created by"`,
         });
       }
 
       if (!createdBy) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'created by': {
-              created_by: {},
-              name: 'created by',
-              type: 'created_by',
-            },
-          },
-        });
-
         missingCreatedBy.push({
-          database: (database as any).title[0].plain_text,
-          from: null,
-          to: 'created by',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `created_by does not exist`,
         });
       }
 
       if (relations.length) {
         missingEmojis.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           relations,
         });
       }
 
       while (selects.length !== 0) {
         const name = selects[0];
-        /**
-         * get all the existing pages
-         * NOTE: curiously unnecessary
-         */
-        // const pages = await notion.databases.query(
-        //   { database_id: database_id },
-        //   { all: true, resultsOnly: true, flattenResponse: true },
-        // );
-        // const page = (pages as any[])[0];
-        // const [, properties] = (await notion.pages.retrieve(
-        //   {
-        //     page_id: page.page_id,
-        //   },
-        //   { flattenResponse: true },
-        // )) as [unknown, Properties];
-
-        /**
-         * get all the existing options
-         */
-        const options: any[] = (database.properties[name] as any).select
-          .options;
-        const firstOptionColor = options[0].color;
-        const updatedOptions = options.map((option) => ({
-          name: option.name,
-          color: firstOptionColor,
-        }));
-
-        /**
-         * delete all existing options
-         */
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [name]: {
-              select: {
-                options: [],
-              },
-              type: 'select',
-            },
-          },
-        });
-        /**
-         * create new options with consistent color
-         */
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [name]: {
-              select: {
-                options: updatedOptions,
-              },
-              type: 'select',
-            },
-          },
-        });
-        /**
-         * reapply options to existing pages
-         * NOTE: curiously unnecessary
-         */
-        // while ((pages as any[]).length) {
-        //   const currentPage = (pages as any[])[0];
-        //   await notion.pages.update({
-        //     page_id: currentPage.page_id,
-        //     properties: expandProperties(currentPage, { properties }),
-        //   });
-
-        //   (pages as any[]).shift();
-        // }
 
         mismatchedSelects.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           name,
         });
 
@@ -322,47 +233,9 @@ export default {
 
       while (multiselects.length !== 0) {
         const name = multiselects[0];
-        /**
-         * get all the existing options
-         */
-        const options: any[] = (database.properties[name] as any).multi_select
-          .options;
-        const firstOptionColor = options[0].color;
-        const updatedOptions = options.map((option) => ({
-          name: option.name,
-          color: firstOptionColor,
-        }));
 
-        /**
-         * delete all existing options
-         */
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [name]: {
-              multi_select: {
-                options: [],
-              },
-              type: 'multi_select',
-            },
-          },
-        });
-        /**
-         * create new options with consistent color
-         */
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [name]: {
-              multi_select: {
-                options: updatedOptions,
-              },
-              type: 'multi_select',
-            },
-          },
-        });
         mismatchedMultiselects.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           name,
         });
 
@@ -371,16 +244,12 @@ export default {
 
       if (allLower.length) {
         missingAllLower.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           allLower,
         });
       }
     }
-    console.log(missingName);
-    console.log(missingLastEditedTime);
-    console.log(missingCreatedTime);
-    console.log(missingLastEditedBy);
-    console.log(missingCreatedBy);
+
     console.log(missingEmojis);
     console.log(mismatchedSelects);
     console.log(mismatchedMultiselects);
@@ -388,6 +257,11 @@ export default {
 
     console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
+      ...missingName,
+      ...missingLastEditedTime,
+      ...missingCreatedTime,
+      ...missingLastEditedBy,
+      ...missingCreatedBy,
       {
         action: 'pass',
         page: { emoji: '🔢', title: 'sets' },

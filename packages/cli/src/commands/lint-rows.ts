@@ -3,19 +3,43 @@ import {
   FullGetDatabaseResponse,
   LogInput,
   MountnCommand,
+  MountNotionConfig,
 } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { printPhraseList } from '../utils';
 
+type LintRowsOptions = {
+  pageId: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is LintRowsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
+
+function dependencies(config: MountNotionConfig) {
+  const hasRules = Object.keys(config.workspace.lint.rows).length > 0;
+
+  if (!hasRules) {
+    throw new Error('no rules configured');
+  }
+}
+
 export default {
   name: 'lint-rows',
   description:
-    'lint workspaces’s databases rows for pass or fail against standards',
+    "lint workspaces's databases rows for pass or fail against lint rules",
   options: [
     { name: '-p, --page-id', description: 'id of page with databases' },
   ],
-  actionFactory: () => async () => {
-    const database_id = '';
+  actionFactory: (config) => async (options) => {
+    dependencies(config);
+    assert(options);
+    const database_id = options.pageId;
     const [entities, properties] = await notion.databases.query<any>(
       {
         database_id,
@@ -73,7 +97,7 @@ export default {
       }
     }
 
-    console.log('3 databases rows to grade: 🔢 sets, 🔵 overlays, 📝 logs');
+    console.log('3 databases rows to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
       {
         action: 'pass',

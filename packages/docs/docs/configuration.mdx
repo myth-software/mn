@@ -1,0 +1,77 @@
+---
+sidebar_position: 2
+---
+
+# configuration
+
+## example
+
+```json title=".mountnotion.config.json"
+{
+  "auth": {
+    "key": null
+  },
+  "options": {
+    "basic": {
+      "pageId": "508626ce-f127-44f2-af41-7e8d526e745b",
+      "baseUrl": "https://api.pferd.ai",
+      "entities": "@pferd/domain-pferd-entities",
+      "javascriptizeColumns": false
+    },
+    "auth": {
+      "strategies": ["sms", "email"],
+      "usersDatabase": "users",
+      "userColumn": "🙂 owner",
+      "public": ["features"]
+    }
+  },
+  "schematics": [
+    {
+      "name": "entities",
+      "disable": true,
+      "options": {
+        "basic": {
+          "pageId": "508626ce-f127-44f2-af41-7e8d526e745b",
+          "outDir": "libs/domain-pferd-entities/src"
+        }
+      }
+    },
+    {
+      "name": "rtk-query",
+      "disable": true,
+      "options": {
+        "basic": {
+          "outDir": "libs/domain-pferd-state/src"
+        }
+      }
+    },
+    {
+      "name": "mock-api",
+      "disable": false,
+      "options": {
+        "basic": {
+          "locals": "@pferd/domain-pferd-locals",
+          "outDir": "libs/domain-pferd-mirage/src"
+        }
+      }
+    },
+    {
+      "name": "locals",
+      "disable": true,
+      "options": {
+        "basic": {
+          "outDir": "libs/domain-pferd-locals/src"
+        }
+      }
+    }
+  ]
+}
+```
+
+:::tip give
+life is good
+:::
+
+:::danger take
+life is bad
+:::

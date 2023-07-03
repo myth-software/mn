@@ -1,4 +1,5 @@
 import { MountnCommand } from '@mountnotion/types';
+import { logSuccess } from '@mountnotion/utils';
 import * as open from 'open';
 
 export default {
@@ -8,7 +9,6 @@ export default {
   actionFactory: () => async () => {
     await open('https://www.oauth.com/oauth2-servers/device-flow/');
     const oAuth = 'https://www.oauth.com/oauth2-servers/device-flow/';
-
-    console.log(`opening browser ${oAuth} ...`);
+    logSuccess({ action: 'opening', message: `browser ${oAuth} ...` });
   },
 } satisfies MountnCommand;

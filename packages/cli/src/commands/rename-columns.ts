@@ -1,22 +1,39 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import { LogInput, MountnCommand } from '@mountnotion/types';
-import { ensure } from '@mountnotion/utils';
 import { printPhraseList } from '../utils';
+
+type RenameColumnsOptions = {
+  pageId: string;
+  fromColumnName: string;
+  toColumnName: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is RenameColumnsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
 
 export default {
   name: 'rename-columns',
   description: 'rename all matching columns',
-  options: [],
-  actionFactory: () => async () => {
-    const page_id = ensure(process.env['PAGE_ID']);
-    const fromColumnName = 'owner attorney';
-    const toColumnName = 'customer';
+  options: [
+    { name: '-p, --page-id', description: 'id of page with databases' },
+  ],
+  actionFactory: () => async (options) => {
+    assert(options);
+    const page_id = options.pageId;
+    const fromColumnName = options.fromColumnName;
+    const toColumnName = options.toColumnName;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
     });
     const ids = allResponses
-      .flatMap(({ results }) => results as any[])
+      .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
     const rename = [];

@@ -20,7 +20,7 @@ export const createDatabaseCaches = async (
     mkdirSync('./.mountnotion');
   }
 
-  const CACHE = options.cacheFile ?? './.mountnotion/cache.json';
+  const CACHE = './.mountnotion/cache.json';
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');

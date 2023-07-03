@@ -1,0 +1,40 @@
+# configure-lint-columns
+
+configure the lint rules for columns of databases in the workspace
+
+**dependencies**
+
+```typescript
+config.workspace.selectedPages.length > 0;
+```
+
+**arguments**
+
+| name          | long  | short | prompt                   | enum               |
+| ------------- | ----- | ----- | ------------------------ | ------------------ |
+| use lint rule | --use | -u    | select lint rules to use | COLUMNS_LINT_RULES |
+
+**cli example**
+
+```sh title="terminal"
+npx mn configure-lint-columns --use consistentTitlesAsName --use automaticLastEditedTime
+```
+
+**prompt example**
+
+```sh title="terminal"
+npx mn configure-lint-columns
+```
+
+```sh
+select lint rules to use:
+[x] consistent titles as 'name'
+[ ] automatic created_by
+[ ] automatic created_time
+[ ] automatic last_edited_by
+[ ] automatic last_edited_time
+[x] consistent select colors using first color
+[ ] consistent multi_select colors using first color
+[ ] lowercase column names
+[ ] relations with leading emoji
+```
