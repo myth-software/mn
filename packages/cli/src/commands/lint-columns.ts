@@ -50,7 +50,7 @@ export default {
       .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const missingName: Message[] = [];
+    const missingName: LogInput[] = [];
     const missingLastEditedTime: Message[] = [];
     const missingCreatedTime: Message[] = [];
     const missingLastEditedBy: Message[] = [];
@@ -117,9 +117,12 @@ export default {
 
       if (!database.properties['name']) {
         missingName.push({
-          database: database.title[0].plain_text,
-          from: title,
-          to: 'name',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `title "${title}" has consistent titles as "name"`,
         });
       }
 
