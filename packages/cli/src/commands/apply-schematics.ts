@@ -3,7 +3,7 @@ import 'symbol-observable';
 
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { logError, logInfo } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
@@ -24,12 +24,23 @@ function assert(
   }
 }
 
+function dependencies(config: MountNotionConfig) {
+  if (!config) {
+    logError({
+      action: 'erroring',
+      message: 'missing mount notion config file',
+    });
+    throw new Error('missing mount notion config file');
+  }
+}
+
 export default {
   name: 'apply-schematics',
   description: 'applies schematics',
   options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
   actionFactory: (config) => async (options) => {
     assert(options);
+    dependencies(config);
 
     if (options.clearCache) {
       await rimraf(`${process.cwd()}/.mountnotion`);
@@ -74,15 +85,6 @@ export default {
       return 'npm';
     }
 
-    if (!config) {
-      logError({
-        action: 'erroring',
-        message: 'missing mount notion config file',
-      });
-
-      return;
-    }
-
     /** Create the workflow scoped to the working directory that will be executed with this run. */
     const workflow = new NodeWorkflow(process.cwd(), {
       resolvePaths: [process.cwd(), __dirname],
@@ -117,7 +119,7 @@ export default {
         : event.path;
 
       const desc =
-        (event as any).description == 'alreadyExist'
+        (event as { description: string }).description == 'alreadyExist'
           ? 'already exists'
           : 'does not exist';
 

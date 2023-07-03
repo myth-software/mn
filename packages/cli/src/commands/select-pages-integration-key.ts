@@ -14,7 +14,7 @@ function assert(
   }
 }
 
-export const promptSelectPagesIntegrationKey = async (): Promise<string> => {
+export const optionsPrompt = async () => {
   const results = await prompt<SelectPagesIntegrationKeyOptions>([
     {
       type: 'input',
@@ -31,13 +31,13 @@ export default {
   description:
     'select pages manually, where there is no known list of available options',
   options: [
-    { name: '-p, --page-id', description: 'id of page with databases' },
+    { name: '-p, --page-id <id>', description: 'id of page with databases' },
   ],
   actionFactory: () => async (options) => {
     assert(options);
 
     if (!options.pageId) {
-      await promptSelectPagesIntegrationKey();
+      await optionsPrompt();
       return;
     }
 

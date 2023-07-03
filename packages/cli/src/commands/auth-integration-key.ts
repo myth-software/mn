@@ -5,7 +5,7 @@ type AuthIntegrationKeyOptions = {
   integrationKey: string;
 };
 
-async function promptAuthIntegrationKey(): Promise<string> {
+async function optionsPrompt() {
   const results = await prompt<AuthIntegrationKeyOptions>([
     {
       type: 'input',
@@ -14,7 +14,7 @@ async function promptAuthIntegrationKey(): Promise<string> {
     },
   ]);
 
-  return results.integrationKey;
+  return results;
 }
 
 function assert(
@@ -40,7 +40,7 @@ export default {
     assert(options);
 
     if (!options.integrationKey) {
-      await promptAuthIntegrationKey();
+      await optionsPrompt();
       return;
     }
 

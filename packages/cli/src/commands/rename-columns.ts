@@ -4,6 +4,8 @@ import { printPhraseList } from '../utils';
 
 type RenameColumnsOptions = {
   pageId: string;
+  fromColumnName: string;
+  toColumnName: string;
 };
 
 function assert(
@@ -24,8 +26,8 @@ export default {
   actionFactory: () => async (options) => {
     assert(options);
     const page_id = options.pageId;
-    const fromColumnName = 'owner attorney';
-    const toColumnName = 'customer';
+    const fromColumnName = options.fromColumnName;
+    const toColumnName = options.toColumnName;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,

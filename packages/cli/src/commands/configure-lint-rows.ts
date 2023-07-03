@@ -1,39 +1,35 @@
 import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
-type RowsOptions = {
-  configureStandardsRows: string[];
+type ConfigureLintRowsOptions = {
+  configureLintRows: string[];
   use: string;
 };
 
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is RowsOptions {
+): asserts condition is ConfigureLintRowsOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
 }
 
-export const rowConfigChoices = [
-  'lowercase page titles',
-  'untitled pages default to animal color names',
-  'pages without icons default to database icon',
-];
-
-export const promptStandardsRows = async () => {
-  const results = await prompt<RowsOptions>([
+export const optionsPrompt = async () => {
+  const results = await prompt<ConfigureLintRowsOptions>([
     {
       type: 'multiselect',
       message: 'Select lint rules to use:',
-      name: 'configureStandardsRows',
-      choices: rowConfigChoices,
+      name: 'configureLintRows',
+      choices: [
+        'lowercase page titles',
+        'untitled pages default to animal color names',
+        'pages without icons default to database icon',
+      ],
     },
   ]);
-  console.log('You selected:', results.configureStandardsRows);
-  const selectedRowConfig = results.configureStandardsRows;
-  console.log('selectedRowConfig:', selectedRowConfig);
-  return results.configureStandardsRows;
+
+  return results;
 };
 
 export default {
@@ -52,7 +48,7 @@ export default {
     const args = {} as Record<string, string>;
 
     if (!options['use']) {
-      await promptStandardsRows();
+      await optionsPrompt();
       return;
     }
 

@@ -15,39 +15,27 @@ function assert(
   }
 }
 
-export const columnConfigChoices = [
-  "consistent titles as 'name'",
-  'automatic created_by',
-  'automatic created_time',
-  'automatic last_edited_by',
-  'automatic last_edited_time',
-  'consistent select colors using first color',
-  'consistent multi_select colors using first color',
-  'lowercase column names',
-  'relations with leading emoji',
-];
-
-export const promptStandardsColumns = async () => {
+export const optionsPrompt = async () => {
   const results = await prompt<ColumnsOptions>([
     {
       type: 'multiselect',
       message: 'select lint rules to use:',
       name: 'configureLintColumns',
-      choices: columnConfigChoices,
+      choices: [
+        "consistent titles as 'name'",
+        'automatic created_by',
+        'automatic created_time',
+        'automatic last_edited_by',
+        'automatic last_edited_time',
+        'consistent select colors using first color',
+        'consistent multi_select colors using first color',
+        'lowercase column names',
+        'relations with leading emoji',
+      ],
     },
   ]);
-  console.log(
-    'You selected:',
-    results.configureLintColumns,
-    typeof results.configureLintColumns
-  );
-  const selectedColumnConfig = results.configureLintColumns;
-  console.log(
-    'selectedColumnConfig:',
-    selectedColumnConfig,
-    typeof selectedColumnConfig
-  );
-  return results.configureLintColumns;
+
+  return results;
 };
 
 export default {
@@ -63,7 +51,7 @@ export default {
   actionFactory: () => async (options) => {
     assert(options);
     if (!options['use']) {
-      await promptStandardsColumns();
+      await optionsPrompt();
       return;
     }
 

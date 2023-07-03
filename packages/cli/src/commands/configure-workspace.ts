@@ -18,7 +18,7 @@ function assert(
   }
 }
 
-export const promptConfigureWorkspace = async (
+export const optionsPrompt = async (
   newConfig: WorkspaceOptions,
   currentConfig: WorkspaceOptions
 ) => {
@@ -132,10 +132,10 @@ export default {
       options['usersDatabase'] === undefined ||
       options['userColumn'] === undefined;
     if (optionsAreConfigured) {
-      await promptConfigureWorkspace(selectedConfig, workspaceConfig);
+      await optionsPrompt(selectedConfig, workspaceConfig);
       return;
     } else if (anyOptionIsUndefined) {
-      await promptConfigureWorkspace(selectedConfig, workspaceConfig);
+      await optionsPrompt(selectedConfig, workspaceConfig);
       return;
     } else {
       workspaceConfig = {

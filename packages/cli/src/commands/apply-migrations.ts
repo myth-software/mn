@@ -97,7 +97,7 @@ export default {
 
     if (command === 'migrate') {
       const result = execSync(
-        `npx ts-node ${outDir}/migrate.ts -- ${outDir}`
+        `npx ts-node ${outDir}/migrate.ts ${outDir}`
       ).toString();
       console.log(result);
       return;

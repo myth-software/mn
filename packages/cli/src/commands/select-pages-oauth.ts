@@ -14,7 +14,7 @@ function assert(
   }
 }
 
-export const promptOAuth = async (): Promise<string[]> => {
+export const optionsPrompt = async () => {
   const results = await prompt<SelectPagesOauthOptions>([
     {
       type: 'list',
@@ -28,7 +28,7 @@ export const promptOAuth = async (): Promise<string[]> => {
     },
   ]);
 
-  return [results.pageId];
+  return results;
 };
 // temporary workaround for value being set to boolean true (despite string type) if no argument follows the -id or --page-id flag
 
@@ -46,7 +46,7 @@ export default {
     assert(options);
 
     if (!options.pageId) {
-      await promptOAuth();
+      await optionsPrompt();
       return;
     }
 
