@@ -4,6 +4,7 @@ import {
   Schematics,
 } from '@mountnotion/types';
 import { execSync } from 'child_process';
+import { prompt } from 'enquirer';
 
 type MigrationsOptions = {
   command: 'check' | 'drop' | 'generate' | 'up' | 'migrate';
@@ -28,11 +29,29 @@ function dependencies(config: MountNotionConfig) {
   }
 }
 
+async function optionsPrompt() {
+  const results = await prompt<MigrationsOptions>([
+    {
+      name: 'command',
+      type: 'select',
+      message: 'select command:',
+      choices: [
+        { name: 'check' },
+        { name: 'drop' },
+        { name: 'generate' },
+        { name: 'up' },
+        { name: 'migrate' },
+      ],
+    },
+  ]);
+  return results;
+}
+
 export default {
   name: 'apply-migrations',
   description: 'applies migrations for production drizzle databases',
   options: [
-    { name: '-c, --command <generate>', description: 'select drizzle command' },
+    { name: '-c, --command <generate>', description: 'select command' },
   ],
   actionFactory: (config) => async (options) => {
     assert(options);
@@ -43,7 +62,9 @@ export default {
     );
     const outDir = drizzleSchematic?.options.basic.outDir;
 
-    if (options.command === 'check') {
+    const command = options.command ?? (await optionsPrompt());
+
+    if (command === 'check') {
       try {
         const result = execSync(
           `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
@@ -55,7 +76,7 @@ export default {
       return;
     }
 
-    if (options.command === 'drop') {
+    if (command === 'drop') {
       try {
         const result = execSync(
           `npx drizzle-kit drop:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
@@ -67,7 +88,7 @@ export default {
       return;
     }
 
-    if (options.command === 'generate') {
+    if (command === 'generate') {
       try {
         const result = execSync(
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
@@ -79,7 +100,7 @@ export default {
       return;
     }
 
-    if (options.command === 'migrate') {
+    if (command === 'migrate') {
       try {
         const result = execSync(`npx ts-node ${outDir}/migrate.ts`).toString();
         console.log(result);
@@ -89,7 +110,7 @@ export default {
       return;
     }
 
-    if (options.command === 'up') {
+    if (command === 'up') {
       try {
         const result = execSync(
           `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`

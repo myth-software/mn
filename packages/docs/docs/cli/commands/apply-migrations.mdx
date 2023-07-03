@@ -5,16 +5,14 @@ applies migrations for production drizzle databases
 **dependencies**
 
 ```typescript
-config.workspace.schematics.includes(
-  (schematic) => schematic.name === 'drizzle'
-);
+config.workspace.schematics.some((schematic) => schematic.name === 'drizzle');
 ```
 
 **arguments**
 
-| name    | long      | short | prompt                 | default value | enum             |
-| ------- | --------- | ----- | ---------------------- | ------------- | ---------------- |
-| command | --command | -c    | select drizzle command |               | drizzle commands |
+| name    | long      | short | prompt         | default value | enum     |
+| ------- | --------- | ----- | -------------- | ------------- | -------- |
+| command | --command | -c    | select command |               | commands |
 
 **cli example**
 
@@ -29,9 +27,10 @@ npx mn apply-migrations
 ```
 
 ```sh
-select drizzle command:
+select command:
 [ ] check
 [ ] drop
 [x] generate
+[ ] migrate
 [ ] up
 ```
