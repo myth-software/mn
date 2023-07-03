@@ -1,21 +1,21 @@
 import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
-type SelectPagesOauthConfig = {
+type SelectPagesOauthOptions = {
   pageId: string;
 };
 
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is SelectPagesOauthConfig {
+): asserts condition is SelectPagesOauthOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
 }
 
 export const promptOAuth = async (): Promise<string[]> => {
-  const results = await prompt<SelectPagesOauthConfig>([
+  const results = await prompt<SelectPagesOauthOptions>([
     {
       type: 'list',
       message: 'Select pages to include:',
@@ -38,19 +38,18 @@ export default {
     'select pages from a list of options that come from the results of oauth',
   options: [
     {
-      name: '-id, --page-id [select-pages-oauth]',
+      name: '-p, --page-id [select-pages-oauth]',
       description: 'select pages to include',
     },
   ],
   actionFactory: () => async (options) => {
     assert(options);
-    if (typeof options.pageId === 'string') {
+
+    if (!options.pageId) {
+      await promptOAuth();
       return;
     }
 
-    // console.log("args:", args, "options.pageId:", options.pageId);
-    if (options['pageId'] === undefined) {
-      await promptOAuth();
-    }
+    return;
   },
 } satisfies MountnCommand;

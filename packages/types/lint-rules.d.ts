@@ -1,4 +1,4 @@
-export declare type ColumnsStandards = {
+export declare type ColumnsLintRules = {
   consistentTitlesAsName: "consistent titles as 'name'";
   automaticCreatedBy: 'automatic created_by';
   automaticCreatedTime: 'automatic created_time';
@@ -10,7 +10,7 @@ export declare type ColumnsStandards = {
   relationsWithLeadingEmoji: 'relations with leading emoji';
 };
 
-export declare type RowsStandards = {
+export declare type RowsLintRules = {
   lowercasePageTitles: 'lowercase page titles';
   untitledPagesDefaultToAnimalColorNames: 'untitled pages default to animal color names';
   pagesWithoutIconsDefaultToDatabaseIcon: 'pages without icons default to database icon';

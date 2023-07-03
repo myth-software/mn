@@ -1,21 +1,21 @@
 import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
-type SelectPagesIntegrationKeyConfig = {
+type SelectPagesIntegrationKeyOptions = {
   pageId: string;
 };
 
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is SelectPagesIntegrationKeyConfig {
+): asserts condition is SelectPagesIntegrationKeyOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
 }
 
 export const promptSelectPagesIntegrationKey = async (): Promise<string> => {
-  const results = await prompt<SelectPagesIntegrationKeyConfig>([
+  const results = await prompt<SelectPagesIntegrationKeyOptions>([
     {
       type: 'input',
       name: 'pageId',
@@ -33,16 +33,14 @@ export default {
   options: [
     { name: '-p, --page-id', description: 'id of page with databases' },
   ],
-  actionFactory: () => async (options, next, again) => {
+  actionFactory: () => async (options) => {
     assert(options);
 
-    console.log({ options, next: (next as any).args, again });
+    if (!options.pageId) {
+      await promptSelectPagesIntegrationKey();
+      return;
+    }
 
-    const integrationKey =
-      typeof options.pageId === 'string'
-        ? options.pageId
-        : await promptSelectPagesIntegrationKey();
-
-    console.log(integrationKey);
+    return;
   },
 } satisfies MountnCommand;

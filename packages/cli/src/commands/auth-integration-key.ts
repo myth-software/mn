@@ -1,13 +1,12 @@
 import { MountnCommand } from '@mountnotion/types';
-import { logSuccess } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 
-type AuthIntegrationKeyConfig = {
+type AuthIntegrationKeyOptions = {
   integrationKey: string;
 };
 
 async function promptAuthIntegrationKey(): Promise<string> {
-  const results = await prompt<AuthIntegrationKeyConfig>([
+  const results = await prompt<AuthIntegrationKeyOptions>([
     {
       type: 'input',
       message: 'integration key:',
@@ -21,7 +20,7 @@ async function promptAuthIntegrationKey(): Promise<string> {
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is AuthIntegrationKeyConfig {
+): asserts condition is AuthIntegrationKeyOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
@@ -39,8 +38,6 @@ export default {
   ],
   actionFactory: () => async (options) => {
     assert(options);
-    logSuccess({ action: 'starting', message: 'auth-integration-key command' });
-    logSuccess({ action: '--------', message: '----------------------------' });
 
     if (!options.integrationKey) {
       await promptAuthIntegrationKey();

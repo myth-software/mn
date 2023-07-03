@@ -1,7 +1,7 @@
 import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
-type ColumnsConfig = {
+type ColumnsOptions = {
   configureLintColumns: string[];
   use: string;
 };
@@ -9,7 +9,7 @@ type ColumnsConfig = {
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is ColumnsConfig {
+): asserts condition is ColumnsOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
@@ -27,8 +27,8 @@ export const columnConfigChoices = [
   'relations with leading emoji',
 ];
 
-export const promptStandardsColumns = async (): Promise<string[]> => {
-  const results = await prompt<ColumnsConfig>([
+export const promptStandardsColumns = async () => {
+  const results = await prompt<ColumnsOptions>([
     {
       type: 'multiselect',
       message: 'select lint rules to use:',
@@ -60,15 +60,13 @@ export default {
       description: 'select lint rules to use',
     },
   ],
-  actionFactory: () => (options) => {
+  actionFactory: () => async (options) => {
     assert(options);
-
-    if (typeof options.use === 'string') {
+    if (!options['use']) {
+      await promptStandardsColumns();
       return;
     }
 
-    if (options['use'] === undefined) {
-      promptStandardsColumns();
-    }
+    return;
   },
 } satisfies MountnCommand;

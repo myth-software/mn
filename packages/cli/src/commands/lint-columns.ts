@@ -1,31 +1,64 @@
 import { notion } from '@mountnotion/sdk';
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import {
+  LogInput,
+  MountnCommand,
+  MountNotionConfig,
+  MultiSelectDatabasePropertyConfigResponse,
+  SelectDatabasePropertyConfigResponse,
+} from '@mountnotion/types';
+import { ensure } from '@mountnotion/utils';
 import { EMOJI, printPhraseList } from '../utils';
+
+type Message = { database: string; from?: string | null; to: string };
+type LintColumnsOptions = {
+  pageId: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is LintColumnsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
+
+function dependencies(config: MountNotionConfig) {
+  const hasRules = Object.keys(config.workspace.lint.columns).length > 0;
+
+  if (!hasRules) {
+    throw new Error('no rules configured');
+  }
+}
 
 export default {
   name: 'lint-columns',
   description:
-    'lint workspaces’s databases columns for pass or fail against standards',
-  options: [],
-  actionFactory: () => async () => {
-    const page_id = '';
+    "lint workspaces's databases columns for pass or fail against standards",
+  options: [
+    { name: '-p, --page-id', description: 'id of page with databases' },
+  ],
+  actionFactory: (config) => async (options) => {
+    assert(options);
+    dependencies(config);
+    const page_id = options.pageId;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
     });
     const ids = allResponses
-      .flatMap(({ results }) => results as any[])
+      .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const missingName: any[] = [];
-    const missingLastEditedTime: any[] = [];
-    const missingCreatedTime: any[] = [];
-    const missingLastEditedBy: any[] = [];
-    const missingCreatedBy: any[] = [];
-    const missingEmojis: any[] = [];
-    const mismatchedSelects: any[] = [];
-    const mismatchedMultiselects: any[] = [];
-    const missingAllLower: any[] = [];
+    const missingName: Message[] = [];
+    const missingLastEditedTime: Message[] = [];
+    const missingCreatedTime: Message[] = [];
+    const missingLastEditedBy: Message[] = [];
+    const missingCreatedBy: Message[] = [];
+    const missingEmojis: { database: string; relations: string[] }[] = [];
+    const mismatchedSelects: { database: string; name: string }[] = [];
+    const mismatchedMultiselects: { database: string; name: string }[] = [];
+    const missingAllLower: { database: string; allLower: string[] }[] = [];
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
@@ -42,9 +75,11 @@ export default {
       const createdBy = propertyNames.find((name) => {
         return database.properties[name].type === 'created_by';
       });
-      const title = propertyNames.find((name) => {
-        return database.properties[name].type === 'title';
-      });
+      const title = ensure(
+        propertyNames.find((name) => {
+          return database.properties[name].type === 'title';
+        })
+      );
       const relations = propertyNames
         .filter((name) => {
           return database.properties[name].type === 'relation';
@@ -58,8 +93,9 @@ export default {
           return database.properties[name].type === 'select';
         })
         .filter((name) => {
-          const options: any[] = (database.properties[name] as any).select
-            .options;
+          const options = (
+            database.properties[name] as SelectDatabasePropertyConfigResponse
+          ).select.options;
           const firstOptionColor = options[0].color;
 
           return !options.every((option) => option.color === firstOptionColor);
@@ -69,8 +105,11 @@ export default {
           return database.properties[name].type === 'multi_select';
         })
         .filter((name) => {
-          const options: any[] = (database.properties[name] as any).multi_select
-            .options;
+          const options = (
+            database.properties[
+              name
+            ] as MultiSelectDatabasePropertyConfigResponse
+          ).multi_select.options;
           const firstOptionColor = options[0].color;
 
           return !options.every((option) => option.color === firstOptionColor);
@@ -80,13 +119,13 @@ export default {
         await notion.databases.update({
           database_id,
           properties: {
-            [title!]: {
+            [title]: {
               name: 'name',
             },
           },
         });
         missingName.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: title,
           to: 'name',
         });
@@ -102,7 +141,7 @@ export default {
           },
         });
         missingLastEditedTime.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: lastEditedTime,
           to: 'last edited time',
         });
@@ -121,7 +160,7 @@ export default {
         });
 
         missingLastEditedTime.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: null,
           to: 'last edited time',
         });
@@ -138,7 +177,7 @@ export default {
         });
 
         missingCreatedTime.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: createdTime,
           to: 'created time',
         });
@@ -157,7 +196,7 @@ export default {
         });
 
         missingCreatedTime.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: null,
           to: 'created time',
         });
@@ -173,7 +212,7 @@ export default {
           },
         });
         missingLastEditedBy.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: lastEditedBy,
           to: 'last edited by',
         });
@@ -192,7 +231,7 @@ export default {
         });
 
         missingLastEditedBy.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: null,
           to: 'last edited by',
         });
@@ -209,7 +248,7 @@ export default {
         });
 
         missingCreatedBy.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: createdBy,
           to: 'created by',
         });
@@ -228,7 +267,7 @@ export default {
         });
 
         missingCreatedBy.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           from: null,
           to: 'created by',
         });
@@ -236,7 +275,7 @@ export default {
 
       if (relations.length) {
         missingEmojis.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           relations,
         });
       }
@@ -262,8 +301,9 @@ export default {
         /**
          * get all the existing options
          */
-        const options: any[] = (database.properties[name] as any).select
-          .options;
+        const options = (
+          database.properties[name] as SelectDatabasePropertyConfigResponse
+        ).select.options;
         const firstOptionColor = options[0].color;
         const updatedOptions = options.map((option) => ({
           name: option.name,
@@ -313,7 +353,7 @@ export default {
         // }
 
         mismatchedSelects.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           name,
         });
 
@@ -325,8 +365,9 @@ export default {
         /**
          * get all the existing options
          */
-        const options: any[] = (database.properties[name] as any).multi_select
-          .options;
+        const options = (
+          database.properties[name] as MultiSelectDatabasePropertyConfigResponse
+        ).multi_select.options;
         const firstOptionColor = options[0].color;
         const updatedOptions = options.map((option) => ({
           name: option.name,
@@ -362,7 +403,7 @@ export default {
           },
         });
         mismatchedMultiselects.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           name,
         });
 
@@ -371,7 +412,7 @@ export default {
 
       if (allLower.length) {
         missingAllLower.push({
-          database: (database as any).title[0].plain_text,
+          database: database.title[0].plain_text,
           allLower,
         });
       }

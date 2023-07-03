@@ -1,5 +1,5 @@
 import { EmojiRequest } from './api-endpoints';
-import { ColumnsStandards, RowsStandards } from './lint-rules';
+import { ColumnsLintRules, RowsLintRules } from './lint-rules';
 
 export declare type AuthOptions = {
   strategies: Array<string>;
@@ -69,9 +69,9 @@ export type MountNotionConfig = {
       };
   workspace: {
     selectedPages: string[];
-    standards: {
-      columns: Partial<ColumnsStandards>;
-      rows: Partial<RowsStandards>;
+    lint: {
+      columns: Partial<ColumnsLintRules>;
+      rows: Partial<RowsLintRules>;
     };
   };
   options: { auth: AuthOptions; basic: BasicOptions };

@@ -5,7 +5,7 @@ export default {
   name: 'fix-rows',
   description: 'standardizes any rows that failed grading',
   options: [],
-  actionFactory: () => () => {
+  actionFactory: () => async () => {
     console.log('1 databases rows to standardize: 📝 logs');
     const phraseList: LogInput[] = [
       {

@@ -5,7 +5,7 @@ export default {
   name: 'fix-columns',
   description: 'standardizes any columns that failed grading',
   options: [],
-  actionFactory: () => () => {
+  actionFactory: () => async () => {
     console.log('2 databases columns to standardize: 🔢 sets, 📝 logs');
     const phraseList: LogInput[] = [
       {
