@@ -67,7 +67,7 @@ export default {
     if (command === 'check') {
       try {
         execSync(
-          `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
+          `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
       } catch (e) {
         console.error(e);
@@ -110,7 +110,7 @@ export default {
     if (command === 'up') {
       try {
         execSync(
-          `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
+          `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
       } catch (e) {
         console.error(e);
