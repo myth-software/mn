@@ -51,7 +51,7 @@ export default {
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
     const missingName: LogInput[] = [];
-    const missingLastEditedTime: Message[] = [];
+    const missingLastEditedTime: LogInput[] = [];
     const missingCreatedTime: Message[] = [];
     const missingLastEditedBy: Message[] = [];
     const missingCreatedBy: Message[] = [];
@@ -128,17 +128,23 @@ export default {
 
       if (lastEditedTime && lastEditedTime !== 'last edited time') {
         missingLastEditedTime.push({
-          database: database.title[0].plain_text,
-          from: lastEditedTime,
-          to: 'last edited time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_time "${lastEditedTime}" has consistent column name as "last edited time"`,
         });
       }
 
       if (!lastEditedTime) {
         missingLastEditedTime.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'last edited time',
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `last_edited_time does not exist`,
         });
       }
 
@@ -226,8 +232,7 @@ export default {
         });
       }
     }
-    console.log(missingName);
-    console.log(missingLastEditedTime);
+
     console.log(missingCreatedTime);
     console.log(missingLastEditedBy);
     console.log(missingCreatedBy);
@@ -238,6 +243,8 @@ export default {
 
     console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
+      ...missingName,
+      ...missingLastEditedTime,
       {
         action: 'pass',
         page: { emoji: '🔢', title: 'sets' },

@@ -88,9 +88,10 @@ export default {
 
     if (command === 'generate') {
       try {
-        execSync(
+        const result = execSync(
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
         ).toString('utf-8');
+        console.log(result);
       } catch (e) {
         console.error(e);
       }
