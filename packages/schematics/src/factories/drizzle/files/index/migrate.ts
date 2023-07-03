@@ -8,7 +8,9 @@ const sql = postgres(connectionString, { max: 1, ssl: true });
 const db = drizzle(sql);
 
 async function run() {
-  await migrate(db, { migrationsFolder: 'drizzle' });
+  const outDir = process.argv[2];
+
+  await migrate(db, { migrationsFolder: `${outDir}/../drizzle` });
 }
 
 run();

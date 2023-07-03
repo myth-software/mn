@@ -63,6 +63,7 @@ export default {
     const outDir = drizzleSchematic?.options.basic.outDir;
 
     const command = options.command ?? (await optionsPrompt());
+    console.log(command);
 
     if (command === 'check') {
       try {
@@ -102,7 +103,9 @@ export default {
 
     if (command === 'migrate') {
       try {
-        const result = execSync(`npx ts-node ${outDir}/migrate.ts`).toString();
+        const result = execSync(
+          `npx ts-node ${outDir}/migrate.ts -- ${outDir}`
+        ).toString();
         console.log(result);
       } catch (e) {
         console.error(e);

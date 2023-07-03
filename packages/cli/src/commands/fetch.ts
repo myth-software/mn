@@ -1,10 +1,30 @@
+import { createDatabaseCaches } from '@mountnotion/sdk';
 import { LogInput, MountnCommand } from '@mountnotion/types';
 import { logSuccess } from '@mountnotion/utils';
+
+export type FetchOptions = {
+  pageId: string;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is FetchOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
 
 export default {
   name: 'fetch',
   description: 'fetches databases and builds cache',
-  actionFactory: () => async () => {
+  options: [
+    { name: '-p, --page-id', description: 'id of page with databases' },
+  ],
+  actionFactory: (config) => async (options) => {
+    assert(options);
+    const pageIds = [options.pageId];
+    await createDatabaseCaches(pageIds, config.options);
     const phraseList: LogInput[] = [
       {
         action: 'listing',

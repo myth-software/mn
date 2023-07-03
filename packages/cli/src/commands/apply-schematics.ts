@@ -4,7 +4,7 @@ import 'symbol-observable';
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
 import { LogInput, MountnCommand } from '@mountnotion/types';
-import { logError, logInfo, logSuccess } from '@mountnotion/utils';
+import { logError, logInfo } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
@@ -29,7 +29,6 @@ export default {
   description: 'applies schematics',
   options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
   actionFactory: (config) => async (options) => {
-    logSuccess({ action: 'starting', message: 'apply-schematics command' });
     assert(options);
 
     if (options.clearCache) {
