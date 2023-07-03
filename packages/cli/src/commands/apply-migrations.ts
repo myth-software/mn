@@ -78,7 +78,7 @@ export default {
     if (command === 'drop') {
       try {
         execSync(
-          `npx drizzle-kit drop --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
+          `npx drizzle-kit drop --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
       } catch (e) {
         console.error(e);
@@ -98,7 +98,10 @@ export default {
     }
 
     if (command === 'migrate') {
-      execSync(`npx ts-node ${outDir}/migrate.ts ${outDir}`).toString('utf-8');
+      const result = execSync(
+        `npx ts-node ${outDir}/migrate.ts ${outDir}`
+      ).toString('utf-8');
+      console.log(result);
 
       return;
     }
