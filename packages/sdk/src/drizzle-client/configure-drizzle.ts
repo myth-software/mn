@@ -6,40 +6,11 @@ import {
 import { eq, InferModel } from 'drizzle-orm';
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as postgres from 'postgres';
+import {
+  MountNotionClientDrizzleConfig,
+  MountNotionDrizzleClient,
+} from './configure-drizzle.type';
 import { notionToDrizzleWhereMapper } from './notion-to-drizzle-where.mapper';
-
-type MountNotionClientDrizzleConfig = {
-  connectionString: string;
-  indicies: {
-    [key: string]: any;
-  };
-};
-
-type MountNotionDrizzleClient<T extends MountNotionClientDrizzleConfig> = {
-  [Property in keyof T['indicies']]: T['indicies'][Property] extends infer Database extends T['indicies'][Property]
-    ? {
-        query: (
-          query?: MountNotionQueryParameters<any>
-        ) => Promise<InferModel<Database>[]>;
-        retrieve: (body: { id: string }) => Promise<InferModel<Database>>;
-        update: (
-          body: {
-            id: string;
-          } & Omit<
-            InferModel<Database, 'insert'>,
-            ReadonlyColumnTypes & AdditionalPropertyTypes
-          >
-        ) => Promise<InferModel<Database>>;
-        create: (
-          body: Omit<
-            InferModel<Database, 'insert'>,
-            ReadonlyColumnTypes & AdditionalPropertyTypes
-          >
-        ) => Promise<InferModel<Database>>;
-        delete: (body: { id: string }) => Promise<InferModel<Database>>;
-      }
-    : never;
-};
 
 export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
   config: Config
