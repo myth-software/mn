@@ -25,7 +25,7 @@ export const promptStandardsRows = async (): Promise<string[]> => {
   const results = await prompt<RowsConfig>([
     {
       type: 'multiselect',
-      message: 'Select standards to use:',
+      message: 'Select lint rules to use:',
       name: 'configureStandardsRows',
       choices: rowConfigChoices,
     },
@@ -37,12 +37,13 @@ export const promptStandardsRows = async (): Promise<string[]> => {
 };
 
 export default {
-  name: 'configure-standards-rows',
-  description: 'configure the standards for rows of databases in the workspace',
+  name: 'configure-lint-rows',
+  description:
+    'configure the lint rules for rows of databases in the workspace',
   options: [
     {
-      name: '-u, --use [configure-standards-rows]',
-      description: 'select standards to use',
+      name: '-u, --use [configure-lint-rows]',
+      description: 'select lint rules to use',
     },
   ],
   actionFactory: () => (options) => {
@@ -60,7 +61,7 @@ export default {
 
     const selected: string[] = [];
     for (const [index, arg] of Object.entries(args)) {
-      if (arg === 'configure-standards-rows') {
+      if (arg === 'configure-lint-rows') {
         if (args[index + 1] === '-u' || args[index + 1] === '--use') {
           selected.push(args[index + 2]);
         }

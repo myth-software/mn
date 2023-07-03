@@ -4,14 +4,14 @@ select pages from a list of options that come from the results of oauth
 
 **dependencies**
 
-```tsx
+```typescript
 config.workspace.auth.strategy === 'oauth';
 config.workspace.auth.availablePages.length > 0;
 ```
 
 **validation**
 
-```tsx
+```typescript
 isUuid(pageId);
 ```
 

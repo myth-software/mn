@@ -10,7 +10,7 @@ import * as path from 'path';
 import { description, version } from '../package.json';
 import { commands } from './commands';
 
-export async function cli(): Promise<undefined> {
+export async function cli(): Promise<0> {
   const configPath = path.resolve(process.cwd(), '.mountnotion.config.json');
   process.chdir(path.dirname(configPath));
   const unparsedConfig = await fs.readFile(configPath, { encoding: 'utf8' });
@@ -22,7 +22,7 @@ export async function cli(): Promise<undefined> {
    */
   const program = new Command();
 
-  program.name('mountn').description(description).version(version);
+  program.name('mn').description(description).version(version);
 
   commands.forEach((command) => {
     const subcommand = program
@@ -36,7 +36,7 @@ export async function cli(): Promise<undefined> {
   });
 
   program.parse();
-  return;
+  return 0;
 }
 
 cli()

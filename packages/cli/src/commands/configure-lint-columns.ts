@@ -2,7 +2,7 @@ import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
 type ColumnsConfig = {
-  configureStandardsColumns: string[];
+  configureLintColumns: string[];
   use: string;
 };
 
@@ -31,33 +31,33 @@ export const promptStandardsColumns = async (): Promise<string[]> => {
   const results = await prompt<ColumnsConfig>([
     {
       type: 'multiselect',
-      message: 'Select standards to use:',
-      name: 'configureStandardsColumns',
+      message: 'select lint rules to use:',
+      name: 'configureLintColumns',
       choices: columnConfigChoices,
     },
   ]);
   console.log(
     'You selected:',
-    results.configureStandardsColumns,
-    typeof results.configureStandardsColumns
+    results.configureLintColumns,
+    typeof results.configureLintColumns
   );
-  const selectedColumnConfig = results.configureStandardsColumns;
+  const selectedColumnConfig = results.configureLintColumns;
   console.log(
     'selectedColumnConfig:',
     selectedColumnConfig,
     typeof selectedColumnConfig
   );
-  return results.configureStandardsColumns;
+  return results.configureLintColumns;
 };
 
 export default {
-  name: 'configure-standards-columns',
+  name: 'configure-lint-columns',
   description:
-    'configure the standards for columns of databases in the workspace',
+    'configure the lint rules for columns of databases in the workspace',
   options: [
     {
-      name: '-u, --use [configure-standards-columns]',
-      description: 'select standards to use',
+      name: '-u, --use [configure-lint-columns]',
+      description: 'select lint rules to use',
     },
   ],
   actionFactory: () => (options) => {

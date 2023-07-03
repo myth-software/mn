@@ -10,7 +10,7 @@ import { printPhraseList } from '../utils';
 export default {
   name: 'lint-rows',
   description:
-    'lint workspaces’s databases rows for pass or fail against standards',
+    "lint workspaces's databases rows for pass or fail against lint rules",
   options: [
     { name: '-p, --page-id', description: 'id of page with databases' },
   ],

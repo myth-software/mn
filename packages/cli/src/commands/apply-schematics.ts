@@ -11,6 +11,19 @@ import * as path from 'path';
 import { rimraf } from 'rimraf';
 dotenv.config();
 
+type SchematicsOptions = {
+  clearCache: boolean;
+};
+
+function assert(
+  condition: unknown,
+  msg?: string
+): asserts condition is SchematicsOptions {
+  if (typeof condition !== 'object') {
+    throw new Error(msg);
+  }
+}
+
 export default {
   name: 'apply-schematics',
   description: 'applies schematics',
@@ -19,9 +32,9 @@ export default {
   ],
   actionFactory: (config) => async (options) => {
     logSuccess({ action: 'starting', message: 'apply-schematics command' });
+    assert(options);
 
-    const o = options as { clearCache: string };
-    if (o.clearCache) {
+    if (options.clearCache) {
       await rimraf(`${process.cwd()}/.mountnotion`);
     }
 

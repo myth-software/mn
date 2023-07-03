@@ -1,0 +1,37 @@
+# apply-migrations
+
+applies migrations for production drizzle databases
+
+**dependencies**
+
+```typescript
+config.workspace.schematics.includes(
+  (schematic) => schematic.name === 'drizzle'
+);
+```
+
+**arguments**
+
+| name    | long      | short | prompt                 | default value | enum             |
+| ------- | --------- | ----- | ---------------------- | ------------- | ---------------- |
+| command | --command | -c    | select drizzle command |               | drizzle commands |
+
+**cli example**
+
+```sh title="terminal"
+npx mn apply-migrations --command=generate
+```
+
+**prompt example**
+
+```sh title="terminal"
+npx mn apply-migrations
+```
+
+```sh
+select drizzle command:
+[ ] check
+[ ] drop
+[x] generate
+[ ] up
+```

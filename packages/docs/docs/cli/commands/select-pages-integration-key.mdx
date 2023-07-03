@@ -4,13 +4,13 @@ select pages manually, where there is no known list of available options
 
 **dependencies**
 
-```tsx
+```typescript
 config.workspace.auth.strategy === 'integration-key';
 ```
 
 **validation**
 
-```tsx
+```typescript
 isUuid(pageId);
 isAvailable(pageId);
 ```
