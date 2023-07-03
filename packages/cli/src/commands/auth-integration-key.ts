@@ -5,16 +5,22 @@ type AuthIntegrationKeyOptions = {
   integrationKey: string;
 };
 
-async function optionsPrompt() {
-  const results = await prompt<AuthIntegrationKeyOptions>([
-    {
+async function optionsPrompt(options: AuthIntegrationKeyOptions) {
+  const prompts = [];
+  if (!options.integrationKey) {
+    prompts.push({
       type: 'input',
       message: 'integration key:',
       name: 'integrationKey',
-    },
-  ]);
+    });
+  }
 
-  return results;
+  if (prompts.length) {
+    const results = await prompt<AuthIntegrationKeyOptions>(prompts);
+
+    return results;
+  }
+  return options;
 }
 
 function assert(
@@ -36,13 +42,10 @@ export default {
       description: 'notion integration key',
     },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-
-    if (!options.integrationKey) {
-      await optionsPrompt();
-      return;
-    }
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
     return;
   },

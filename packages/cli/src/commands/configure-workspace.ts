@@ -31,10 +31,10 @@ function dependencies() {
   }
 }
 
-export async function optionsPrompt(newConfig: WorkspaceOptions) {
+export async function optionsPrompt(options: WorkspaceOptions) {
   const prompts = [];
 
-  if (!newConfig.entities) {
+  if (!options.entities) {
     prompts.push({
       type: 'input',
       message: 'name of entities package:',
@@ -42,7 +42,7 @@ export async function optionsPrompt(newConfig: WorkspaceOptions) {
     });
   }
 
-  if (!newConfig.baseUrl) {
+  if (!options.baseUrl) {
     prompts.push({
       type: 'input',
       message: 'base url for api:',
@@ -50,7 +50,7 @@ export async function optionsPrompt(newConfig: WorkspaceOptions) {
     });
   }
 
-  if (!newConfig.authStrategies) {
+  if (!options.authStrategies) {
     prompts.push({
       type: 'multiselect',
       message: 'authentication strategies:',
@@ -59,7 +59,7 @@ export async function optionsPrompt(newConfig: WorkspaceOptions) {
     });
   }
 
-  if (!newConfig.usersDatabase) {
+  if (!options.usersDatabase) {
     prompts.push({
       type: 'list',
       message: 'users database:',
@@ -68,7 +68,7 @@ export async function optionsPrompt(newConfig: WorkspaceOptions) {
     });
   }
 
-  if (!newConfig.userColumn) {
+  if (!options.userColumn) {
     prompts.push({
       type: 'input',
       message: 'user column:',
@@ -76,8 +76,11 @@ export async function optionsPrompt(newConfig: WorkspaceOptions) {
     });
   }
 
-  const results = await prompt<WorkspaceOptions>(prompts);
-  return results;
+  if (prompts.length) {
+    const results = await prompt<WorkspaceOptions>(prompts);
+    return { ...options, ...results };
+  }
+  return options;
 }
 
 export default {
@@ -105,9 +108,10 @@ export default {
       description: 'user column',
     },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-    const allOptions = await optionsPrompt(options);
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
     return;
   },

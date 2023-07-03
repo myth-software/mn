@@ -25,43 +25,50 @@ function dependencies(config: MountNotionConfig) {
   }
 }
 
-async function optionsPrompt() {
-  const results = await prompt<MigrationsOptions>([
-    {
+async function optionsPrompt(options: MigrationsOptions) {
+  const prompts = [];
+  if (!options.command) {
+    prompts.push({
       name: 'command',
       type: 'select',
       message: 'select command:',
       choices: [
-        { name: 'check' },
-        { name: 'drop' },
-        { name: 'generate', message: 'generate migration' },
-        { name: 'up' },
-        { name: 'migrate', hint: 'run migration' },
+        { name: 'check', hint: 'check up on the migrations' },
+        { name: 'drop', hint: 'safely delete migration files' },
+        { name: 'generate', message: 'create new migration file' },
+        { name: 'up', hint: 'shape up metadata' },
+        { name: 'migrate', hint: 'run migration from file' },
       ],
-    },
-  ]);
-  return results;
+    });
+  }
+
+  if (prompts.length) {
+    const results = await prompt<MigrationsOptions>(prompts);
+    return results;
+  }
+
+  return options;
 }
 
 export default {
   name: 'apply-migrations',
   description: 'applies migrations for production drizzle databases',
   options: [{ name: '-c, --command <name>', description: 'select command' }],
-  actionFactory: (config) => async (options) => {
-    assert(options);
+  actionFactory: (config) => async (args) => {
+    assert(args);
     dependencies(config);
 
     const drizzleSchematic = config.schematics.find(
       (schematic) => schematic.name === 'drizzle'
     );
     const outDir = drizzleSchematic?.options.basic.outDir;
-    const command = options.command ?? (await optionsPrompt()).command;
+    const command = (await optionsPrompt(args)).command;
 
     if (command === 'check') {
       try {
         execSync(
           `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
-        );
+        ).toString('utf-8');
       } catch (e) {
         console.error(e);
       }
@@ -72,7 +79,7 @@ export default {
       try {
         execSync(
           `npx drizzle-kit drop --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
-        );
+        ).toString('utf-8');
       } catch (e) {
         console.error(e);
       }
@@ -83,7 +90,7 @@ export default {
       try {
         execSync(
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
-        );
+        ).toString('utf-8');
       } catch (e) {
         console.error(e);
       }
@@ -91,7 +98,7 @@ export default {
     }
 
     if (command === 'migrate') {
-      execSync(`npx ts-node ${outDir}/migrate.ts ${outDir}`);
+      execSync(`npx ts-node ${outDir}/migrate.ts ${outDir}`).toString('utf-8');
 
       return;
     }
@@ -100,7 +107,7 @@ export default {
       try {
         execSync(
           `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts --out=${outDir}/../drizzle`
-        );
+        ).toString('utf-8');
       } catch (e) {
         console.error(e);
       }

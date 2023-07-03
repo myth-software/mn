@@ -1,4 +1,4 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
 type ConfigureLintColumnsOptions = {
@@ -41,8 +41,16 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
     return results;
   }
 
-  return;
+  return options;
 };
+
+function dependencies(config: MountNotionConfig) {
+  const hasPages = config.workspace.selectedPages.length > 0;
+
+  if (!hasPages) {
+    throw new Error('no pages selected');
+  }
+}
 
 export default {
   name: 'configure-lint-columns',
@@ -54,7 +62,8 @@ export default {
       description: 'select lint rules to use',
     },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
+    dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
     console.log(options);

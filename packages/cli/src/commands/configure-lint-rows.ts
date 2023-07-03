@@ -1,4 +1,4 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
 type ConfigureLintRowsOptions = {
@@ -19,12 +19,12 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
   if (!options.use) {
     prompts.push({
       type: 'multiselect',
-      message: 'Select lint rules to use:',
-      name: 'configureLintRows',
+      message: 'select lint rules to use:',
+      name: 'use',
       choices: [
-        'lowercase page titles',
-        'untitled pages default to animal color names',
-        'pages without icons default to database icon',
+        { name: 'lowercase page titles' },
+        { name: 'untitled pages default to animal color names' },
+        { name: 'pages without icons default to database icon' },
       ],
     });
   }
@@ -34,8 +34,16 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
 
     return results;
   }
-  return;
+  return options;
 };
+
+function dependencies(config: MountNotionConfig) {
+  const hasPages = config.workspace.selectedPages.length > 0;
+
+  if (!hasPages) {
+    throw new Error('no pages selected');
+  }
+}
 
 export default {
   name: 'configure-lint-rows',
@@ -47,7 +55,8 @@ export default {
       description: 'select lint rules to use',
     },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
+    dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
     console.log(options);
