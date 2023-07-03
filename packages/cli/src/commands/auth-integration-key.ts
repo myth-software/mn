@@ -32,7 +32,7 @@ export default {
     'an integration key generated in notion by a developer for internal integrations',
   options: [
     {
-      name: '-i, --integration-key <integration-key>',
+      name: '-i, --integration-key <key>',
       description: 'notion integration key',
     },
   ],

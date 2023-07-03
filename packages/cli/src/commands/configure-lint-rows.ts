@@ -2,7 +2,6 @@ import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
 type ConfigureLintRowsOptions = {
-  configureLintRows: string[];
   use: string;
 };
 
@@ -15,9 +14,10 @@ function assert(
   }
 }
 
-export const optionsPrompt = async () => {
-  const results = await prompt<ConfigureLintRowsOptions>([
-    {
+export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
+  const prompts = [];
+  if (!options.use) {
+    prompts.push({
       type: 'multiselect',
       message: 'Select lint rules to use:',
       name: 'configureLintRows',
@@ -26,10 +26,15 @@ export const optionsPrompt = async () => {
         'untitled pages default to animal color names',
         'pages without icons default to database icon',
       ],
-    },
-  ]);
+    });
+  }
 
-  return results;
+  if (prompts.length) {
+    const results = await prompt<ConfigureLintRowsOptions>(prompts);
+
+    return results;
+  }
+  return;
 };
 
 export default {
@@ -38,31 +43,15 @@ export default {
     'configure the lint rules for rows of databases in the workspace',
   options: [
     {
-      name: '-u, --use [configure-lint-rows]',
+      name: '-u, --use <rule>',
       description: 'select lint rules to use',
     },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-    let selectedRowConfig: string[] | [] = [];
-    const args = {} as Record<string, string>;
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
-    if (!options['use']) {
-      await optionsPrompt();
-      return;
-    }
-
-    const selected: string[] = [];
-    for (const [index, arg] of Object.entries(args)) {
-      if (arg === 'configure-lint-rows') {
-        if (args[index + 1] === '-u' || args[index + 1] === '--use') {
-          selected.push(args[index + 2]);
-        }
-      }
-    }
-    selectedRowConfig = selected;
-    console.log(`you have selected a row configuration of: '${selected}'`);
-    // console.log("selectedRowConfig", selectedRowConfig);
     return;
   },
 } satisfies MountnCommand;

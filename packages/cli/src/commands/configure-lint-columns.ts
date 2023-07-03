@@ -1,41 +1,47 @@
 import { MountnCommand } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 
-type ColumnsOptions = {
-  configureLintColumns: string[];
+type ConfigureLintColumnsOptions = {
   use: string;
 };
 
 function assert(
   condition: unknown,
   msg?: string
-): asserts condition is ColumnsOptions {
+): asserts condition is ConfigureLintColumnsOptions {
   if (typeof condition !== 'object') {
     throw new Error(msg);
   }
 }
 
-export const optionsPrompt = async () => {
-  const results = await prompt<ColumnsOptions>([
-    {
+export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
+  const prompts = [];
+  if (!options.use) {
+    prompts.push({
       type: 'multiselect',
       message: 'select lint rules to use:',
-      name: 'configureLintColumns',
+      name: 'use',
       choices: [
-        "consistent titles as 'name'",
-        'automatic created_by',
-        'automatic created_time',
-        'automatic last_edited_by',
-        'automatic last_edited_time',
-        'consistent select colors using first color',
-        'consistent multi_select colors using first color',
-        'lowercase column names',
-        'relations with leading emoji',
+        { name: "consistent titles as 'name'" },
+        { name: 'automatic created_by' },
+        { name: 'automatic created_time' },
+        { name: 'automatic last_edited_by' },
+        { name: 'automatic last_edited_time' },
+        { name: 'consistent select colors using first color' },
+        { name: 'consistent multi_select colors using first color' },
+        { name: 'lowercase column names' },
+        { name: 'relations with leading emoji' },
       ],
-    },
-  ]);
+    });
+  }
 
-  return results;
+  if (prompts.length) {
+    const results = await prompt<ConfigureLintColumnsOptions>(prompts);
+
+    return results;
+  }
+
+  return;
 };
 
 export default {
@@ -44,16 +50,14 @@ export default {
     'configure the lint rules for columns of databases in the workspace',
   options: [
     {
-      name: '-u, --use [configure-lint-columns]',
+      name: '-u, --use <rule>',
       description: 'select lint rules to use',
     },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-    if (!options['use']) {
-      await optionsPrompt();
-      return;
-    }
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
     return;
   },
