@@ -1,3 +1,54 @@
 # configure-workspace
 
-for configuration of mountnotion workspace
+configures mount notion workspace
+
+**dependencies**
+
+```tsx
+cache.length > 1;
+```
+
+**arguments**
+
+| name             | long             | short  | prompt                   | default value | enum                 |
+| ---------------- | ---------------- | ------ | ------------------------ | ------------- | -------------------- |
+| entities package | --entities       | -e     | name of entities package | none          |                      |
+| api base url     | --base-url       | -b     | base url for api         | none          |                      |
+| auth strategy    | --auth-strategy  | -a     | authentication strategy  | none          | notion, sms          |
+| users database   | --users-database | -users | users database           | none          | databases from cache |
+| user column      | --user-column    | -user  | user column              | none          |                      |
+
+**cli example**
+
+```sh title="terminal"
+npx mn configure-workspace --entities @myth-software/entities -b https://api.myth.software -a sms --users-database users --user-column owner
+```
+
+**prompt example**
+
+```sh title="terminal"
+npx mn configure-workspace
+```
+
+```sh
+name of entities package:
+
+> @myth-software/entities
+
+base url for api:
+
+> https://api.myth.software
+
+authentication strategy:
+[ ] notion
+[x] sms
+
+users database:
+[ ] 👥 people
+[ ] 🏢 companies
+[x] 🙂 users
+
+user column:
+
+> owner
+```

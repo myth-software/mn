@@ -1,3 +1,55 @@
 # lint-columns
 
-for testing columns of database against lint rules
+lint workspaces’s databases columns for pass or fail against lint rules
+
+**dependencies**
+
+```tsx
+config.workspace.lint.columns.length > 0;
+```
+
+**arguments**
+
+none
+
+**cli example**
+
+```sh title="terminal"
+npx mn lint-columns
+```
+
+```sh
+3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs
+
+pass 🔢 sets has consistent titles as 'name'
+pass 🔢 sets has automatic created_by
+pass 🔢 sets has automatic created_time
+pass 🔢 sets has automatic last_edited_by
+pass 🔢 sets has automatic last_edited_time
+pass 🔢 sets has consistent select colors using first color
+pass 🔢 sets has consistent multi_select colors using first color
+pass 🔢 sets has lowercase column names
+pass 🔢 sets has relations with leading emoji
+pass 🔵 overlays has consistent titles as 'name'
+pass 🔵 overlays has automatic created_by
+fail 🔵 overlays has automatic created_time
+pass 🔵 overlays has automatic last_edited_by
+pass 🔵 overlays has automatic last_edited_time
+pass 🔵 overlays has consistent select colors using first color
+pass 🔵 overlays has consistent multi_select colors using first color
+pass 🔵 overlays has lowercase column names
+pass 🔵 overlays has relations with leading emoji
+fail 📝 logs title 'Title' has consistent titles as 'name'
+fail 📝 logs has automatic created_by
+fail 📝 logs has automatic created_time
+fail 📝 logs has automatic last_edited_by
+fail 📝 logs has automatic last_edited_time
+fail 📝 logs select 'method' has consistent select colors using first color
+fail 📝 logs multi_select 'Tags' has consistent multi_select colors using first color
+fail 📝 logs multi_select 'Tags' has lowercase column names
+fail 📝 logs relation 'user' has relations with leading emoji
+```
+
+**prompt example**
+
+none

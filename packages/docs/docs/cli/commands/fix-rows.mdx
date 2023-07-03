@@ -1,3 +1,35 @@
 # fix-rows
 
-for fixing rows according to lint rules
+fixes rows that failed lint rules
+
+**dependencies**
+
+```tsx
+const databasesWithRowsFails = cache.filter(
+  (database) => database.lintFails.rows.length > 0
+);
+databasesWithRowsFails.length > 1;
+```
+
+**arguments**
+
+none
+
+**cli example**
+
+```sh title="terminal"
+npx mn fix-rows
+```
+
+```sh
+1 databases rows to fix: 📝 logs
+
+update 📝 logs page_id 'bd7beed3-ba4a-499b-8f9d-16a4dd73e24f' title "Ticked" to "ticked"
+update 📝 logs page_id '5bf11310-23ae-429b-8f0a-d3d33fbc8b23' title "Untitled" to "zebra white"
+update 📝 logs page_id '41f0d2d4-9ddb-44f9-aeac-bf68c17704e0' title "Untitled" to "giraffe orange"
+update 📝 logs page_id '41f0d2d4-9ddb-44f9-aeac-bf68c17704e0' icon to 📝
+```
+
+**prompt example**
+
+none

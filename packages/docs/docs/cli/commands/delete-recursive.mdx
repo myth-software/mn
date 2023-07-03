@@ -1,13 +1,31 @@
 # delete-recursive
 
-for recursive delete of a seelected page and all related pages whose only relation is the selected page
+recursive delete of a seelected page and all related pages whose only relation is the selected page
+
+**dependencies**
+
+none
+
+**arguments**
+
+| name    | long      | short | prompt            | default value |
+| ------- | --------- | ----- | ----------------- | ------------- |
+| page id | --page-id | -p    | page_id to delete |               |
+
+**cli example**
+
+```sh title="terminal"
+npx mn delete-recursive --page-id=2b7495d0-6e26-4e33-8fe4-378d1be2c944
+```
+
+**prompt example**
 
 ```sh title="terminal"
 npx mn delete-recursive
 ```
 
-## options
+```sh
+page_id to delete:
 
-| name    | long      | short | description          |
-| ------- | --------- | ----- | -------------------- |
-| page id | --page-id |       | page id for deleting |
+> 2b7495d0-6e26-4e33-8fe4-378d1be2c944
+```

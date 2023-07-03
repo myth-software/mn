@@ -1,3 +1,34 @@
 # configure-lint-rows
 
-for configuration of rows lint rules
+configure the lint rule for rows of databases in the workspace
+
+**dependencies**
+
+```tsx
+config.workspace.selectedPages.length > 0;
+```
+
+**arguments**
+
+| name          | long  | short | prompt                  | default value | enum            |
+| ------------- | ----- | ----- | ----------------------- | ------------- | --------------- |
+| use lint rule | --use | -u    | select lint rule to use | none          | ROWS_LINT_RULES |
+
+**cli example**
+
+```sh title="terminal"
+npx mn configure-lint-rows --use lowercasePageTitles
+```
+
+**prompt example**
+
+```sh title="terminal"
+npx mn configure-lint-rows
+```
+
+```sh
+select lint rule to use:
+[x] lowercase page titles
+[ ] untitled pages default to animal color names
+[ ] pages without icons default to database icon
+```

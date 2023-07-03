@@ -1,3 +1,41 @@
 # select-pages-oauth
 
-for selecting top-level pages when using oauth auth
+select pages from a list of options that come from the results of oauth
+
+**dependencies**
+
+```tsx
+config.workspace.auth.strategy === 'oauth';
+config.workspace.auth.availablePages.length > 0;
+```
+
+**validation**
+
+```tsx
+isUuid(pageId);
+```
+
+**arguments**
+
+| name    | long      | short | prompt                  | default value | enum                       |
+| ------- | --------- | ----- | ----------------------- | ------------- | -------------------------- |
+| page id | --page-id | -id   | select pages to include |               | config.auth.availablePages |
+
+**cli example**
+
+```sh title="terminal"
+npx mn select-pages-oauth --page-id=dcc1a64095b6-49f3-bcc7-939b-a90c3764
+```
+
+**prompt example**
+
+```sh title="terminal"
+npx mn select-pages-oauth
+```
+
+```sh
+select pages to include:
+[x] 💪 flexin databases
+[ ] 💿 record databases
+[ ] ❤️ bottomless love databases
+```
