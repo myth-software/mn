@@ -4,15 +4,15 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
  
 <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
   <% if(cache.options?.[column] && type === 'multi_select') {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= property %>', [
+    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
       <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= property %>', [
+    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
       <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } else if(cache.rollupsOptions?.[property]) {  %>
-    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= property %>', [
+    export const <%= camelize(title) %><%= classify(property) %> = pgEnum('<%= camelize(title) %><%= classify(property) %>', [
       <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } %>  

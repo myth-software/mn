@@ -1,4 +1,5 @@
 import { MountnCommand } from '@mountnotion/types';
+import { logSuccess } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 
 type AuthIntegrationKeyConfig = {
@@ -30,21 +31,22 @@ export default {
   name: 'auth-integration-key',
   description:
     'an integration key generated in notion by a developer for internal integrations',
-  actionFactory: () => async (options) => {
-    assert(options);
-    console.log({ options });
-
-    const integrationKey =
-      typeof options.integrationKey === 'string'
-        ? options.integrationKey
-        : await promptAuthIntegrationKey();
-
-    console.log(integrationKey);
-  },
   options: [
     {
       name: '-i, --integration-key <integration-key>',
       description: 'notion integration key',
     },
   ],
+  actionFactory: () => async (options) => {
+    assert(options);
+    logSuccess({ action: 'starting', message: 'auth-integration-key command' });
+    logSuccess({ action: '--------', message: '----------------------------' });
+
+    if (!options.integrationKey) {
+      await promptAuthIntegrationKey();
+      return;
+    }
+
+    return;
+  },
 } satisfies MountnCommand;

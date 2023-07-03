@@ -1,6 +1,6 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { logSuccess } from '@mountnotion/utils';
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 
 type MigrationsOptions = {
   command: 'check' | 'drop' | 'generate' | 'up';
@@ -37,16 +37,8 @@ export default {
     logSuccess({ action: 'starting', message: 'apply-migrations command' });
 
     if (options.command === 'generate') {
-      exec('npx drizzle-kit generate:pg', (err, stdout, stderr) => {
-        if (err) {
-          // node couldn't execute the command
-          return;
-        }
-
-        // the *entire* stdout and stderr (buffered)
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-      });
+      const result = execSync('npx drizzle-kit generate:pg').toString();
+      console.log(result);
       return;
     }
   },
