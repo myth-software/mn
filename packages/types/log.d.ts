@@ -1,3 +1,5 @@
+import { MountNotionConfig } from './cli';
+
 export declare type LogInput = {
   action: string;
   page?: {
@@ -8,11 +10,11 @@ export declare type LogInput = {
 };
 
 export declare type CliInput = {
-  args: string[];
+  args: Array<string>;
 };
 
 export declare type OauthPagesChoices = {
-  choices: string[];
+  choices: Array<string>;
 };
 
 export declare type MountnCommand = {

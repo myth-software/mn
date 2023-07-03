@@ -1,5 +1,5 @@
 import { createDatabaseCaches } from '@mountnotion/sdk';
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { logSuccess } from '@mountnotion/utils';
 
 export type FetchOptions = {
@@ -15,16 +15,26 @@ function assert(
   }
 }
 
+function dependencies(config: MountNotionConfig) {
+  const pagesSelected = config.workspace.selectedPages.length > 0;
+
+  if (!pagesSelected) {
+    throw new Error('no pages selected');
+  }
+}
+
 export default {
   name: 'fetch',
   description: 'fetches databases and builds cache',
   options: [
-    { name: '-p, --page-id', description: 'id of page with databases' },
+    { name: '-p, --page-id <id>', description: 'id of page with databases' },
   ],
   actionFactory: (config) => async (options) => {
     assert(options);
+    dependencies(config);
+
     const pageIds = [options.pageId];
-    await createDatabaseCaches(pageIds, config.options);
+    await createDatabaseCaches(pageIds, config.options.basic);
     const phraseList: LogInput[] = [
       {
         action: 'listing',

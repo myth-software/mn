@@ -1,8 +1,4 @@
-import {
-  MountnCommand,
-  MountNotionConfig,
-  Schematics,
-} from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { execSync } from 'child_process';
 import { prompt } from 'enquirer';
 
@@ -56,14 +52,12 @@ export default {
   actionFactory: (config) => async (options) => {
     assert(options);
     dependencies(config);
-    const schematics = config.schematics as Schematics[];
-    const drizzleSchematic = schematics.find(
+
+    const drizzleSchematic = config.schematics.find(
       (schematic) => schematic.name === 'drizzle'
     );
     const outDir = drizzleSchematic?.options.basic.outDir;
-
-    const command = options.command ?? (await optionsPrompt());
-    console.log(command);
+    const command = options.command ?? (await optionsPrompt()).command;
 
     if (command === 'check') {
       try {
@@ -102,14 +96,10 @@ export default {
     }
 
     if (command === 'migrate') {
-      try {
-        const result = execSync(
-          `npx ts-node ${outDir}/migrate.ts -- ${outDir}`
-        ).toString();
-        console.log(result);
-      } catch (e) {
-        console.error(e);
-      }
+      const result = execSync(
+        `npx ts-node ${outDir}/migrate.ts -- ${outDir}`
+      ).toString();
+      console.log(result);
       return;
     }
 
