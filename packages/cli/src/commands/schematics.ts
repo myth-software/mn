@@ -35,7 +35,7 @@ function dependencies(config: MountNotionConfig) {
 }
 
 export default {
-  name: 'apply-schematics',
+  name: 'schematics',
   description: 'applies schematics',
   options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
   actionFactory: (config) => async (options) => {

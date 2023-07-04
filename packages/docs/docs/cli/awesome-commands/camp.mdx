@@ -46,12 +46,12 @@ options
 
 **stages**
 
-| name             | condition                                              |
-| ---------------- | ------------------------------------------------------ |
-| cleanup          | if climber chooses to clear cache                      |
-| fetch            | if there is no cache                                   |
-| lint-rows        | if there is configure-lint-rows and not --skip-lint    |
-| lint-columns     | if there is configure-lint-columns and not --skip-lint |
-| fix-rows         | if failing rows and not --skip-lint                    |
-| fix-columns      | if failing columns and not --skip-lint                 |
-| apply-schematics | if the cache has changes                               |
+| name         | condition                                              |
+| ------------ | ------------------------------------------------------ |
+| cleanup      | if climber chooses to clear cache                      |
+| fetch        | if there is no cache                                   |
+| lint-rows    | if there is configure-lint-rows and not --skip-lint    |
+| lint-columns | if there is configure-lint-columns and not --skip-lint |
+| fix-rows     | if failing rows and not --skip-lint                    |
+| fix-columns  | if failing columns and not --skip-lint                 |
+| schematics   | if the cache has changes                               |
