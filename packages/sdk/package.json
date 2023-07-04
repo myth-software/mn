@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/sdk",
-  "version": "1.4.122",
+  "version": "1.4.123",
   "description": "tools for mounting notion",
   "main": "src/index.js",
   "repository": {
