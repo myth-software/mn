@@ -24,29 +24,27 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   cover: text('cover').notNull(),
   description: text('description').notNull(),
   <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
-    '<%= property %>':
-      <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
-      <% } %>
-      <% if(type === 'relation') { %>
-        text('<%= property %>').array()
-      <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
-        timestamp('<%= property %>').defaultNow()
-      <% } else if(type === 'checkbox') { %>
-        boolean('<%= property %>')
-      <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
-        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
-      <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
-        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>')
-      <% } else if(cache.rollupsOptions?.[property]) {  %>
-        <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
-      <% } else if(type === 'rollup') { %>
-      <% } else if(type === 'files') { %>
-        text('<%= property %>').array()
-      <% } else if(type === 'number') { %>
-        numeric('<%= property %>')
-      <% } else { %>
-        text('<%= property %>')
-      <% } %>
+    <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
+    <% } %>
+    <% if(type === 'relation') { %>
+    <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
+      '<%= property %>': timestamp('<%= property %>').defaultNow()
+    <% } else if(type === 'checkbox') { %>
+      '<%= property %>': boolean('<%= property %>')
+    <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
+    <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>')
+    <% } else if(cache.rollupsOptions?.[property]) {  %>
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
+    <% } else if(type === 'rollup') { %>
+    <% } else if(type === 'files') { %>
+      '<%= property %>': text('<%= property %>').array()
+    <% } else if(type === 'number') { %>
+      '<%= property %>': numeric('<%= property %>')
+    <% } else { %>
+      '<%= property %>': text('<%= property %>')
+    <% } %>
     ,
   <% } %>
 });
