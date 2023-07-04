@@ -10,6 +10,7 @@ import {
   addPackageToPackageJson,
 } from '../../utils';
 import { addRelationToIndexRule } from './rules/add-relation-to-index.rule';
+import { createRelationRule } from './rules/create-relation.rule';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
@@ -49,6 +50,16 @@ export function drizzle(options: BasicOptions): Rule {
       move(outDir),
     ]);
 
+    const rules = [...drizzleRules, drizzleIndexRule];
+
+    const newRelationRules = includedCaches
+      .filter((cache) => cache.relations)
+      .map((cache) => {
+        return createRelationRule(options, cache);
+      });
+
+    rules.push(...newRelationRules);
+
     const uniqueRelations: Relations = includedCaches
       .filter((cache) => cache.relations)
       .reduce((acc, cache) => {
@@ -74,8 +85,6 @@ export function drizzle(options: BasicOptions): Rule {
           ...orderedRelations,
         };
       }, {} as Record<string, string>);
-
-    const rules = [...drizzleRules, drizzleIndexRule];
 
     if (uniqueRelations) {
       Object.entries(uniqueRelations).forEach((relation) => {

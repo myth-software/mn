@@ -60,7 +60,7 @@ export function addRelationToIndexChange(
   }
   const indiciesListText = indiciesListNode.getText();
   const firstRelation = `${relation[0]}Relations`;
-  const secondRelation = `${relation[0]}Relations`;
+  const secondRelation = `${relation[1]}Relations`;
   const manyToMany = `${relation[0]}To${classify(relation[1])}`;
   let indiciesToAdd = '';
   if (!indiciesListText.endsWith(',')) {
