@@ -35,7 +35,7 @@ async function optionsPrompt(options: MigrationsOptions) {
       choices: [
         { name: 'check', hint: 'check up on the migrations' },
         { name: 'drop', hint: 'safely delete migration files' },
-        { name: 'generate', message: 'create new migration file' },
+        { name: 'generate', hint: 'create new migration file' },
         { name: 'up', hint: 'shape up metadata' },
         { name: 'migrate', hint: 'run migration from file' },
       ],

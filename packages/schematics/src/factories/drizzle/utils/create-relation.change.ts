@@ -1,6 +1,6 @@
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import { Cache } from '@mountnotion/types';
-import { camelize, classify, ensure } from '@mountnotion/utils';
+import { camelize, classify, decamelize, ensure } from '@mountnotion/utils';
 import * as ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { Change, getSourceNodes, InsertChange } from 'schematics-utilities';
 export function createRelationChange(
@@ -36,25 +36,56 @@ export function createRelationChange(
   }
 
   const title = cache.title;
-  const relations = Object.values(ensure(cache.relations))
-    .map((name) => {
-      if (name > title) {
-        return `${camelize(title)}To${classify(name)}`;
-      }
-      return `${camelize(name)}To${classify(title)}`;
-    })
-    .map((name) => `${name}: many(${name}),`);
+  const relations = Object.values(ensure(cache.relations)).map((name) => {
+    if (name > title) {
+      return `${camelize(title)}To${classify(name)}`;
+    }
+    return `${camelize(name)}To${classify(title)}`;
+  });
 
-  const relationToCreate = `export const ${camelize(
+  const innerRelations = relations.map((name) => `${name}: many(${name}),`);
+
+  let relationsToCreate = '';
+
+  relationsToCreate += `export const ${camelize(
     title
   )}Relations = relations(${camelize(title)}, ({ many }) => ({
-    ${relations.join(' ')}
+    ${innerRelations.join(' ')}
   }));`;
+
+  Object.values(ensure(cache.relations)).forEach((name) => {
+    const relation =
+      name > title
+        ? `${camelize(title)}To${classify(name)}`
+        : `${camelize(name)}To${classify(title)}`;
+    if (!sourceText.includes(`export const ${relation}`)) {
+      relationsToCreate += `export const ${relation} = pgTable('${decamelize(
+        relation
+      )}', {
+          ${name}Id: integer('${name}_id').notNull().references(() => ${name}.id),
+          ${title}Id: integer('${title}_id').notNull().references(() => ${title}.id),
+        }, (t) => ({
+          pk: primaryKey(t.${name}Id, t.${title}Id),
+        }),
+      );
+      
+      export const ${relation}Relations = relations(${relation}, ({ one }) => ({
+        ${title}: one(${title}, {
+          fields: [${relation}.${title}Id],
+          references: [${title}.id],
+        }),
+        ${name}: one(${name}, {
+          fields: [${relation}.${name}Id],
+          references: [${name}.id],
+        }),
+      }));`;
+    }
+  });
 
   // insert the new index to the end of the object (at the end of the indiciesListNode)
   return new InsertChange(
     path,
     indiciesNode.parent.parent.parent.getStart(),
-    relationToCreate
+    relationsToCreate
   );
 }
