@@ -2,19 +2,9 @@
   <%= logDebug({ action: 'debugging', message: 'mn.ts' }) %>
 <% } %>
 
-import { indicies } from '<%= options.entities %>';
-import { client } from '<%= options.drizzle %>'
-import { configure } from '@mountnotion/sdk';
-
-
-export const mn =
-  process.env.NODE_ENV === 'production'
-    ? client
-    : configure({
-        integrationKey: process.env.INTEGRATION_KEY,
-        indicies,
-      });
-
+import { client } from '@pferd/domain-pferd-drizzle';
+import { client as notion } from '@pferd/domain-pferd-entities';
+export const mn = process.env.NODE_ENV === 'production' ? client : notion;
 
 <% if (options.debug) { %>
   <%= logDebug({ action: 'debugging', message: 'end mn.ts' }) %>
