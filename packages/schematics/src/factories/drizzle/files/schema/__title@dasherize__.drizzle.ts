@@ -22,30 +22,28 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   id: uuid('id').defaultRandom().primaryKey(),
   icon: text('icon').notNull(),
   cover: text('cover').notNull(),
-  description: text('description').notNull(),
   <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
     <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
     <% } %>
     <% if(type === 'relation') { %>
     <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
-      '<%= property %>': timestamp('<%= property %>').defaultNow()
+      '<%= property %>': timestamp('<%= property %>').defaultNow(),
     <% } else if(type === 'checkbox') { %>
-      '<%= property %>': boolean('<%= property %>')
+      '<%= property %>': boolean('<%= property %>'),
     <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
-      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
     <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
-      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>')
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>'),
     <% } else if(cache.rollupsOptions?.[property]) {  %>
-      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array()
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
     <% } else if(type === 'rollup') { %>
     <% } else if(type === 'files') { %>
-      '<%= property %>': text('<%= property %>').array()
+      '<%= property %>': text('<%= property %>').array(),
     <% } else if(type === 'number') { %>
-      '<%= property %>': numeric('<%= property %>')
+      '<%= property %>': numeric('<%= property %>'),
     <% } else { %>
-      '<%= property %>': text('<%= property %>')
+      '<%= property %>': text('<%= property %>'),
     <% } %>
-    ,
   <% } %>
 });
 
