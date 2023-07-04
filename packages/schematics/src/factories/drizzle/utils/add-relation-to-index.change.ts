@@ -58,9 +58,21 @@ export function addRelationToIndexChange(
   if (!indiciesListNode) {
     throw new SchematicsException(`indicies list node is not defined`);
   }
-  console.log({ indiciesList: indiciesListNode.getText() });
+  const indiciesListText = indiciesListNode.getText();
+  const firstRelation = `${relation[0]}Relations`;
+  const secondRelation = `${relation[0]}Relations`;
   const manyToMany = `${relation[0]}To${classify(relation[1])}`;
-  const indiciesToAdd = `${manyToMany}, ${manyToMany}Relations,`;
+  let indiciesToAdd = '';
+  if (!indiciesListText.endsWith(',')) {
+    indiciesToAdd = ', ';
+  }
+  if (!indiciesListText.includes(firstRelation)) {
+    indiciesToAdd += `${firstRelation}, `;
+  }
+  if (!indiciesListText.includes(secondRelation)) {
+    indiciesToAdd += `${secondRelation}, `;
+  }
+  indiciesToAdd = indiciesToAdd + `${manyToMany}, ${manyToMany}Relations,`;
 
   // insert the new index to the end of the object (at the end of the indiciesListNode)
   return new InsertChange(path, indiciesListNode.getEnd(), indiciesToAdd);
