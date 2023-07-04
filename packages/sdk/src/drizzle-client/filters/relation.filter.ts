@@ -14,12 +14,12 @@ export function relationPropertyFilter({
   }
 
   if (filter.contains) {
-    return { filter: inArray(database[property], filter.contains) };
+    return inArray(database[property], filter.contains);
   }
 
   if (filter.does_not_contain) {
-    return { filter: notInArray(database[property], filter.does_not_contain) };
+    return notInArray(database[property], filter.does_not_contain);
   }
 
-  return;
+  throw new Error('uncaught relation filter case');
 }

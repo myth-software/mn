@@ -14,12 +14,12 @@ export function selectPropertyFilter({
   }
 
   if (filter.equals) {
-    return { filter: eq(database[property], filter.equals) };
+    return eq(database[property], filter.equals);
   }
 
   if (filter.does_not_equal) {
-    return { filter: ne(database[property], filter.does_not_equal) };
+    return ne(database[property], filter.does_not_equal);
   }
 
-  return;
+  throw new Error('uncaught select filter case');
 }

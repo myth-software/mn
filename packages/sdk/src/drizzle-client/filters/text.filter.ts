@@ -10,34 +10,28 @@ export function textPropertyFilter({ database, filter, property }: FilterArgs) {
   }
 
   if (filter.equals) {
-    return { filter: eq(database[property], filter.equals) };
+    return eq(database[property], filter.equals);
   }
 
   if (filter.does_not_equal) {
-    return { filter: ne(database[property], filter.does_not_equal) };
+    return ne(database[property], filter.does_not_equal);
   }
 
   if (filter.contains) {
-    return { filter: ilike(database[property], `%${filter.contains}%`) };
+    return ilike(database[property], `%${filter.contains}%`);
   }
 
   if (filter.does_not_contain) {
-    return {
-      filter: notIlike(database[property], `%${filter.does_not_contain}%`),
-    };
+    return notIlike(database[property], `%${filter.does_not_contain}%`);
   }
 
   if (filter.starts_with) {
-    return {
-      filter: ilike(database[property], `${filter.starts_with}%`),
-    };
+    return ilike(database[property], `${filter.starts_with}%`);
   }
 
   if (filter.ends_with) {
-    return {
-      filter: ilike(database[property], `%${filter.ends_with}`),
-    };
+    return ilike(database[property], `%${filter.ends_with}`);
   }
 
-  return;
+  throw new Error('uncaught text filter case');
 }
