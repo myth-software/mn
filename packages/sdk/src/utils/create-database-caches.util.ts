@@ -45,7 +45,7 @@ export const createDatabaseCaches = async (
   );
   logInfo({
     action: 'listing',
-    message: 'databases page children',
+    message: 'page children',
     page: { emoji: page.icon, title: page.title },
   });
   const allResponses = (await Promise.all(promises)).flat();
@@ -67,7 +67,7 @@ export const createDatabaseCaches = async (
   const primaryIds = [...new Set(allPrimaryIds.concat(allParagraphIds))];
   logInfo({
     action: 'retrieving',
-    message: 'databases primary databases',
+    message: 'primary databases',
     page: { emoji: page.icon, title: page.title },
   });
   const primaryDatabases = await infrastructure.databases.retrieveAll(
@@ -85,7 +85,7 @@ export const createDatabaseCaches = async (
   ] as string[];
   logInfo({
     action: 'retrieving',
-    message: 'databases related databases',
+    message: 'related databases',
     page: { emoji: page.icon, title: page.title },
   });
   const relatedDatabases = await infrastructure.databases.retrieveAll(
@@ -103,7 +103,7 @@ export const createDatabaseCaches = async (
   );
   logInfo({
     action: 'querying',
-    message: 'databases primary and related databases',
+    message: 'primary and related databases',
     page: { emoji: page.icon, title: page.title },
   });
   const nestedPages = await Promise.all(pagePromises);
@@ -113,7 +113,7 @@ export const createDatabaseCaches = async (
   );
   logInfo({
     action: 'querying',
-    message: 'databases property types',
+    message: 'property types',
     page: { emoji: page.icon, title: page.title },
   });
   const allRollups = await Promise.all(allRollupsPromises);
@@ -141,7 +141,7 @@ export const createDatabaseCaches = async (
 
   logInfo({
     action: 'caching',
-    message: 'databases',
+    message: '',
     page: { emoji: page.icon, title: page.title },
   });
   writeFileSync(CACHE, JSON.stringify(caches));

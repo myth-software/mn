@@ -3,6 +3,7 @@ import {
   DatabaseObjectResponse,
   FlatDatabase,
 } from '@mountnotion/types';
+import { ensure, underscore } from '@mountnotion/utils';
 import { createColumns, createMappings, createOptions } from '../utils';
 import { flattenCover } from './cover.flattener';
 import { flattenDescription } from './description.flattener';
@@ -24,7 +25,7 @@ export const flattenDatabaseResponse = (
     icon: flattenIcon(icon),
     cover: flattenCover(cover),
     description: flattenDescription(description),
-    title: flattenRichText(title) ?? '',
+    title: underscore(ensure(flattenRichText(title))),
     columns: createColumns(properties),
     options: createOptions(properties),
     relations: null,

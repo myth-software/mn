@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
-import { BasicOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { BasicOptions, Relations } from '@mountnotion/types';
+import { ensure, logSuccess, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
@@ -9,6 +9,7 @@ import {
   addDevPackageToPackageJson,
   addPackageToPackageJson,
 } from '../../utils';
+import { addRelationToIndexRule } from './rules/add-relation-to-index.rule';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
@@ -47,6 +48,41 @@ export function drizzle(options: BasicOptions): Rule {
       }),
       move(outDir),
     ]);
-    return chain([...drizzleRules, drizzleIndexRule]);
+
+    const uniqueRelations: Relations = includedCaches
+      .filter((cache) => cache.relations)
+      .reduce((acc, cache) => {
+        const { title, relations } = cache;
+        const orderedRelations = Object.values(ensure(relations)).reduce(
+          (innerAcc, name) => {
+            if (name > title) {
+              return {
+                ...innerAcc,
+                [title]: name,
+              };
+            }
+            return {
+              ...innerAcc,
+              [name]: title,
+            };
+          },
+          acc
+        );
+
+        return {
+          ...acc,
+          ...orderedRelations,
+        };
+      }, {} as Record<string, string>);
+
+    const rules = [...drizzleRules, drizzleIndexRule];
+
+    if (uniqueRelations) {
+      Object.entries(uniqueRelations).forEach((relation) => {
+        rules.push(addRelationToIndexRule(relation));
+      });
+    }
+
+    return chain(rules);
   };
 }
