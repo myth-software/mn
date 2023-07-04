@@ -29,7 +29,7 @@ export function createRelationChange(
 
   // find the 'default' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'default'
   const defaultNode = nodes.find(
-    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'default'
+    (n) => n.kind === ts.SyntaxKind.DefaultKeyword
   );
   if (!defaultNode || !defaultNode.parent) {
     throw new SchematicsException(`expected default variable in ${path}`);
@@ -85,7 +85,7 @@ export function createRelationChange(
   // insert the new index to the end of the object (at the end of the defaultListNode)
   return new InsertChange(
     path,
-    defaultNode.parent.parent.parent.getStart(),
+    defaultNode.parent.getStart(),
     relationsToCreate
   );
 }

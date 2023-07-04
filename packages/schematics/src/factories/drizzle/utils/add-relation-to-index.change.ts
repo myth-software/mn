@@ -28,7 +28,7 @@ export function addRelationToIndexChange(
 
   // find the 'default' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'default'
   const defaultNode = nodes.find(
-    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'default'
+    (n) => n.kind === ts.SyntaxKind.DefaultKeyword
   );
   if (!defaultNode || !defaultNode.parent) {
     throw new SchematicsException(`expected default variable in ${path}`);

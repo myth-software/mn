@@ -43,21 +43,23 @@ export function drizzle(options: BasicOptions): Rule {
         move(`${outDir}/schema`),
       ]);
     });
-    const drizzleIndexRule = applyWithOverwrite(url('./files/index'), [
-      template({
-        titles,
-        ...strings,
-      }),
-      move(outDir),
-    ]);
-
-    const rules = [...drizzleRules, drizzleIndexRule];
 
     const newRelationRules = includedCaches
       .filter((cache) => cache.relations)
       .map((cache) => {
         return createRelationRule(options, cache);
       });
+
+    const drizzleIndexRule = applyWithOverwrite(url('./files/index'), [
+      template({
+        titles,
+        relations: newRelationRules.length ? true : false,
+        ...strings,
+      }),
+      move(outDir),
+    ]);
+
+    const rules = [...drizzleRules, drizzleIndexRule];
 
     if (newRelationRules.length) {
       rules.push(
