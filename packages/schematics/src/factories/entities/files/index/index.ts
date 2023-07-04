@@ -15,7 +15,7 @@ export const indicies = {
     <%= camelize(title) %>:  <%= underscore(title).toUpperCase() %>,
   <% } %>
 };
-export const client = configure({ integrationKey: process.env.INTEGRATION_KEY, indicies });
+export const client = configure({ integrationKey: process.env['INTEGRATION_KEY']!, indicies });
 
 
 <% if (options.debug) { %>
