@@ -62,8 +62,8 @@ export function createRelationChange(
       relationsToCreate += `export const ${relation} = pgTable('${decamelize(
         relation
       )}', {
-          ${name}Id: integer('${name}_id').notNull().references(() => ${name}.id),
-          ${title}Id: integer('${title}_id').notNull().references(() => ${title}.id),
+          ${name}Id: uuid('${name}_id').notNull().references(() => ${name}.id),
+          ${title}Id: uuid('${title}_id').notNull().references(() => ${title}.id),
         }, (t) => ({
           pk: primaryKey(t.${name}Id, t.${title}Id),
         }),
