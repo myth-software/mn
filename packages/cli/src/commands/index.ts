@@ -1,5 +1,4 @@
 import { MountnCommand } from '@mountnotion/types';
-import applyMigrations from './apply-migrations';
 import applySchematics from './apply-schematics';
 import authIntegrationKey from './auth-integration-key';
 import authOauth from './auth-oauth';
@@ -15,13 +14,14 @@ import fixColumns from './fix-columns';
 import fixRows from './fix-rows';
 import lintColumns from './lint-columns';
 import lintRows from './lint-rows';
+import migrations from './migrations';
 import renameColumns from './rename-columns';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 import setup from './setup';
 
 export const commands: Array<MountnCommand> = [
-  applyMigrations,
+  migrations,
   applySchematics,
   authIntegrationKey,
   authOauth,
@@ -37,6 +37,7 @@ export const commands: Array<MountnCommand> = [
   fixRows,
   lintColumns,
   lintRows,
+  migrations,
   renameColumns,
   selectPagesIntegrationKey,
   selectPagesOauth,

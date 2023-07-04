@@ -51,7 +51,7 @@ async function optionsPrompt(options: MigrationsOptions) {
 }
 
 export default {
-  name: 'apply-migrations',
+  name: 'migrations',
   description: 'applies migrations for production drizzle databases',
   options: [{ name: '-c, --command <name>', description: 'select command' }],
   actionFactory: (config) => async (args) => {
