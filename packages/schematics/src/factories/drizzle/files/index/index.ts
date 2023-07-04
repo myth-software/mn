@@ -1,4 +1,3 @@
-import { relations } from 'drizzle-orm';
 import { configureDrizzle } from '@mountnotion/sdk';
 <% for(const title of titles) { %>
   export * from  './schema/<%= dasherize(title) %>.drizzle';

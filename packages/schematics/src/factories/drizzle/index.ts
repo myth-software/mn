@@ -11,6 +11,7 @@ import {
 } from '../../utils';
 import { addRelationToIndexRule } from './rules/add-relation-to-index.rule';
 import { createRelationRule } from './rules/create-relation.rule';
+import { prettifyIndexRule } from './rules/prettify-index.rule';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
@@ -91,6 +92,8 @@ export function drizzle(options: BasicOptions): Rule {
         rules.push(addRelationToIndexRule(options, relation));
       });
     }
+
+    rules.push(prettifyIndexRule(options));
 
     return chain(rules);
   };
