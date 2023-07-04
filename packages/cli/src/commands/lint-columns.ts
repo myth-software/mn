@@ -35,7 +35,7 @@ export default {
   description:
     "lint workspaces's databases columns for pass or fail against standards",
   options: [
-    { name: '-p, --page-id', description: 'id of page with databases' },
+    { name: '-p, --page-id [id]', description: 'id of page with databases' },
   ],
   actionFactory: (config) => async (options) => {
     assert(options);
@@ -54,10 +54,10 @@ export default {
     const missingCreatedTime: LogInput[] = [];
     const missingLastEditedBy: LogInput[] = [];
     const missingCreatedBy: LogInput[] = [];
-    const missingEmojis: { database: string; relations: string[] }[] = [];
-    const mismatchedSelects: { database: string; name: string }[] = [];
-    const mismatchedMultiselects: { database: string; name: string }[] = [];
-    const missingAllLower: { database: string; allLower: string[] }[] = [];
+    const missingEmojis: LogInput[] = [];
+    const mismatchedSelects: LogInput[] = [];
+    const mismatchedMultiselects: LogInput[] = [];
+    const missingAllLower: LogInput[] = [];
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
@@ -215,8 +215,12 @@ export default {
 
       if (relations.length) {
         missingEmojis.push({
-          database: database.title[0].plain_text,
-          relations,
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: relations.join(', '),
         });
       }
 
@@ -224,8 +228,12 @@ export default {
         const name = selects[0];
 
         mismatchedSelects.push({
-          database: database.title[0].plain_text,
-          name,
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `mismatchedSelects ${name}`,
         });
 
         selects.shift();
@@ -235,8 +243,12 @@ export default {
         const name = multiselects[0];
 
         mismatchedMultiselects.push({
-          database: database.title[0].plain_text,
-          name,
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `mismatchedMultiselects ${name}`,
         });
 
         multiselects.shift();
@@ -244,24 +256,18 @@ export default {
 
       if (allLower.length) {
         missingAllLower.push({
-          database: database.title[0].plain_text,
-          allLower,
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `missingAllLower ${allLower.join(', ')}`,
         });
       }
     }
 
-    console.log(missingEmojis);
-    console.log(mismatchedSelects);
-    console.log(mismatchedMultiselects);
-    console.log(missingAllLower);
-
     console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
-      ...missingName,
-      ...missingLastEditedTime,
-      ...missingCreatedTime,
-      ...missingLastEditedBy,
-      ...missingCreatedBy,
       {
         action: 'pass',
         page: { emoji: '🔢', title: 'sets' },
@@ -399,6 +405,15 @@ export default {
         page: { emoji: '📝', title: 'logs' },
         message: 'relation "user" has relations with leading emoji',
       },
+      ...missingName,
+      ...missingLastEditedTime,
+      ...missingCreatedTime,
+      ...missingLastEditedBy,
+      ...missingCreatedBy,
+      ...missingEmojis,
+      ...mismatchedSelects,
+      ...mismatchedMultiselects,
+      ...missingAllLower,
     ];
     phraseList.forEach(printPhraseList);
   },
