@@ -33,7 +33,7 @@ function dependencies(config: MountNotionConfig) {
 export default {
   name: 'lint-columns',
   description:
-    "lint workspaces's databases columns for pass or fail against standards",
+    "lint workspaces's databases columns for pass or fail against lint rules",
   options: [
     { name: '-p, --page-id [id]', description: 'id of page with databases' },
   ],

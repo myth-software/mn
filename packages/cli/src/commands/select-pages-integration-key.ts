@@ -14,16 +14,24 @@ function assert(
   }
 }
 
-export const optionsPrompt = async () => {
-  const results = await prompt<SelectPagesIntegrationKeyOptions>([
-    {
+export const optionsPrompt = async (
+  options: SelectPagesIntegrationKeyOptions
+) => {
+  const prompts = [];
+  if (!options.pageId) {
+    prompts.push({
       type: 'input',
-      name: 'pageId',
       message: 'page id:',
-    },
-  ]);
+      name: 'pageId',
+    });
+  }
 
-  return results.pageId;
+  if (prompts.length) {
+    const results = await prompt<SelectPagesIntegrationKeyOptions>(prompts);
+
+    return results;
+  }
+  return options;
 };
 
 export default {
@@ -33,13 +41,10 @@ export default {
   options: [
     { name: '-p, --page-id <id>', description: 'id of page with databases' },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-
-    if (!options.pageId) {
-      await optionsPrompt();
-      return;
-    }
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt(args);
+    console.log(options);
 
     return;
   },
