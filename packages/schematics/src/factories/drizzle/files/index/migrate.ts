@@ -15,7 +15,10 @@ async function run() {
 }
 
 run()
-  .then((exitCode) => (process.exitCode = exitCode))
+  .then((exitCode) => {
+    process.exitCode = exitCode;
+    process.exit();
+  })
   .catch((e) => {
     throw e;
   });
