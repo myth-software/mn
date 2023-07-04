@@ -55,13 +55,12 @@ export function addRelationToIndexChange(
     .getChildren()
     .find((n) => n.kind === ts.SyntaxKind.SyntaxList);
 
-  console.log({ indiciesList: indiciesListNode?.getText() });
-
   if (!indiciesListNode) {
     throw new SchematicsException(`indicies list node is not defined`);
   }
-
-  const indiciesToAdd = `${relation[0]}To${classify(relation[1])},`;
+  console.log({ indiciesList: indiciesListNode.getText() });
+  const manyToMany = `${relation[0]}To${classify(relation[1])}`;
+  const indiciesToAdd = `${manyToMany}, ${manyToMany}Relations,`;
 
   // insert the new index to the end of the object (at the end of the indiciesListNode)
   return new InsertChange(path, indiciesListNode.getEnd(), indiciesToAdd);

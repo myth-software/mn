@@ -79,7 +79,7 @@ export function drizzle(options: BasicOptions): Rule {
 
     if (uniqueRelations) {
       Object.entries(uniqueRelations).forEach((relation) => {
-        rules.push(addRelationToIndexRule(relation));
+        rules.push(addRelationToIndexRule(options, relation));
       });
     }
 
