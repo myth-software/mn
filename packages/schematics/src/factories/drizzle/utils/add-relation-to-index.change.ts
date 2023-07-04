@@ -26,54 +26,54 @@ export function addRelationToIndexChange(
   // get the nodes of the source file
   const nodes = getSourceNodes(sourceFile);
 
-  // find the 'indicies' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'indicies'
-  const indiciesNode = nodes.find(
-    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'indicies'
+  // find the 'default' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'default'
+  const defaultNode = nodes.find(
+    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'default'
   );
-  if (!indiciesNode || !indiciesNode.parent) {
-    throw new SchematicsException(`expected indicies variable in ${path}`);
+  if (!defaultNode || !defaultNode.parent) {
+    throw new SchematicsException(`expected default variable in ${path}`);
   }
 
-  // define indiciesNode's sibling nodes and remove indiciesNode from it
-  let indiciesNodeSiblings = indiciesNode.parent.getChildren();
-  const indiciesNodeIndex = indiciesNodeSiblings.indexOf(indiciesNode);
-  indiciesNodeSiblings = indiciesNodeSiblings.slice(indiciesNodeIndex);
+  // define defaultNode's sibling nodes and remove defaultNode from it
+  let defaultNodeSiblings = defaultNode.parent.getChildren();
+  const defaultNodeIndex = defaultNodeSiblings.indexOf(defaultNode);
+  defaultNodeSiblings = defaultNodeSiblings.slice(defaultNodeIndex);
 
-  // get indicies object literal expression from the siblings, this means this sign "{"
-  const indiciesObjectLiteralExpressionNode = indiciesNodeSiblings.find(
+  // get default object literal expression from the siblings, this means this sign "{"
+  const defaultObjectLiteralExpressionNode = defaultNodeSiblings.find(
     (n) => n.kind === ts.SyntaxKind.ObjectLiteralExpression
   );
 
-  if (!indiciesObjectLiteralExpressionNode) {
+  if (!defaultObjectLiteralExpressionNode) {
     throw new SchematicsException(
-      `indicies ObjectLiteralExpression node is not defined`
+      `default ObjectLiteralExpression node is not defined`
     );
   }
 
-  // get indicies object list node which is in the children of indiciesObjectLiteralExpressionNode and its kind of SyntaxList
-  const indiciesListNode = indiciesObjectLiteralExpressionNode
+  // get default object list node which is in the children of defaultObjectLiteralExpressionNode and its kind of SyntaxList
+  const defaultListNode = defaultObjectLiteralExpressionNode
     .getChildren()
     .find((n) => n.kind === ts.SyntaxKind.SyntaxList);
 
-  if (!indiciesListNode) {
-    throw new SchematicsException(`indicies list node is not defined`);
+  if (!defaultListNode) {
+    throw new SchematicsException(`default list node is not defined`);
   }
-  const indiciesListText = indiciesListNode.getText();
+  const defaultListText = defaultListNode.getText();
   const firstRelation = `${relation[0]}Relations`;
   const secondRelation = `${relation[1]}Relations`;
   const manyToMany = `${relation[0]}To${classify(relation[1])}`;
-  let indiciesToAdd = '';
-  if (!indiciesListText.endsWith(',')) {
-    indiciesToAdd = ', ';
+  let defaultToAdd = '';
+  if (!defaultListText.endsWith(',')) {
+    defaultToAdd = ', ';
   }
-  if (!indiciesListText.includes(firstRelation)) {
-    indiciesToAdd += `${firstRelation}, `;
+  if (!defaultListText.includes(firstRelation)) {
+    defaultToAdd += `${firstRelation}, `;
   }
-  if (!indiciesListText.includes(secondRelation)) {
-    indiciesToAdd += `${secondRelation}, `;
+  if (!defaultListText.includes(secondRelation)) {
+    defaultToAdd += `${secondRelation}, `;
   }
-  indiciesToAdd = indiciesToAdd + `${manyToMany}, ${manyToMany}Relations,`;
+  defaultToAdd = defaultToAdd + `${manyToMany}, ${manyToMany}Relations,`;
 
-  // insert the new index to the end of the object (at the end of the indiciesListNode)
-  return new InsertChange(path, indiciesListNode.getEnd(), indiciesToAdd);
+  // insert the new index to the end of the object (at the end of the defaultListNode)
+  return new InsertChange(path, defaultListNode.getEnd(), defaultToAdd);
 }

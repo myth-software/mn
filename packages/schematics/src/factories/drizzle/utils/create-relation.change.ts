@@ -27,12 +27,12 @@ export function createRelationChange(
   // get the nodes of the source file
   const nodes = getSourceNodes(sourceFile);
 
-  // find the 'indicies' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'indicies'
-  const indiciesNode = nodes.find(
-    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'indicies'
+  // find the 'default' node by checking the SyntaxKind to be Identifier and by checking the node text to be 'default'
+  const defaultNode = nodes.find(
+    (n) => n.kind === ts.SyntaxKind.Identifier && n.getText() === 'default'
   );
-  if (!indiciesNode || !indiciesNode.parent) {
-    throw new SchematicsException(`expected indicies variable in ${path}`);
+  if (!defaultNode || !defaultNode.parent) {
+    throw new SchematicsException(`expected default variable in ${path}`);
   }
 
   const title = cache.title;
@@ -82,10 +82,10 @@ export function createRelationChange(
     }
   });
 
-  // insert the new index to the end of the object (at the end of the indiciesListNode)
+  // insert the new index to the end of the object (at the end of the defaultListNode)
   return new InsertChange(
     path,
-    indiciesNode.parent.parent.parent.getStart(),
+    defaultNode.parent.parent.parent.getStart(),
     relationsToCreate
   );
 }

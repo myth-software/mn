@@ -59,6 +59,18 @@ export function drizzle(options: BasicOptions): Rule {
         return createRelationRule(options, cache);
       });
 
+    if (newRelationRules.length) {
+      rules.push(
+        applyWithOverwrite(url('./files/relations'), [
+          template({
+            titles,
+            ...strings,
+          }),
+          move(`${outDir}/schema`),
+        ])
+      );
+    }
+
     rules.push(...newRelationRules);
 
     const uniqueRelations: Relations = includedCaches

@@ -8,7 +8,7 @@ export function addRelationToIndexRule(
   relation: [string, string]
 ): Rule {
   return (tree: Tree) => {
-    const path = `${options.outDir}/index.ts`;
+    const path = `${options.outDir}/schema/relations.ts`;
 
     const change = addRelationToIndexChange(path, relation, tree);
     const declarationRecorder = tree.beginUpdate(path);

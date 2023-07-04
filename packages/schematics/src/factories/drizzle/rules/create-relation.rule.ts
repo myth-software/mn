@@ -5,7 +5,7 @@ import { createRelationChange } from '../utils/create-relation.change';
 
 export function createRelationRule(options: BasicOptions, cache: Cache): Rule {
   return (tree: Tree) => {
-    const path = `${options.outDir}/index.ts`;
+    const path = `${options.outDir}/schema/relations.ts`;
 
     const change = createRelationChange(path, cache, tree);
     const declarationRecorder = tree.beginUpdate(path);

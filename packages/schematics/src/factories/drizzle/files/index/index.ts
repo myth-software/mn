@@ -6,9 +6,16 @@ import { configureDrizzle } from '@mountnotion/sdk';
   import { <%= camelize(title) %> } from  './schema/<%= dasherize(title) %>.drizzle';
 <% } %>
 
+<% if(relations) { %>
+  import * as relations from  './schema/relations';
+<% } %>
+
 export const indicies = {
   <% for(const title of titles) { %>
     <%= camelize(title) %>,
+  <% } %>
+  <% if(relations) { %>
+    ...relations
   <% } %>
 };
 
