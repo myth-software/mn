@@ -5,10 +5,21 @@ import {
   MultiSelectDatabasePropertyConfigResponse,
   SelectDatabasePropertyConfigResponse,
 } from '@mountnotion/types';
-import { ensure } from '@mountnotion/utils';
-import { EMOJI, printPhraseList } from '../utils';
+import { ensure, getLintColumns, log } from '@mountnotion/utils';
+import { printPhraseList } from '../utils';
+import {
+  fixColumnsAutomaticCreatedBy,
+  fixColumnsAutomaticCreatedTime,
+  fixColumnsAutomaticLastEditedBy,
+  fixColumnsAutomaticLastEditedTime,
+  fixColumnsConsistentCreatedBy,
+  fixColumnsConsistentCreatedTime,
+  fixColumnsConsistentLastEditedBy,
+  fixColumnsConsistentLastEditedTime,
+  fixColumnsConsistentTitle,
+  fixRelationsWithLeadingEmoji,
+} from './fix';
 
-type Message = { database: string; from?: string | null; to: string };
 type FixColumnsOptions = {
   pageId: string;
 };
@@ -23,14 +34,13 @@ function assert(
 }
 
 function dependencies() {
-  const cache: Array<any> = [];
-  const databasesWithColumnsFails = cache.filter(
-    (database) => database.lintFails.columns.length > 0
-  );
-  const canFix = databasesWithColumnsFails.length > 1;
-
-  if (!canFix) {
-    throw new Error('no columns to fix');
+  const lintColumns = getLintColumns();
+  const hasCache = lintColumns !== undefined && lintColumns.length > 1;
+  if (!hasCache) {
+    log.fatal({
+      action: 'aborting',
+      message: 'no columns to fix',
+    });
   }
 }
 
@@ -41,6 +51,63 @@ export default {
   actionFactory: () => async (options) => {
     assert(options);
     dependencies();
+    const fixes = ensure(getLintColumns());
+    const logs: LogInput[] = [];
+
+    while (fixes.length > 0) {
+      const fix = ensure(fixes.shift());
+
+      if (fix.id === 'automaticLastEditedTime') {
+        const result = await fixColumnsAutomaticLastEditedTime(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'automaticCreatedBy') {
+        const result = await fixColumnsAutomaticCreatedBy(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'automaticCreatedTime') {
+        const result = await fixColumnsAutomaticCreatedTime(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'automaticLastEditedBy') {
+        const result = await fixColumnsAutomaticLastEditedBy(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'consistentCreatedBy') {
+        const result = await fixColumnsConsistentCreatedBy(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'consistentCreatedTime') {
+        const result = await fixColumnsConsistentCreatedTime(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'consistentLastEditedBy') {
+        const result = await fixColumnsConsistentLastEditedBy(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'consistentLastEditedTime') {
+        const result = await fixColumnsConsistentLastEditedTime(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'consistentTitlesAsName') {
+        const result = await fixColumnsConsistentTitle(fix);
+        logs.push(result);
+      }
+
+      if (fix.id === 'relationsWithLeadingEmoji') {
+        const result = await fixRelationsWithLeadingEmoji(fix);
+        logs.push(result);
+      }
+    }
+
     const page_id = options.pageId;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
@@ -50,11 +117,7 @@ export default {
       .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const missingName: Message[] = [];
-    const missingLastEditedTime: Message[] = [];
-    const missingCreatedTime: Message[] = [];
-    const missingLastEditedBy: Message[] = [];
-    const missingCreatedBy: Message[] = [];
+
     const missingEmojis: { database: string; relations: string[] }[] = [];
     const mismatchedSelects: { database: string; name: string }[] = [];
     const mismatchedMultiselects: { database: string; name: string }[] = [];
@@ -63,28 +126,7 @@ export default {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
       const propertyNames = Object.keys(database.properties);
-      const lastEditedTime = propertyNames.find((name) => {
-        return database.properties[name].type === 'last_edited_time';
-      });
-      const createdTime = propertyNames.find((name) => {
-        return database.properties[name].type === 'created_time';
-      });
-      const lastEditedBy = propertyNames.find((name) => {
-        return database.properties[name].type === 'last_edited_by';
-      });
-      const createdBy = propertyNames.find((name) => {
-        return database.properties[name].type === 'created_by';
-      });
-      const title = ensure(
-        propertyNames.find((name) => {
-          return database.properties[name].type === 'title';
-        })
-      );
-      const relations = propertyNames
-        .filter((name) => {
-          return database.properties[name].type === 'relation';
-        })
-        .filter((name) => !EMOJI.includes(name.split(' ')[0]));
+
       const allLower = propertyNames.filter(
         (name) => name !== name.toLowerCase()
       );
@@ -114,171 +156,6 @@ export default {
 
           return !options.every((option) => option.color === firstOptionColor);
         });
-
-      if (!database.properties['name']) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [title]: {
-              name: 'name',
-            },
-          },
-        });
-        missingName.push({
-          database: database.title[0].plain_text,
-          from: title,
-          to: 'name',
-        });
-      }
-
-      if (lastEditedTime && lastEditedTime !== 'last edited time') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [lastEditedTime]: {
-              name: 'last edited time',
-            },
-          },
-        });
-        missingLastEditedTime.push({
-          database: database.title[0].plain_text,
-          from: lastEditedTime,
-          to: 'last edited time',
-        });
-      }
-
-      if (!lastEditedTime) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'last edited time': {
-              last_edited_time: {},
-              name: 'last edited time',
-              type: 'last_edited_time',
-            },
-          },
-        });
-
-        missingLastEditedTime.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'last edited time',
-        });
-      }
-
-      if (createdTime && createdTime !== 'created time') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [createdTime]: {
-              name: 'created time',
-            },
-          },
-        });
-
-        missingCreatedTime.push({
-          database: database.title[0].plain_text,
-          from: createdTime,
-          to: 'created time',
-        });
-      }
-
-      if (!createdTime) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'created time': {
-              created_time: {},
-              name: 'created time',
-              type: 'created_time',
-            },
-          },
-        });
-
-        missingCreatedTime.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'created time',
-        });
-      }
-
-      if (lastEditedBy && lastEditedBy !== 'last edited by') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [lastEditedBy]: {
-              name: 'last edited by',
-            },
-          },
-        });
-        missingLastEditedBy.push({
-          database: database.title[0].plain_text,
-          from: lastEditedBy,
-          to: 'last edited by',
-        });
-      }
-
-      if (!lastEditedBy) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'last edited by': {
-              last_edited_by: {},
-              name: 'last edited by',
-              type: 'last_edited_by',
-            },
-          },
-        });
-
-        missingLastEditedBy.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'last edited by',
-        });
-      }
-
-      if (createdBy && createdBy !== 'created by') {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            [createdBy]: {
-              name: 'created by',
-            },
-          },
-        });
-
-        missingCreatedBy.push({
-          database: database.title[0].plain_text,
-          from: createdBy,
-          to: 'created by',
-        });
-      }
-
-      if (!createdBy) {
-        await notion.databases.update({
-          database_id,
-          properties: {
-            'created by': {
-              created_by: {},
-              name: 'created by',
-              type: 'created_by',
-            },
-          },
-        });
-
-        missingCreatedBy.push({
-          database: database.title[0].plain_text,
-          from: null,
-          to: 'created by',
-        });
-      }
-
-      if (relations.length) {
-        missingEmojis.push({
-          database: database.title[0].plain_text,
-          relations,
-        });
-      }
 
       while (selects.length !== 0) {
         const name = selects[0];
@@ -417,11 +294,6 @@ export default {
         });
       }
     }
-    console.log(missingName);
-    console.log(missingLastEditedTime);
-    console.log(missingCreatedTime);
-    console.log(missingLastEditedBy);
-    console.log(missingCreatedBy);
     console.log(missingEmojis);
     console.log(mismatchedSelects);
     console.log(mismatchedMultiselects);
@@ -429,35 +301,11 @@ export default {
 
     console.log('2 databases columns to fix: 🔢 sets, 📝 logs');
     const phraseList: LogInput[] = [
-      {
-        action: 'create',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'created_time as "created time"',
-      },
+      ...logs,
       {
         action: 'update',
         page: { emoji: '📝', title: 'logs' },
         message: 'title "Title" to "name"',
-      },
-      {
-        action: 'create',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'created_by as "created by"',
-      },
-      {
-        action: 'create',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'created_time as "created time"',
-      },
-      {
-        action: 'create',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'created_last_edited_by as "last edited by"',
-      },
-      {
-        action: 'create',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'last_edited_time as "last edited time"',
       },
       {
         action: 'update',
@@ -473,12 +321,6 @@ export default {
         action: 'update',
         page: { emoji: '📝', title: 'logs' },
         message: 'multi_select "Tags" to "tags"',
-      },
-      {
-        action: 'warn',
-        page: { emoji: '📝', title: 'logs' },
-        message:
-          'relation "user" cannot automatically be updated to "🙂 user". manual update in notion is required.',
       },
     ];
     phraseList.forEach(printPhraseList);

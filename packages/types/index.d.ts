@@ -4,6 +4,7 @@ export * from './client';
 export * from './columns';
 export * from './databases';
 export * from './file';
+export * from './fix';
 export * from './helpers';
 export * from './lint-rules';
 export * from './log';
