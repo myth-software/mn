@@ -1,4 +1,4 @@
-<% if (debug) { %>
+<% if (options.debug) { %>
   <%= log.debug({ action: 'debugging', message: `schema: cache ${cache ? 'is defined': 'is not defined'}` }) %>
 <% } %>
 
