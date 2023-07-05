@@ -1,8 +1,11 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 type SelectPagesIntegrationKeyOptions = {
-  pageId: string;
+  pageId: string[];
 };
 
 function assert(
@@ -21,13 +24,26 @@ export const optionsPrompt = async (
   if (!options.pageId) {
     prompts.push({
       type: 'input',
-      message: 'page id:',
+      message:
+        "type page_id of selected page to include [press 'c' when complete]",
       name: 'pageId',
     });
   }
 
   if (prompts.length) {
-    const results = await prompt<SelectPagesIntegrationKeyOptions>(prompts);
+    const results: SelectPagesIntegrationKeyOptions = { pageId: [] };
+    let result;
+
+    while (result !== 'c') {
+      const { pageId } = await prompt<{ pageId: string }>(prompts);
+
+      if (pageId === 'c') {
+        result = pageId;
+        break;
+      }
+
+      results.pageId.push(pageId);
+    }
 
     return results;
   }
@@ -41,11 +57,21 @@ export default {
   options: [
     { name: '-p, --page-id <id>', description: 'id of page with databases' },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
     assert(args);
     const options = await optionsPrompt(args);
-    console.log(options);
 
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      workspace: {
+        ...config.workspace,
+        selectedPages: options.pageId,
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+
+    log.success({ action: 'writing', message: 'page ids to config' });
     return;
   },
 } satisfies MountnCommand;

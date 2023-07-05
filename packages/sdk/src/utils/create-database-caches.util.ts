@@ -8,6 +8,7 @@ import { logInfo } from '@mountnotion/utils';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
+import { CACHE } from './constants.util';
 import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';
@@ -20,7 +21,6 @@ export const createDatabaseCaches = async (
     mkdirSync('./.mountnotion');
   }
 
-  const CACHE = './.mountnotion/cache.json';
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');

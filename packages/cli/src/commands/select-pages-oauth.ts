@@ -14,7 +14,7 @@ function assert(
   }
 }
 
-export const optionsPrompt = async () => {
+export async function optionsPrompt() {
   const results = await prompt<SelectPagesOauthOptions>([
     {
       type: 'list',
@@ -29,8 +29,7 @@ export const optionsPrompt = async () => {
   ]);
 
   return results;
-};
-// temporary workaround for value being set to boolean true (despite string type) if no argument follows the -id or --page-id flag
+}
 
 export default {
   name: 'select-pages-oauth',
@@ -42,13 +41,10 @@ export default {
       description: 'select pages to include',
     },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
-
-    if (!options.pageId) {
-      await optionsPrompt();
-      return;
-    }
+  actionFactory: () => async (args) => {
+    assert(args);
+    const options = await optionsPrompt();
+    console.log(options);
 
     return;
   },
