@@ -5,7 +5,7 @@ import {
 } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
-import { CONFIG_FILE } from '../utils';
+import { CONFIG_FILE, ROWS_LINT_RULES } from '../utils';
 
 type ConfigureLintRowsOptions = {
   use: Array<string>;
@@ -27,11 +27,13 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
       type: 'multiselect',
       message: 'select lint rules to use',
       name: 'use',
-      choices: [
-        { name: 'lowercase page titles' },
-        { name: 'untitled pages default to animal color names' },
-        { name: 'pages without icons default to database icon' },
-      ],
+      choices: ROWS_LINT_RULES.map((rule) => {
+        return {
+          name: rule.name,
+          value: rule.id,
+          hint: rule.description ?? '',
+        };
+      }),
     });
   }
 

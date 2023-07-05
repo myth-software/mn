@@ -5,7 +5,7 @@ import {
 } from '@mountnotion/types';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
-import { CONFIG_FILE } from '../utils';
+import { COLUMNS_LINT_RULES, CONFIG_FILE } from '../utils';
 
 type ConfigureLintColumnsOptions = {
   use: Array<string>;
@@ -27,17 +27,13 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
       type: 'multiselect',
       message: 'select lint rules to use',
       name: 'use',
-      choices: [
-        { name: "consistent titles as 'name'", hint: '' },
-        { name: 'automatic created_by', hint: '' },
-        { name: 'automatic created_time', hint: '' },
-        { name: 'automatic last_edited_by', hint: '' },
-        { name: 'automatic last_edited_time', hint: '' },
-        { name: 'consistent select colors using first color', hint: '' },
-        { name: 'consistent multi_select colors using first color', hint: '' },
-        { name: 'lowercase column names', hint: '' },
-        { name: 'relations with leading emoji', hint: '' },
-      ],
+      choices: COLUMNS_LINT_RULES.map((rule) => {
+        return {
+          name: rule.name,
+          value: rule.id,
+          hint: rule.description ?? '',
+        };
+      }),
     });
   }
 

@@ -6,6 +6,7 @@ type ColunnsLintRulesArray<
   [P in keyof ColumnsLintRules]: {
     id: P;
     name: ColumnsLintRules[P];
+    description?: string;
   };
 }[T][];
 
@@ -13,6 +14,7 @@ type RowsLintRulesArray<T extends keyof RowsLintRules = keyof RowsLintRules> = {
   [P in keyof RowsLintRules]: {
     id: P;
     name: RowsLintRules[P];
+    description?: string;
   };
 }[T][];
 
@@ -20,22 +22,27 @@ export const COLUMNS_LINT_RULES: ColunnsLintRulesArray = [
   {
     id: 'consistentTitlesAsName',
     name: "consistent titles as 'name'",
+    description: 'all of the title columns of workspace are called "name"',
   },
   {
     id: 'automaticCreatedBy',
     name: 'automatic created_by',
+    description: 'all of the databases have created_by column',
   },
   {
     id: 'automaticCreatedTime',
     name: 'automatic created_time',
+    description: 'all of the databases have created_time column',
   },
   {
     id: 'automaticLastEditedBy',
     name: 'automatic last_edited_by',
+    description: 'all of the databases have last_edited_by column',
   },
   {
     id: 'automaticLastEditedTime',
     name: 'automatic last_edited_time',
+    description: 'all of the databases have last_edited_time column',
   },
   {
     id: 'consistentSelectColorsUsingFirstColor',
