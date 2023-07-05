@@ -36,7 +36,7 @@ export const optionsPrompt = async (options: ConfigureSchematicsOptions) => {
           name: 'interfaces',
         },
         {
-          name: 'mock-api',
+          name: 'mirage',
         },
         {
           name: 'react-query',

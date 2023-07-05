@@ -1,13 +1,13 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
-import { MockApiOptions } from '@mountnotion/types';
+import { MirageOptions } from '@mountnotion/types';
 import { log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 dotenv.config();
 
-export function mockApi(options: MockApiOptions): Rule {
+export function mirage(options: MirageOptions): Rule {
   log.success({ action: 'running', message: 'mock api schematic' });
   log.success({ action: '-------', message: '------------------' });
   validateInputs(options);

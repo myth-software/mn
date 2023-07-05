@@ -28,9 +28,9 @@
       "factory": "./src/factories/locals/index#locals",
       "description": "generate locals"
     },
-    "mock-api": {
-      "factory": "./src/factories/mock-api/index#mockApi",
-      "description": "generate mockApi"
+    "mirage": {
+      "factory": "./src/factories/mirage/index#mirage",
+      "description": "generate mirage"
     },
     "openApi": {
       "factory": "./src/factories/open-api/index#openApi",

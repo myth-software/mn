@@ -17,7 +17,7 @@ export declare type BasicOptions = {
   debug: boolean;
 };
 
-export declare type MockApiOptions = { locals: string } & BasicOptions &
+export declare type MirageOptions = { locals: string } & BasicOptions &
   AuthOptions;
 
 export declare type RtkQueryOptions = BasicOptions & AuthOptions;

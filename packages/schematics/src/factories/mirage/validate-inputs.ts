@@ -1,7 +1,7 @@
-import { MockApiOptions } from '@mountnotion/types';
+import { MirageOptions } from '@mountnotion/types';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
-export function validateInputs(options: MockApiOptions): void {
+export function validateInputs(options: MirageOptions): void {
   validateBasicInputs(options);
   validateAuthInputs(options);
 }
