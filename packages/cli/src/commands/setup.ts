@@ -17,14 +17,25 @@ import schematics from './schematics';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 
+type AuthFlowOptions = {
+  flow: 'oauth' | 'integrationKey';
+};
+
 export async function authPrompt() {
-  const results = await prompt<{
-    press: string;
-  }>({
-    type: 'input',
-    message:
-      "press any key to launch oauth flow in browser. press 'i' to use notion integration key auth flow",
-    name: 'press',
+  const results = await prompt<AuthFlowOptions>({
+    type: 'select',
+    message: 'select auth flow',
+    choices: [
+      {
+        name: 'oauth',
+        hint: 'launch oauth flow in browser',
+      },
+      {
+        name: 'integration key',
+        hint: 'use notion integration key auth flow',
+      },
+    ],
+    name: 'flow',
   });
 
   return results;
@@ -34,14 +45,14 @@ export default {
   name: 'setup',
   description: 'interactive setup for mount notion',
   actionFactory: (config) => async () => {
-    const { press } = await authPrompt();
+    const { flow } = await authPrompt();
 
-    if (press === 'i') {
+    if (flow === 'integrationKey') {
       await authIntegrationKey.actionFactory(config)({});
       await selectPagesIntegrationKey.actionFactory(config)({});
     }
 
-    if (press !== 'i') {
+    if (flow === 'oauth') {
       await authOauth.actionFactory()();
       await selectPagesOauth.actionFactory(config)();
     }
