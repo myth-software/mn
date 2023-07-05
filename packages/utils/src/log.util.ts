@@ -84,10 +84,8 @@ export function logFatal({ action, message, page }: LogInput) {
         page.title
       )} ${message}`
     );
-    return;
   }
-  console.log(`${error(paddedAction)} ${message}`);
-  return;
+  throw new Error(`${error(paddedAction)} ${message}`);
 }
 
 export function logDebug({ action, message, page }: LogInput) {

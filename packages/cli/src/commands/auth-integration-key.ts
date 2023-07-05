@@ -13,7 +13,7 @@ async function optionsPrompt(options: AuthIntegrationKeyOptions) {
   if (!options.integrationKey) {
     prompts.push({
       type: 'input',
-      message: 'integration key:',
+      message: 'integration key',
       name: 'integrationKey',
     });
   }

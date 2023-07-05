@@ -1,5 +1,5 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { logError } from '@mountnotion/utils';
+import { getCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
 import { CONFIG_FILE } from '../utils';
@@ -22,14 +22,13 @@ function assert(
 }
 
 function dependencies() {
-  const cache = [];
-  const hasCache = cache.length > 1;
+  const cache = getCache();
+  const hasCache = cache !== undefined && cache.length > 1;
   if (!hasCache) {
-    logError({
-      action: 'erroring',
+    log.fatal({
+      action: 'aborting',
       message: 'missing mount notion cache',
     });
-    throw new Error('missing mount notion cache');
   }
 }
 
@@ -39,7 +38,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.entities) {
     prompts.push({
       type: 'input',
-      message: 'name of entities package:',
+      message: 'name of entities package',
       name: 'entities',
     });
   }
@@ -47,7 +46,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.baseUrl) {
     prompts.push({
       type: 'input',
-      message: 'base url for api:',
+      message: 'base url for api',
       name: 'baseUrl',
     });
   }
@@ -55,7 +54,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.authStrategies) {
     prompts.push({
       type: 'multiselect',
-      message: 'authentication strategies:',
+      message: 'authentication strategies',
       name: 'authStrategies',
       choices: ['email', 'sms'],
     });
@@ -64,7 +63,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.usersDatabase) {
     prompts.push({
       type: 'list',
-      message: 'users database:',
+      message: 'users database',
       name: 'usersDatabase',
       choices: ['people', 'companies', 'users'],
     });
@@ -73,7 +72,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.userColumn) {
     prompts.push({
       type: 'input',
-      message: 'user column:',
+      message: 'user column',
       name: 'userColumn',
     });
   }

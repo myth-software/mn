@@ -4,11 +4,10 @@ import {
   Cache,
   Entity,
 } from '@mountnotion/types';
-import { logInfo } from '@mountnotion/utils';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { CACHE, getCache, log } from '@mountnotion/utils';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
-import { CACHE } from './constants.util';
 import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';
@@ -21,17 +20,13 @@ export const createDatabaseCaches = async (
     mkdirSync('./.mountnotion');
   }
 
-  let cached;
-  try {
-    cached = readFileSync(CACHE, 'utf8');
-    logInfo({ action: 'loading', message: 'data from filesystem cache' });
-  } catch (error) {
-    logInfo({ action: 'loading', message: 'data from notion workspace' });
-  }
+  const cached = getCache();
 
   if (cached) {
-    return JSON.parse(cached) as Cache[];
+    return cached;
   }
+
+  log.info({ action: 'loading', message: 'data from notion workspace' });
 
   const pageResponse = await infrastructure.pages.retrieve({
     page_id: pageIds[0],
@@ -43,7 +38,7 @@ export const createDatabaseCaches = async (
       page_size: 100,
     })
   );
-  logInfo({
+  log.info({
     action: 'listing',
     message: 'page children',
     page: { emoji: page.icon, title: page.title },
@@ -65,7 +60,7 @@ export const createDatabaseCaches = async (
     .filter((result) => result.type === 'child_database')
     .map(({ id }) => id);
   const primaryIds = [...new Set(allPrimaryIds.concat(allParagraphIds))];
-  logInfo({
+  ({
     action: 'retrieving',
     message: 'primary databases',
     page: { emoji: page.icon, title: page.title },
@@ -83,7 +78,7 @@ export const createDatabaseCaches = async (
       allRelatedIds.filter((relatedId) => !primaryIds.includes(relatedId))
     ),
   ] as string[];
-  logInfo({
+  ({
     action: 'retrieving',
     message: 'related databases',
     page: { emoji: page.icon, title: page.title },
@@ -101,7 +96,7 @@ export const createDatabaseCaches = async (
       { flattenResponse: true, resultsOnly: true }
     )
   );
-  logInfo({
+  ({
     action: 'querying',
     message: 'primary and related databases',
     page: { emoji: page.icon, title: page.title },
@@ -111,7 +106,7 @@ export const createDatabaseCaches = async (
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
     createRollups(database.properties, pages[i].id)
   );
-  logInfo({
+  ({
     action: 'querying',
     message: 'property types',
     page: { emoji: page.icon, title: page.title },
@@ -139,7 +134,7 @@ export const createDatabaseCaches = async (
       };
     });
 
-  logInfo({
+  ({
     action: 'caching',
     message: '',
     page: { emoji: page.icon, title: page.title },
