@@ -20,7 +20,7 @@ function formatPageTitle(str: string) {
   return str.length >= 15 ? str.substring(0, 11) + '...' : str;
 }
 
-export function logSuccess({ action, message, page }: LogInput) {
+function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
@@ -34,7 +34,7 @@ export function logSuccess({ action, message, page }: LogInput) {
   return;
 }
 
-export function logInfo({ action, message, page }: LogInput) {
+function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
@@ -48,7 +48,7 @@ export function logInfo({ action, message, page }: LogInput) {
   return;
 }
 
-export function logWarn({ action, message, page }: LogInput) {
+function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
@@ -62,7 +62,7 @@ export function logWarn({ action, message, page }: LogInput) {
   return;
 }
 
-export function logError({ action, message, page }: LogInput) {
+function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
@@ -76,7 +76,7 @@ export function logError({ action, message, page }: LogInput) {
   return;
 }
 
-export function logFatal({ action, message, page }: LogInput) {
+function logFatal({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
@@ -88,7 +88,7 @@ export function logFatal({ action, message, page }: LogInput) {
   throw new Error(`${error(paddedAction)} ${message}`);
 }
 
-export function logDebug({ action, message, page }: LogInput) {
+function logDebug({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(

@@ -1,15 +1,15 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateBasicInputs } from '../../utils';
 
 dotenv.config();
 export function interfaces(options: BasicOptions): Rule {
-  logSuccess({ action: 'running', message: 'interfaces schematic' });
-  logSuccess({ action: '-------', message: '--------------------' });
+  log.success({ action: 'running', message: 'interfaces schematic' });
+  log.success({ action: '-------', message: '--------------------' });
   validateBasicInputs(options);
 
   const pageIds = [options.pageId].flat();
@@ -28,6 +28,7 @@ export function interfaces(options: BasicOptions): Rule {
             index: cache,
             cache,
             options,
+            log,
             ...strings,
           }),
           move(options.outDir ?? 'out/interfaces'),
@@ -37,6 +38,7 @@ export function interfaces(options: BasicOptions): Rule {
       const interfacesIndexRule = applyWithOverwrite(url('./files/index'), [
         template({
           titles,
+          log,
           ...strings,
         }),
         move(options.outDir ?? 'out/interfaces'),

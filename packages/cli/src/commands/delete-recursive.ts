@@ -1,6 +1,6 @@
 import { notion } from '@mountnotion/sdk';
 import { MountnCommand } from '@mountnotion/types';
-import { logDebug } from '@mountnotion/utils';
+import { log } from '@mountnotion/utils';
 
 export type DeleteRecursiveOptions = {
   pageId: string;
@@ -27,7 +27,7 @@ export default {
   actionFactory: () => async (options) => {
     assert(options);
     const { pageId } = options;
-    logDebug({ action: 'debugging', message: `page_id: ${pageId}` });
+    log.debug({ action: 'debugging', message: `page_id: ${pageId}` });
     const foundPages: string[] = [];
     return deleteRecursive(pageId);
 

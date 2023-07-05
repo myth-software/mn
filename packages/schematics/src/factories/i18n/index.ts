@@ -4,7 +4,7 @@ dotenv.config();
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { Cache, I18nOptions, Options } from '@mountnotion/types';
-import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';
 import { validateInputs } from './validate-inputs';
@@ -18,8 +18,8 @@ type FormattedTranslations = {
   };
 };
 export function i18n(options: I18nOptions): Rule {
-  logSuccess({ action: 'running', message: 'i18n schematic' });
-  logSuccess({ action: '-------', message: '--------------' });
+  log.success({ action: 'running', message: 'i18n schematic' });
+  log.success({ action: '-------', message: '--------------' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();
@@ -72,7 +72,7 @@ export function i18n(options: I18nOptions): Rule {
                     options,
                     columns,
                     language: lng,
-                    logDebug,
+                    log,
                     ...strings,
                   }),
                   move(`${outDir}/${lng}`),
@@ -102,7 +102,7 @@ export function i18n(options: I18nOptions): Rule {
           [
             template({
               languages: options.languages,
-              logDebug,
+              log,
               ...strings,
             }),
             move(outDir),

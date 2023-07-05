@@ -1,13 +1,13 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { AuthOptions, BasicOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
-  logSuccess({ action: 'running', message: 'open api schematic' });
-  logSuccess({ action: '-------', message: '------------------' });
+  log.success({ action: 'running', message: 'open api schematic' });
+  log.success({ action: '-------', message: '------------------' });
   validateBasicInputs(options);
   validateAuthInputs(options);
 
@@ -30,6 +30,7 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
           strategies: options.strategies,
           userColumn: options.userColumn,
           usersDatabase: options.usersDatabase,
+          log,
           ...strings,
         }),
         move(outDir),
@@ -38,6 +39,7 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
     const controllersIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles,
+        log,
         ...strings,
       }),
       move(outDir),

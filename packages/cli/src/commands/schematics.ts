@@ -4,7 +4,7 @@ import 'symbol-observable';
 import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
 import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { logError, logInfo } from '@mountnotion/utils';
+import { log } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { existsSync } from 'fs';
 import * as path from 'path';
@@ -26,7 +26,7 @@ function assert(
 
 function dependencies(config: MountNotionConfig) {
   if (!config) {
-    logError({
+    log.error({
       action: 'erroring',
       message: 'missing mount notion config file',
     });
@@ -126,7 +126,7 @@ export default {
       switch (event.kind) {
         case 'error':
           error = true;
-          logError({ action: 'erroring', message: `${eventPath} ${desc}` });
+          log.error({ action: 'erroring', message: `${eventPath} ${desc}` });
           break;
         case 'update':
           loggingQueue.push({
@@ -157,7 +157,7 @@ export default {
       if (event.kind == 'workflow-end' || event.kind == 'post-tasks-start') {
         if (!error) {
           // Flush the log queue and clean the error state.
-          loggingQueue.forEach((input) => logInfo(input));
+          loggingQueue.forEach((input) => log.info(input));
         }
 
         loggingQueue = [];
@@ -179,7 +179,7 @@ export default {
       }
 
       if (!process.env['NOTION_INTEGRATION_KEY']) {
-        logError({
+        log.error({
           action: 'erroring',
           message:
             'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable',
@@ -207,19 +207,19 @@ export default {
       }
 
       if (nothingDone) {
-        logInfo({ action: 'informing', message: 'nothing to be done' });
+        log.info({ action: 'informing', message: 'nothing to be done' });
       }
 
       return;
     } catch (err) {
       if (err instanceof UnsuccessfulWorkflowExecution) {
         // "See above" because we already printed the error.
-        logError({
+        log.error({
           action: 'erroring',
           message: 'the schematic workflow failed. see above',
         });
       } else {
-        logError({
+        log.error({
           action: 'erroring',
           message: `${err instanceof Error ? err.message : err}`,
         });

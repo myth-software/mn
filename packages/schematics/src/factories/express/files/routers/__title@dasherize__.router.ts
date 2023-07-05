@@ -1,5 +1,5 @@
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+  <%= log.debug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
 import express, { Request, Response } from 'express';

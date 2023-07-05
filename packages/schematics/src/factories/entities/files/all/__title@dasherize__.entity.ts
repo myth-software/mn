@@ -1,5 +1,5 @@
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: `entity: title ${cache.title ? 'is ' + cache.title : 'is not defined'}` }) %>
+  <%= log.debug({ action: 'debugging', message: `entity: title ${cache.title ? 'is ' + cache.title : 'is not defined'}` }) %>
 <% } %>
 
 import { InferReadonly, InferWriteonly, MountNotionQueryParameters } from '@mountnotion/types';
@@ -57,5 +57,5 @@ export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= c
 export declare type <%= classify(cache.title) %> = <%= classify(cache.title) %>Readonly & <%= classify(cache.title) %>Writeonly;
 
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: 'entity: end' }) %>
+  <%= log.debug({ action: 'debugging', message: 'entity: end' }) %>
 <% } %>

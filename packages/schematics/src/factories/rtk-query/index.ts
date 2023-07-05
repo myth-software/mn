@@ -4,13 +4,13 @@ dotenv.config();
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { RtkQueryOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 export function rtkQuery(options: RtkQueryOptions): Rule {
-  logSuccess({ action: 'running', message: 'rtk query schematic' });
-  logSuccess({ action: '-------', message: '-------------------' });
+  log.success({ action: 'running', message: 'rtk query schematic' });
+  log.success({ action: '-------', message: '-------------------' });
   validateInputs(options);
   const { outDir, entities, baseUrl } = options;
   const excludes = options.excludes ?? [];
@@ -33,6 +33,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             entities,
             baseUrl,
             strategies: options.strategies,
+            log,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -47,6 +48,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             strategies: options.strategies,
             userColumn: options.userColumn,
             usersDatabase: options.usersDatabase,
+            log,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -56,6 +58,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             titles,
             baseUrl,
             entities,
+            log,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -67,6 +70,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             titles,
             userColumn: options.userColumn,
             usersDatabase: options.usersDatabase,
+            log,
             ...strings,
           }),
           move(outDir),
@@ -75,6 +79,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             entities,
             titles,
+            log,
             ...strings,
           }),
           move(outDir),

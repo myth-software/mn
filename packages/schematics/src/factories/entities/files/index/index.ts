@@ -1,5 +1,5 @@
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: 'entity: index.ts' }) %>
+  <%= log.debug({ action: 'debugging', message: 'entity: index.ts' }) %>
 <% } %>
 
 import { configure } from '@mountnotion/sdk';
@@ -19,5 +19,5 @@ export const client = configure({ integrationKey: process.env['INTEGRATION_KEY']
 
 
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: 'entity: end index.ts' }) %>
+  <%= log.debug({ action: 'debugging', message: 'entity: end index.ts' }) %>
 <% } %>

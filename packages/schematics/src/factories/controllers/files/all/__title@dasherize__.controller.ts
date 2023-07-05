@@ -1,5 +1,5 @@
 <% if (debug) { %>
-  <%= logDebug({ action: 'debugging', message: `controllers: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+  <%= log.debug({ action: 'debugging', message: `controllers: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
 <% if (strategies) { %>
@@ -376,3 +376,7 @@ export class <%= classify(title) %>Controller {
     return mountn.<%= camelize(title) %>.delete({ id });
   }
 }
+
+<% if (debug) { %>
+  <%= log.debug({ action: 'debugging', message: 'end' }) %>
+<% } %>

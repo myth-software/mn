@@ -1,5 +1,5 @@
 <% if (options.debug) { %>
-  <%= logDebug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
+  <%= log.debug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
 <% } %>
 
 import 'dotenv/config';

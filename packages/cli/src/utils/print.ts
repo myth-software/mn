@@ -1,17 +1,17 @@
 import { LogInput } from '@mountnotion/types';
-import { logError, logSuccess, logWarn } from '@mountnotion/utils';
+import { log } from '@mountnotion/utils';
 import { failActions, successActions, warnActions } from '../types';
 
 export function printPhraseList(input: LogInput, index: number) {
   setTimeout(() => {
     if (successActions.includes(input.action)) {
-      logSuccess(input);
+      log.success(input);
     }
     if (warnActions.includes(input.action)) {
-      logWarn(input);
+      log.warn(input);
     }
     if (failActions.includes(input.action)) {
-      logError(input);
+      log.error(input);
     }
   }, index * 1000);
 }

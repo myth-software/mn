@@ -1,15 +1,15 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ExpressOptions } from '@mountnotion/types';
-import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { addPackageToPackageJson } from '../../utils';
 import { validateInputs } from './validate-inputs';
 
 export function express(options: ExpressOptions): Rule {
-  logSuccess({ action: 'running', message: 'express schematic' });
-  logSuccess({ action: '-------', message: '-----------------' });
+  log.success({ action: 'running', message: 'express schematic' });
+  log.success({ action: '-------', message: '-----------------' });
   validateInputs(options);
 
   const outDir = options.outDir;
@@ -30,7 +30,7 @@ export function express(options: ExpressOptions): Rule {
           title: cache.title,
           cache,
           options,
-          logDebug,
+          log,
           ...strings,
         }),
         move(`${outDir}/routers`),
@@ -40,7 +40,7 @@ export function express(options: ExpressOptions): Rule {
       template({
         titles,
         options,
-        logDebug,
+        log,
         ...strings,
       }),
       move(outDir),

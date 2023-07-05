@@ -1,15 +1,15 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { MockApiOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 dotenv.config();
 
 export function mockApi(options: MockApiOptions): Rule {
-  logSuccess({ action: 'running', message: 'mock api schematic' });
-  logSuccess({ action: '-------', message: '------------------' });
+  log.success({ action: 'running', message: 'mock api schematic' });
+  log.success({ action: '-------', message: '------------------' });
   validateInputs(options);
 
   const { outDir, entities, baseUrl, usersDatabase, locals } = options;
@@ -31,6 +31,7 @@ export function mockApi(options: MockApiOptions): Rule {
           entities,
           baseUrl,
           locals,
+          log,
           ...strings,
         }),
         move(`${outDir}/endpoints`),
@@ -44,6 +45,7 @@ export function mockApi(options: MockApiOptions): Rule {
             entities,
             baseUrl,
             locals,
+            log,
             usersDatabase,
             ...strings,
           }),
@@ -55,6 +57,7 @@ export function mockApi(options: MockApiOptions): Rule {
             options,
             entities,
             baseUrl,
+            log,
             locals,
             ...strings,
           }),
@@ -66,6 +69,7 @@ export function mockApi(options: MockApiOptions): Rule {
           title: cache.title,
           options,
           entities,
+          log,
           baseUrl,
           locals,
           ...strings,
@@ -78,6 +82,7 @@ export function mockApi(options: MockApiOptions): Rule {
         titles,
         options,
         entities,
+        log,
         baseUrl,
         locals,
         ...strings,
@@ -89,6 +94,7 @@ export function mockApi(options: MockApiOptions): Rule {
         titles,
         options,
         entities,
+        log,
         baseUrl,
         locals,
         ...strings,

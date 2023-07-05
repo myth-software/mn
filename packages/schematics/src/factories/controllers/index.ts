@@ -1,13 +1,13 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
-import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 export function controllers(options: ControllersOptions): Rule {
-  logSuccess({ action: 'running', message: 'controllers schematic' });
-  logSuccess({ action: '-------', message: '---------------------' });
+  log.success({ action: 'running', message: 'controllers schematic' });
+  log.success({ action: '-------', message: '---------------------' });
   validateInputs(options);
 
   const outDir = options.outDir;
@@ -34,7 +34,7 @@ export function controllers(options: ControllersOptions): Rule {
           usersDatabase: options.usersDatabase,
           isPublic: options.public?.includes(cache.title) ?? false,
           debug: options.debug,
-          logDebug,
+          log,
           ...strings,
         }),
         move(outDir),
