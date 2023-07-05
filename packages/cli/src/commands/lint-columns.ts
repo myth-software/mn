@@ -42,7 +42,8 @@ export default {
   actionFactory: (config) => async (options) => {
     assert(options);
     dependencies(config);
-    const page_id = options.pageId;
+    const selectedPages = config.workspace.selectedPages;
+    const page_id = options.pageId ?? selectedPages[0];
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,

@@ -1,8 +1,14 @@
-import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import {
+  ColumnsLintRules,
+  MountnCommand,
+  MountNotionConfig,
+} from '@mountnotion/types';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 type ConfigureLintColumnsOptions = {
-  use: string;
+  use: Array<string>;
 };
 
 function assert(
@@ -66,7 +72,24 @@ export default {
     dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
-    console.log(options);
+
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      workspace: {
+        ...config.workspace,
+        lint: {
+          ...config.workspace.lint,
+          columns: options.use?.reduce((acc, column) => {
+            return {
+              ...acc,
+              [column]: column,
+            };
+          }, {} as Partial<ColumnsLintRules>),
+        },
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
 
     return;
   },

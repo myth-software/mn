@@ -1,29 +1,30 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
-type SelectPagesOauthOptions = {
-  pageId: string;
-};
-
-function assert(
-  condition: unknown,
-  msg?: string
-): asserts condition is SelectPagesOauthOptions {
-  if (typeof condition !== 'object') {
-    throw new Error(msg);
-  }
-}
-
-export async function optionsPrompt() {
-  const results = await prompt<SelectPagesOauthOptions>([
+export async function selectPagesPrompts() {
+  const results = await prompt<{
+    pageId: Array<string>;
+  }>([
     {
       type: 'list',
-      message: 'Select pages to include:',
+      message: 'select pages to include',
       name: 'selectPagesOauth',
       choices: [
-        '💪 flexin databases',
-        '💿 record databases',
-        '❤️ bottomless love databases',
+        {
+          name: '💪 flexin databases',
+          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        },
+        {
+          name: '💿 record databases',
+          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        },
+        {
+          name: '❤️ bottomless love databases',
+          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        },
       ],
     },
   ]);
@@ -35,17 +36,19 @@ export default {
   name: 'select-pages-oauth',
   description:
     'select pages from a list of options that come from the results of oauth',
-  options: [
-    {
-      name: '-p, --page-id [select-pages-oauth]',
-      description: 'select pages to include',
-    },
-  ],
-  actionFactory: () => async (args) => {
-    assert(args);
-    const options = await optionsPrompt();
-    console.log(options);
+  actionFactory: (config) => async () => {
+    const options = await selectPagesPrompts();
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      workspace: {
+        ...config.workspace,
+        selectedPages: options.pageId,
+      },
+    };
 
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+
+    log.success({ action: 'writing', message: 'page ids to config' });
     return;
   },
 } satisfies MountnCommand;

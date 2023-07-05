@@ -1,8 +1,14 @@
-import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import {
+  MountnCommand,
+  MountNotionConfig,
+  RowsLintRules,
+} from '@mountnotion/types';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 type ConfigureLintRowsOptions = {
-  use: string;
+  use: Array<string>;
 };
 
 function assert(
@@ -19,7 +25,7 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
   if (!options.use) {
     prompts.push({
       type: 'multiselect',
-      message: 'select lint rules to use:',
+      message: 'select lint rules to use',
       name: 'use',
       choices: [
         { name: 'lowercase page titles' },
@@ -59,7 +65,24 @@ export default {
     dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
-    console.log(options);
+
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      workspace: {
+        ...config.workspace,
+        lint: {
+          ...config.workspace.lint,
+          rows: options.use?.reduce((acc, row) => {
+            return {
+              ...acc,
+              [row]: row,
+            };
+          }, {} as Partial<RowsLintRules>),
+        },
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
 
     return;
   },

@@ -1,6 +1,8 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { logError } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 export type WorkspaceOptions = {
   entities: string | null;
@@ -85,7 +87,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
 
 export default {
   name: 'configure-workspace',
-  description: '',
+  description: 'configures mount notion workspace',
   options: [
     {
       name: '-e, --entities [name]',
@@ -104,14 +106,34 @@ export default {
       description: 'users database',
     },
     {
-      name: '-c, --user-column	 [name]',
+      name: '-c, --user-colum [name]',
       description: 'user column',
     },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
     assert(args);
+    dependencies();
     const options = await optionsPrompt(args);
-    console.log(options);
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      options: {
+        ...config.options,
+        basic: {
+          ...config.options.basic,
+          entities: options.entities ?? config.options.basic.entities,
+          baseUrl: options.baseUrl ?? config.options.basic.baseUrl,
+        },
+        auth: {
+          ...config.options.auth,
+          strategies: options.authStrategies ?? config.options.auth.strategies,
+          userColumn: options.userColumn ?? config.options.auth.userColumn,
+          usersDatabase:
+            options.usersDatabase ?? config.options.auth.usersDatabase,
+        },
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
 
     return;
   },
