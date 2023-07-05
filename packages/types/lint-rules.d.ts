@@ -4,6 +4,10 @@ export declare type ColumnsLintRules = {
   automaticCreatedTime: 'automatic created_time';
   automaticLastEditedBy: 'automatic last_edited_by';
   automaticLastEditedTime: 'automatic last_edited_time';
+  consistentCreatedBy: 'consistent created_by';
+  consistentCreatedTime: 'consistent created_time';
+  consistentLastEditedBy: 'consistent last_edited_by';
+  consistentLastEditedTime: 'consistent last_edited_time';
   consistentSelectColorsUsingFirstColor: 'consistent select colors using first color';
   consistentMultiSelectColorsUsingFirstColor: 'consistent multi_select colors using first color';
   lowercaseColumnNames: 'lowercase column names';

@@ -18,7 +18,7 @@ import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 
 type AuthFlowOptions = {
-  flow: 'oauth' | 'integrationKey';
+  flow: 'oauth' | 'integration key';
 };
 
 export async function authPrompt() {
@@ -32,7 +32,6 @@ export async function authPrompt() {
       },
       {
         name: 'integration key',
-        value: 'integrationKey',
         hint: 'use notion integration key auth flow',
       },
     ],
@@ -48,7 +47,7 @@ export default {
   actionFactory: (config) => async () => {
     const { flow } = await authPrompt();
 
-    if (flow === 'integrationKey') {
+    if (flow === 'integration key') {
       await authIntegrationKey.actionFactory(config)({});
       await selectPagesIntegrationKey.actionFactory(config)({});
     }

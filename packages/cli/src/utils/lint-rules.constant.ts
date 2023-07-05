@@ -45,6 +45,29 @@ export const COLUMNS_LINT_RULES: ColunnsLintRulesArray = [
     description: 'all of the databases have last_edited_time column',
   },
   {
+    id: 'consistentCreatedBy',
+    name: 'consistent created_by',
+    description: 'all of the databases have consistent created_by column names',
+  },
+  {
+    id: 'consistentCreatedTime',
+    name: 'consistent created_time',
+    description:
+      'all of the databases have consistent created_time column names',
+  },
+  {
+    id: 'consistentLastEditedBy',
+    name: 'consistent last_edited_by',
+    description:
+      'all of the databases have consistent last_edited_by column names',
+  },
+  {
+    id: 'consistentLastEditedTime',
+    name: 'consistent last_edited_time',
+    description:
+      'all of the databases have consistent last_edited_time column names',
+  },
+  {
     id: 'consistentSelectColorsUsingFirstColor',
     name: 'consistent select colors using first color',
   },
