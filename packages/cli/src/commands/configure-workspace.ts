@@ -68,8 +68,8 @@ export async function optionsPrompt(options: WorkspaceOptions) {
       name: 'usersDatabase',
       choices: cache.map((c) => {
         return {
-          name: `${c.icon} ${c.title}`,
-          value: c.id,
+          name: c.title,
+          value: c.title,
         };
       }),
     });
@@ -80,7 +80,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
     let userColunn;
     if (results.usersDatabase && !options.userColumn) {
       const database = ensure(
-        cache.find((c) => c.id === results.usersDatabase)
+        cache.find((c) => c.title === results.usersDatabase)
       );
       const choices = Object.keys(database.columns);
       const result = await prompt<{ userColumn: string }>([

@@ -32,6 +32,7 @@ export async function authPrompt() {
       },
       {
         name: 'integration key',
+        value: 'integrationKey',
         hint: 'use notion integration key auth flow',
       },
     ],
