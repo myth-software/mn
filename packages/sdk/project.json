@@ -28,6 +28,13 @@
       },
       "dependsOn": ["version", "build"]
     },
+    "pack": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd dist/packages/sdk && npm pack --pack-destination ../../../"
+      },
+      "dependsOn": ["build"]
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
