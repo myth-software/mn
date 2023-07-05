@@ -31,7 +31,7 @@ async function optionsPrompt(options: MigrationsOptions) {
     prompts.push({
       name: 'command',
       type: 'select',
-      message: 'select command:',
+      message: 'select command',
       choices: [
         { name: 'check', hint: 'check up on the migrations' },
         { name: 'drop', hint: 'safely delete migration files' },

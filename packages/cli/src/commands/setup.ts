@@ -23,7 +23,7 @@ export const authPrompt = async () => {
   }>({
     type: 'input',
     message:
-      "press any key to launch oauth flow in browser\n\npress 'i' to use notion integration key auth flow",
+      "press any key to launch oauth flow in browser. press 'i' to use notion integration key auth flow",
     name: 'press',
   });
 

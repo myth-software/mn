@@ -25,18 +25,18 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
   if (!options.use) {
     prompts.push({
       type: 'multiselect',
-      message: 'select lint rules to use:',
+      message: 'select lint rules to use',
       name: 'use',
       choices: [
-        { name: "consistent titles as 'name'" },
-        { name: 'automatic created_by' },
-        { name: 'automatic created_time' },
-        { name: 'automatic last_edited_by' },
-        { name: 'automatic last_edited_time' },
-        { name: 'consistent select colors using first color' },
-        { name: 'consistent multi_select colors using first color' },
-        { name: 'lowercase column names' },
-        { name: 'relations with leading emoji' },
+        { name: "consistent titles as 'name'", hint: '' },
+        { name: 'automatic created_by', hint: '' },
+        { name: 'automatic created_time', hint: '' },
+        { name: 'automatic last_edited_by', hint: '' },
+        { name: 'automatic last_edited_time', hint: '' },
+        { name: 'consistent select colors using first color', hint: '' },
+        { name: 'consistent multi_select colors using first color', hint: '' },
+        { name: 'lowercase column names', hint: '' },
+        { name: 'relations with leading emoji', hint: '' },
       ],
     });
   }

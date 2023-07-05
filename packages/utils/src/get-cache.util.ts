@@ -7,7 +7,6 @@ export function getCache() {
   let cached;
   try {
     cached = readFileSync(CACHE, 'utf8');
-    log.info({ action: 'loading', message: 'data from filesystem cache' });
   } catch (error) {
     log.info({ action: 'loading', message: 'no cache found' });
   }

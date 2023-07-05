@@ -1,5 +1,5 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { getCache, log } from '@mountnotion/utils';
+import { ensure, getCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
 import { CONFIG_FILE } from '../utils';
@@ -34,6 +34,7 @@ function dependencies() {
 
 export async function optionsPrompt(options: WorkspaceOptions) {
   const prompts = [];
+  const cache = ensure(getCache());
 
   if (!options.entities) {
     prompts.push({
@@ -62,10 +63,15 @@ export async function optionsPrompt(options: WorkspaceOptions) {
 
   if (!options.usersDatabase) {
     prompts.push({
-      type: 'list',
+      type: 'select',
       message: 'users database',
       name: 'usersDatabase',
-      choices: ['people', 'companies', 'users'],
+      choices: cache.map((c) => {
+        return {
+          name: `${c.icon} ${c.title}`,
+          value: c.id,
+        };
+      }),
     });
   }
 

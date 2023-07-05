@@ -23,6 +23,7 @@ export const createDatabaseCaches = async (
   const cached = getCache();
 
   if (cached) {
+    log.info({ action: 'loading', message: 'data from filesystem cache' });
     return cached;
   }
 
