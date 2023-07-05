@@ -17,7 +17,7 @@ import schematics from './schematics';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 
-export const authPrompt = async () => {
+export async function authPrompt() {
   const results = await prompt<{
     press: string;
   }>({
@@ -28,7 +28,7 @@ export const authPrompt = async () => {
   });
 
   return results;
-};
+}
 
 export default {
   name: 'setup',
@@ -56,7 +56,7 @@ export default {
     await fixRows.actionFactory()({});
     await configureSchematics.actionFactory(config)({});
     await schematics.actionFactory(config)({});
-    await campInteractive.actionFactory()();
+    await campInteractive.actionFactory(config)();
 
     log.info({ action: 'informing', message: 'setup complete' });
 
