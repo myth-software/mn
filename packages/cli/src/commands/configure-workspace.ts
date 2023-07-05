@@ -8,7 +8,7 @@ export type WorkspaceOptions = {
   entities: string | null;
   baseUrl: string | null;
   authStrategies: Array<'email' | 'sms'> | null;
-  usersDatabase: 'people' | 'companies' | 'users' | null;
+  usersDatabase: string | null;
   userColumn: string | null;
 };
 
@@ -75,17 +75,30 @@ export async function optionsPrompt(options: WorkspaceOptions) {
     });
   }
 
-  if (!options.userColumn) {
-    prompts.push({
-      type: 'input',
-      message: 'user column',
-      name: 'userColumn',
-    });
-  }
-
   if (prompts.length) {
     const results = await prompt<WorkspaceOptions>(prompts);
-    return { ...options, ...results };
+    let userColunn;
+    if (results.usersDatabase && !options.userColumn) {
+      const database = ensure(
+        cache.find((c) => c.id === results.usersDatabase)
+      );
+      const choices = Object.keys(database.columns);
+      const result = await prompt<{ userColumn: string }>([
+        {
+          type: 'select',
+          message: 'user column',
+          name: 'userColumn',
+          choices: choices,
+        },
+      ]);
+      userColunn = result.userColumn;
+    }
+
+    return {
+      ...options,
+      ...results,
+      userColunn: userColunn ?? options.userColumn ?? results.userColumn,
+    };
   }
   return options;
 }
