@@ -3,6 +3,7 @@ import {
   MountNotionConfig,
   Schematics,
 } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
 import { CONFIG_FILE } from '../utils';
@@ -102,7 +103,10 @@ export default {
     dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
-    console.log('entities schematic is required, schemed automatially');
+    log.info({
+      action: 'informing',
+      message: 'entities schematic is required, schemed automatially',
+    });
 
     const updatedConfig: MountNotionConfig = {
       ...config,
