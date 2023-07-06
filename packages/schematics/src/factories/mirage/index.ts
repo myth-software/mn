@@ -8,8 +8,8 @@ import { validateInputs } from './validate-inputs';
 dotenv.config();
 
 export function mirage(options: MirageOptions): Rule {
-  log.success({ action: 'running', message: 'mock api schematic' });
-  log.success({ action: '-------', message: '------------------' });
+  log.success({ action: 'running', message: 'mirage schematic' });
+  log.success({ action: '-------', message: '----------------' });
   validateInputs(options);
 
   const { outDir } = options;

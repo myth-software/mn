@@ -26,6 +26,7 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
     <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
     <% } %>
     <% if(type === 'relation') { %>
+      '<%= property %>': uuid('<%= property %>').array(),
     <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
       '<%= property %>': timestamp('<%= property %>').defaultNow(),
     <% } else if(type === 'checkbox') { %>
