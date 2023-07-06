@@ -12,7 +12,7 @@ export function mirage(options: MirageOptions): Rule {
   log.success({ action: '-------', message: '------------------' });
   validateInputs(options);
 
-  const { outDir, entities, baseUrl, usersDatabase, locals } = options;
+  const { outDir } = options;
   const excludes = options.excludes ?? [];
   return async () => {
     const pageIds = [options.pageId].flat();
@@ -28,9 +28,6 @@ export function mirage(options: MirageOptions): Rule {
           title: cache.title,
           cache,
           options,
-          entities,
-          baseUrl,
-          locals,
           log,
           ...strings,
         }),
@@ -42,11 +39,7 @@ export function mirage(options: MirageOptions): Rule {
           template({
             titles,
             options,
-            entities,
-            baseUrl,
-            locals,
             log,
-            usersDatabase,
             ...strings,
           }),
           move(`${outDir}/endpoints`),
@@ -55,10 +48,7 @@ export function mirage(options: MirageOptions): Rule {
           template({
             titles,
             options,
-            entities,
-            baseUrl,
             log,
-            locals,
             ...strings,
           }),
           move(`${outDir}/endpoints`),
@@ -68,10 +58,7 @@ export function mirage(options: MirageOptions): Rule {
         template({
           title: cache.title,
           options,
-          entities,
           log,
-          baseUrl,
-          locals,
           ...strings,
         }),
         move(`${outDir}/models`),
@@ -81,10 +68,7 @@ export function mirage(options: MirageOptions): Rule {
       template({
         titles,
         options,
-        entities,
         log,
-        baseUrl,
-        locals,
         ...strings,
       }),
       move(`${outDir}/models`),
@@ -93,10 +77,7 @@ export function mirage(options: MirageOptions): Rule {
       template({
         titles,
         options,
-        entities,
         log,
-        baseUrl,
-        locals,
         ...strings,
       }),
       move(outDir),

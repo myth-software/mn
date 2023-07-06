@@ -3,9 +3,9 @@ import {
   <%= classify(title) %>Columns,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>QueryParameters,
-} from '<%= entities %>';
+} from '<%= options.entities %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-<% if (strategies) { %>
+<% if (options.strategies) { %>
   import { RootState } from '../store';
 <% } %>
 
@@ -26,8 +26,8 @@ const {
 } = createApi({
 reducerPath: '<%= classify(title) %>',
   baseQuery: fetchBaseQuery({
-    baseUrl: '<%= baseUrl %>/<%= dasherize(title) %>',
-    <% if (strategies) { %>
+    baseUrl: '<%= options.baseUrl %>/<%= dasherize(title) %>',
+    <% if (options.strategies) { %>
       prepareHeaders: (headers, { getState }) => {
         const tokens = (getState() as RootState).tokens;
         if (tokens.accessToken) {

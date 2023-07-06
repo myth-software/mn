@@ -12,7 +12,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
   log.success({ action: 'running', message: 'rtk query schematic' });
   log.success({ action: '-------', message: '-------------------' });
   validateInputs(options);
-  const { outDir, entities, baseUrl } = options;
+  const { outDir } = options;
   const excludes = options.excludes ?? [];
   return async () => {
     const pageIds = [options.pageId].flat();
@@ -30,9 +30,6 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
             title: cache.title,
             cache,
             options,
-            entities,
-            baseUrl,
-            strategies: options.strategies,
             log,
             ...strings,
           }),
@@ -43,11 +40,6 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
       ? applyWithOverwrite(url(`${files}/apis-auth-index`), [
           template({
             titles,
-            baseUrl,
-            entities,
-            strategies: options.strategies,
-            userColumn: options.userColumn,
-            usersDatabase: options.usersDatabase,
             log,
             ...strings,
           }),
@@ -56,8 +48,6 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
       : applyWithOverwrite(url(`${files}/apis-index`), [
           template({
             titles,
-            baseUrl,
-            entities,
             log,
             ...strings,
           }),
@@ -66,10 +56,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
     const domainIndexRule = options.strategies
       ? applyWithOverwrite(url(`${files}/auth-index`), [
           template({
-            entities,
             titles,
-            userColumn: options.userColumn,
-            usersDatabase: options.usersDatabase,
             log,
             ...strings,
           }),
@@ -77,7 +64,6 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
         ])
       : applyWithOverwrite(url(`${files}/index`), [
           template({
-            entities,
             titles,
             log,
             ...strings,

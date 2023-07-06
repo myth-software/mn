@@ -1,9 +1,9 @@
-import { local<%= classify(usersDatabase) %> } from '<%= locals %>';
+import { local<%= classify(options.usersDatabase) %> } from '<%= options.locals %>';
 import { Response, Server } from 'miragejs';
 
 export function authEndpoints(server: Server) {
   server.get(`/a/sms/profile`, () => {
-    return new Response(200, {}, local<%= classify(usersDatabase) %>.example);
+    return new Response(200, {}, local<%= classify(options.usersDatabase) %>.example);
   });
 
   server.post(`/a/sms/login-initalization`, () => {

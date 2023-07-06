@@ -13,7 +13,7 @@ export function reactQuery(options: BasicOptions): Rule {
   log.success({ action: '-------', message: '---------------------' });
   validateBasicInputs(options);
 
-  const { outDir, entities, baseUrl } = options;
+  const { outDir } = options;
   const excludes = options.excludes ?? [];
   return () => {
     const pageIds = [options.pageId].flat();
@@ -30,7 +30,6 @@ export function reactQuery(options: BasicOptions): Rule {
             title: cache.title,
             cache,
             options,
-            entities,
             log,
             ...strings,
           }),
@@ -59,10 +58,8 @@ export function reactQuery(options: BasicOptions): Rule {
         return applyWithOverwrite(url(`${files}/+state-all`), [
           template({
             title: cache.title,
-            icon: cache.icon,
             cache,
             options,
-            entities,
             log,
             ...strings,
           }),
@@ -73,7 +70,6 @@ export function reactQuery(options: BasicOptions): Rule {
       const statesIndexRule = applyWithOverwrite(url(`${files}/+state-index`), [
         template({
           titles,
-          baseUrl,
           options,
           log,
           ...strings,

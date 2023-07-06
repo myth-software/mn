@@ -8,14 +8,16 @@ export function startMirage() {
   });
   server.logging = true;
 
-  server.urlPrefix = '<%= baseUrl %>';
+  server.urlPrefix = '<%= options.baseUrl %>';
   for (const namespace of Object.keys(endpoints)) {
     endpoints[namespace](server);
   }
 
   server.namespace = '';
   server.passthrough();
-  server.passthrough(request => !request.url.startsWith('<%= baseUrl %>'));
+  server.passthrough(
+    (request) => !request.url.startsWith('<%= options.baseUrl %>')
+  );
 
   return server;
 }

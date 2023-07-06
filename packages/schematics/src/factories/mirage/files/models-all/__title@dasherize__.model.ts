@@ -1,4 +1,4 @@
-import { <%= classify(title) %> } from '<%= entities %>';
+import { <%= classify(title) %> } from '<%= options.entities %>';
 import { Model } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 

@@ -1,4 +1,4 @@
-import { local<%= classify(title) %> } from '<%= locals %>';
+import { local<%= classify(title) %> } from '<%= options.locals %>';
 import { Response, Server } from 'miragejs';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
