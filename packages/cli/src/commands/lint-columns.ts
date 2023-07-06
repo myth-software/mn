@@ -8,6 +8,14 @@ import {
 } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
 import { EMOJI, printPhraseList } from '../utils';
+import { lintColumnsAutomaticCreatedBy } from './lint/automatic-created-by-columns.rule';
+import { lintColumnsAutomaticCreatedTime } from './lint/automatic-created-time-columns.rule';
+import { lintColumnsAutomaticLastEditedBy } from './lint/automatic-last-edited-by-columns.rule';
+import { lintColumnsAutomaticLastEditedTime } from './lint/automatic-last-edited-time-columns.rule';
+import { lintColumnsConsistentCreatedBy } from './lint/consistent-created-by-columns.rule';
+import { lintColumnsConsistentCreatedTime } from './lint/consistent-created-time-columns.rule';
+import { lintColumnsConsistentLastEditedBy } from './lint/consistent-last-edited-by-columns.rule';
+import { lintColumnsConsistentLastEditedTime } from './lint/consistent-last-edited-time-columns.rule';
 
 type LintColumnsOptions = {
   pageId: string;
@@ -23,7 +31,9 @@ function assert(
 }
 
 function dependencies(config: MountNotionConfig) {
-  const hasRules = Object.keys(config.workspace.lint.columns).length > 0;
+  const hasRules =
+    config.workspace?.lint?.columns &&
+    Object.keys(config.workspace.lint.columns).length > 0;
 
   if (!hasRules) {
     throw new Error('no rules configured');
@@ -33,14 +43,15 @@ function dependencies(config: MountNotionConfig) {
 export default {
   name: 'lint-columns',
   description:
-    "lint workspaces's databases columns for pass or fail against standards",
+    "lint workspaces's databases columns for pass or fail against lint rules",
   options: [
-    { name: '-p, --page-id', description: 'id of page with databases' },
+    { name: '-p, --page-id [id]', description: 'id of page with databases' },
   ],
   actionFactory: (config) => async (options) => {
     assert(options);
     dependencies(config);
-    const page_id = options.pageId;
+    const selectedPages = config.workspace.selectedPages;
+    const page_id = options.pageId ?? selectedPages[0];
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
@@ -49,31 +60,21 @@ export default {
       .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const missingName: LogInput[] = [];
-    const missingLastEditedTime: LogInput[] = [];
-    const missingCreatedTime: LogInput[] = [];
-    const missingLastEditedBy: LogInput[] = [];
-    const missingCreatedBy: LogInput[] = [];
-    const missingEmojis: { database: string; relations: string[] }[] = [];
-    const mismatchedSelects: { database: string; name: string }[] = [];
-    const mismatchedMultiselects: { database: string; name: string }[] = [];
-    const missingAllLower: { database: string; allLower: string[] }[] = [];
+    const outputs: LogInput[] = [];
+
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
+      outputs.push(lintColumnsAutomaticCreatedBy(database));
+      outputs.push(lintColumnsAutomaticCreatedTime(database));
+      outputs.push(lintColumnsAutomaticLastEditedBy(database));
+      outputs.push(lintColumnsAutomaticLastEditedTime(database));
+      outputs.push(lintColumnsConsistentCreatedBy(database));
+      outputs.push(lintColumnsConsistentCreatedTime(database));
+      outputs.push(lintColumnsConsistentLastEditedBy(database));
+      outputs.push(lintColumnsConsistentLastEditedTime(database));
       const propertyNames = Object.keys(database.properties);
-      const lastEditedTime = propertyNames.find((name) => {
-        return database.properties[name].type === 'last_edited_time';
-      });
-      const createdTime = propertyNames.find((name) => {
-        return database.properties[name].type === 'created_time';
-      });
-      const lastEditedBy = propertyNames.find((name) => {
-        return database.properties[name].type === 'last_edited_by';
-      });
-      const createdBy = propertyNames.find((name) => {
-        return database.properties[name].type === 'created_by';
-      });
+
       const title = ensure(
         propertyNames.find((name) => {
           return database.properties[name].type === 'title';
@@ -115,7 +116,7 @@ export default {
         });
 
       if (!database.properties['name']) {
-        missingName.push({
+        outputs.push({
           action: 'fail',
           page: {
             emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
@@ -125,107 +126,27 @@ export default {
         });
       }
 
-      if (lastEditedTime && lastEditedTime !== 'last edited time') {
-        missingLastEditedTime.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `last_edited_time "${lastEditedTime}" has consistent column name as "last edited time"`,
-        });
-      }
-
-      if (!lastEditedTime) {
-        missingLastEditedTime.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `last_edited_time does not exist`,
-        });
-      }
-
-      if (createdTime && createdTime !== 'created time') {
-        missingCreatedTime.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `created_time "${createdTime}" has consistent column name as "created time"`,
-        });
-      }
-
-      if (!createdTime) {
-        missingCreatedTime.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `created_time does not exist`,
-        });
-      }
-
-      if (lastEditedBy && lastEditedBy !== 'last edited by') {
-        missingLastEditedBy.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `last_edited_by "${lastEditedBy}" has consistent column name as "last edited by"`,
-        });
-      }
-
-      if (!lastEditedBy) {
-        missingLastEditedBy.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `last_edited_by does not exist`,
-        });
-      }
-
-      if (createdBy && createdBy !== 'created by') {
-        missingCreatedBy.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `created_by "${lastEditedBy}" has consistent column name as "created by"`,
-        });
-      }
-
-      if (!createdBy) {
-        missingCreatedBy.push({
-          action: 'fail',
-          page: {
-            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
-            title: database.title[0].plain_text,
-          },
-          message: `created_by does not exist`,
-        });
-      }
-
       if (relations.length) {
-        missingEmojis.push({
-          database: database.title[0].plain_text,
-          relations,
+        outputs.push({
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: relations.join(', '),
         });
       }
 
       while (selects.length !== 0) {
         const name = selects[0];
 
-        mismatchedSelects.push({
-          database: database.title[0].plain_text,
-          name,
+        outputs.push({
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `mismatchedSelects ${name}`,
         });
 
         selects.shift();
@@ -234,58 +155,36 @@ export default {
       while (multiselects.length !== 0) {
         const name = multiselects[0];
 
-        mismatchedMultiselects.push({
-          database: database.title[0].plain_text,
-          name,
+        outputs.push({
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `mismatchedMultiselects ${name}`,
         });
 
         multiselects.shift();
       }
 
       if (allLower.length) {
-        missingAllLower.push({
-          database: database.title[0].plain_text,
-          allLower,
+        outputs.push({
+          action: 'fail',
+          page: {
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+            title: database.title[0].plain_text,
+          },
+          message: `missingAllLower ${allLower.join(', ')}`,
         });
       }
     }
 
-    console.log(missingEmojis);
-    console.log(mismatchedSelects);
-    console.log(mismatchedMultiselects);
-    console.log(missingAllLower);
-
     console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
-      ...missingName,
-      ...missingLastEditedTime,
-      ...missingCreatedTime,
-      ...missingLastEditedBy,
-      ...missingCreatedBy,
       {
         action: 'pass',
         page: { emoji: '🔢', title: 'sets' },
         message: 'has consistent titles as "name"',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has automatic created_by',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has automatic created_time',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has automatic last_edited_by',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has automatic last_edited_time',
       },
       {
         action: 'pass',
@@ -312,26 +211,7 @@ export default {
         page: { emoji: '🔵', title: 'overlays' },
         message: 'has consistent titles as "name"',
       },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has automatic created_by',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has automatic created_time',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has automatic last_edited_by',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has automatic last_edited_time',
-      },
+
       {
         action: 'pass',
         page: { emoji: '🔵', title: 'overlays' },
@@ -360,26 +240,6 @@ export default {
       {
         action: 'fail',
         page: { emoji: '📝', title: 'logs' },
-        message: 'has automatic created_by',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'has automatic created_time',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'has automatic last_edited_by',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'has automatic last_edited_time',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
         message:
           'select "method" has consistent select colors using first color',
       },
@@ -399,6 +259,7 @@ export default {
         page: { emoji: '📝', title: 'logs' },
         message: 'relation "user" has relations with leading emoji',
       },
+      ...outputs,
     ];
     phraseList.forEach(printPhraseList);
   },

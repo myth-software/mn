@@ -1,5 +1,6 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
-import { LogInput, MountnCommand } from '@mountnotion/types';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { prompt } from 'enquirer';
 import { printPhraseList } from '../utils';
 
 type RenameColumnsOptions = {
@@ -17,14 +18,42 @@ function assert(
   }
 }
 
+async function optionsPrompt(options: RenameColumnsOptions) {
+  const prompts = [];
+  if (!options.pageId) {
+    prompts.push({
+      type: 'input',
+      message: 'page id:',
+      name: 'pageId',
+    });
+  }
+
+  if (prompts.length) {
+    const results = await prompt<RenameColumnsOptions>(prompts);
+
+    return results;
+  }
+  return options;
+}
+
+function dependencies(config: MountNotionConfig) {
+  const hasPages = config.workspace.selectedPages.length > 0;
+
+  if (!hasPages) {
+    throw new Error('no pages selected');
+  }
+}
+
 export default {
   name: 'rename-columns',
   description: 'rename all matching columns',
   options: [
     { name: '-p, --page-id', description: 'id of page with databases' },
   ],
-  actionFactory: () => async (options) => {
-    assert(options);
+  actionFactory: (config) => async (args) => {
+    assert(args);
+    dependencies(config);
+    const options = await optionsPrompt(args);
     const page_id = options.pageId;
     const fromColumnName = options.fromColumnName;
     const toColumnName = options.toColumnName;

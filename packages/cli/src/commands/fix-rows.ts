@@ -97,7 +97,7 @@ export default {
       }
     }
 
-    console.log('1 databases rows to standardize: 📝 logs');
+    console.log('1 databases rows to lint: 📝 logs');
     const phraseList: LogInput[] = [
       {
         action: `update`,

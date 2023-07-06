@@ -1,84 +1,67 @@
-import {
-  datePropertyFilter,
-  peoplePropertyFilter,
-  selectPropertyFilter,
-  textPropertyFilter,
-} from './filters';
+import { and, asc, desc, or } from 'drizzle-orm';
+import { mapNotionToDrizzleFilter } from './notion-to-drizzle-filter.mapper';
 
-export function notionToDrizzleWhereMapper(
-  database: any,
-  where: any
-): {
+type DrizzleWhere = {
   filter?: any;
-  orderBy?: any;
-} {
+  orderBy?: Array<any>;
+};
+
+type NotionWhere = {
+  sorts?: Array<any>;
+  filter?: any;
+};
+
+export function mapNotionToDrizzleWhere(
+  database: any,
+  where?: NotionWhere
+): DrizzleWhere {
+  const drizzleWhere = {} as DrizzleWhere;
   if (!where) {
-    return {};
+    return drizzleWhere;
   }
 
-  if (where.filter.select) {
-    const { select, property } = where.filter;
-    const filter = selectPropertyFilter({ database, filter: select, property });
-    if (filter) {
-      return filter;
-    }
-  }
-
-  if (where.filter.rich_text) {
-    const { rich_text, property } = where.filter;
-    const filter = textPropertyFilter({
-      database,
-      filter: rich_text,
-      property,
+  if (where.sorts) {
+    drizzleWhere.orderBy = where.sorts.map((sort) => {
+      if (sort.direction === 'ascending') {
+        return asc(sort.property ?? sort.timestamp);
+      }
+      return desc(sort.property ?? sort.timestamp);
     });
-    if (filter) {
-      return filter;
-    }
   }
 
-  if (where.filter.title) {
-    const { title, property } = where.filter;
-    const filter = textPropertyFilter({ database, filter: title, property });
-    if (filter) {
-      return filter;
-    }
+  if (!where.filter.or && !where.filter.and) {
+    drizzleWhere.filter = mapNotionToDrizzleFilter(where, database);
   }
 
-  if (where.filter.phone_number) {
-    const { phone_number, property } = where.filter;
-    const filter = textPropertyFilter({
-      database,
-      filter: phone_number,
-      property,
-    });
-    if (filter) {
-      return filter;
-    }
+  if (where.filter.or) {
+    drizzleWhere.filter = or(
+      ...where.filter.or.map((orFilter: any) =>
+        mapNotionToDrizzleFilter(orFilter, database)
+      )
+    );
   }
 
-  if (where.filter.url) {
-    const { url, property } = where.filter;
-    const filter = textPropertyFilter({ database, filter: url, property });
-    if (filter) {
-      return filter;
-    }
+  if (where.filter.and && where.filter.and.some((filter: any) => filter.or)) {
+    const orIndex = where.filter.and.findIndex((filter: any) => filter.or);
+    const otherIndex = where.filter.and.findIndex((filter: any) => !filter.or);
+
+    drizzleWhere.filter = and(
+      or(
+        ...where.filter.and[orIndex].or.map((orFilter: any) =>
+          mapNotionToDrizzleFilter(orFilter, database)
+        )
+      ),
+      mapNotionToDrizzleFilter(where.filter.and[otherIndex], database)
+    );
   }
 
-  if (where.filter.people) {
-    const { people, property } = where.filter;
-    const filter = peoplePropertyFilter({ database, filter: people, property });
-    if (filter) {
-      return filter;
-    }
+  if (where.filter.and) {
+    drizzleWhere.filter = and(
+      ...where.filter.and.map((andFilter: any) =>
+        mapNotionToDrizzleFilter(andFilter, database)
+      )
+    );
   }
 
-  if (where.filter.date) {
-    const { date, property } = where.filter;
-    const filter = datePropertyFilter({ database, filter: date, property });
-    if (filter) {
-      return filter;
-    }
-  }
-
-  return where;
+  return drizzleWhere;
 }

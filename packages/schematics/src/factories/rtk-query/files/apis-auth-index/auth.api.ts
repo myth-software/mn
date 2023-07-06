@@ -1,10 +1,10 @@
-import { <%= classify(usersDatabase) %>, <%= classify(usersDatabase) %>Writeonly } from '<%= entities %>';
+import { <%= classify(options.usersDatabase) %>, <%= classify(options.usersDatabase) %>Writeonly } from '<%= options.entities %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 
 export const authApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: '<%= baseUrl %>/a',
+    baseUrl: '<%= options.baseUrl %>/a',
     prepareHeaders: (headers, { getState }) => {
       const tokens = (getState() as RootState).tokens;
       if (tokens.accessToken) {
@@ -14,7 +14,7 @@ export const authApi = createApi({
     }
   }),
   endpoints: build => ({
-    <% if (strategies.includes('email')) { %>
+    <% if (options.strategies.includes('email')) { %>
       postALogin: build.mutation<TokenObjectResponse, {
         email: string;
         password?: string;
@@ -25,9 +25,9 @@ export const authApi = createApi({
           body,
         }),
       }),
-      getAMe: build.query<<%= classify(usersDatabase) %>, void>({
+      getAMe: build.query<<%= classify(options.usersDatabase) %>, void>({
         query: () => ({ url: `/me` }),
-        providesTags: ['<%= classify(usersDatabase) %>'],
+        providesTags: ['<%= classify(options.usersDatabase) %>'],
       }),
       postASignup: build.mutation<{
         id: string;
@@ -43,7 +43,7 @@ export const authApi = createApi({
         }),
       }),
     <% } %>
-    <% if (strategies.includes('sms')) { %>
+    <% if (options.strategies.includes('sms')) { %>
       postASmsLoginInitialization: build.mutation<
         void,
         {
@@ -56,9 +56,9 @@ export const authApi = createApi({
           body,
         }),
       }),
-      getASmsProfile: build.query<<%= classify(usersDatabase) %>, void>({
+      getASmsProfile: build.query<<%= classify(options.usersDatabase) %>, void>({
         query: () => ({ url: `/sms/profile` }),
-        providesTags: ['<%= classify(usersDatabase) %>'],
+        providesTags: ['<%= classify(options.usersDatabase) %>'],
       }),
       postASmsLogin: build.mutation<
         TokenObjectResponse,
@@ -89,20 +89,20 @@ export const authApi = createApi({
         query: () => ({ url: `/sms/logout` }),
       }),
       patchASmsUpdateAccount: build.mutation<
-        <%= classify(usersDatabase) %>,
-        Partial<<%= classify(usersDatabase) %>Writeonly>
+        <%= classify(options.usersDatabase) %>,
+        Partial<<%= classify(options.usersDatabase) %>Writeonly>
       >({
         query: body => ({
           url: `/sms/update-account`,
           method: 'PATCH',
           body,
         }),
-        invalidatesTags: ['<%= classify(usersDatabase) %>'],
+        invalidatesTags: ['<%= classify(options.usersDatabase) %>'],
       }),
     <% } %>
   }),
   tagTypes: [
-    '<%= classify(usersDatabase) %>'
+    '<%= classify(options.usersDatabase) %>'
   ],
 });
 
@@ -113,12 +113,12 @@ export type TokenObjectResponse = {
 };
 
 export const {
-  <% if (strategies.includes('email')) { %>
+  <% if (options.strategies.includes('email')) { %>
     usePostALoginMutation,
     useGetAMeQuery,
     usePostASignupMutation,
   <% } %> 
-  <% if (strategies.includes('sms')) { %>
+  <% if (options.strategies.includes('sms')) { %>
     usePostASmsLoginInitializationMutation,
     usePostASmsLoginMutation,
     useGetASmsProfileQuery,

@@ -12,8 +12,8 @@ import {
 import { expandProperties } from '../expanders/properties.expander';
 import { flattenPageResponse, flattenPageResponses } from '../flatteners';
 import client from '../infrastructure/client';
-import { instanceMapper } from './instance.mapper';
-import { queryMapper } from './query.mapper';
+import { mapInstance } from './instance.mapper';
+import { mapQuery } from './query.mapper';
 
 export function configure<Config extends MountNotionClientConfig>(
   config: Config
@@ -26,7 +26,7 @@ export function configure<Config extends MountNotionClientConfig>(
       title,
       {
         query: async (args: MountNotionQueryParameters<Database>) => {
-          const query = args ? queryMapper(args, index.mappings) : {};
+          const query = args ? mapQuery(args, index.mappings) : {};
           const response = await notion.databases.query({
             database_id: index.id,
             ...(query as QueryDatabaseBodyParameters),
@@ -38,7 +38,7 @@ export function configure<Config extends MountNotionClientConfig>(
           >(results);
 
           return instances.map((instance) =>
-            instanceMapper(instance, index.mappings)
+            mapInstance(instance, index.mappings)
           );
         },
         retrieve: async ({ id }: { id: string }) => {
@@ -49,7 +49,7 @@ export function configure<Config extends MountNotionClientConfig>(
             InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
-          return instanceMapper(instance, index.mappings);
+          return mapInstance(instance, index.mappings);
         },
         update: async ({
           id,
@@ -70,7 +70,7 @@ export function configure<Config extends MountNotionClientConfig>(
             InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
-          return instanceMapper(instance, index.mappings);
+          return mapInstance(instance, index.mappings);
         },
         create: async (body: Partial<InferWriteonly<Database>>) => {
           const properties = expandProperties<
@@ -94,7 +94,7 @@ export function configure<Config extends MountNotionClientConfig>(
             InferReadonly<Database> & InferWriteonly<Database>
           >(response);
 
-          return instanceMapper(instance, index.mappings);
+          return mapInstance(instance, index.mappings);
         },
         delete: async ({ id }: { id: string }) =>
           notion.blocks.delete({

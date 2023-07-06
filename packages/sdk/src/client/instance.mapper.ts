@@ -1,9 +1,6 @@
 import { Instance, Mappings } from '@mountnotion/types';
 
-export function instanceMapper(
-  instance: Instance,
-  mappings: Mappings
-): Instance {
+export function mapInstance(instance: Instance, mappings: Mappings): Instance {
   return Object.entries(mappings).reduce(
     (acc, [mappedName, columnName]) => {
       return {

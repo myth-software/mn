@@ -1,15 +1,15 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
 export function entities(options: BasicOptions): Rule {
-  logSuccess({ action: 'running', message: 'entities schematic' });
-  logSuccess({ action: '-------', message: '------------------' });
+  log.success({ action: 'running', message: 'entities schematic' });
+  log.success({ action: '-------', message: '------------------' });
   validateInputs(options);
   const { outDir } = options;
   const pageIds = [options.pageId].flat();
@@ -27,7 +27,7 @@ export function entities(options: BasicOptions): Rule {
           title: cache.title,
           cache,
           options,
-          logDebug,
+          log,
           ...strings,
         }),
         move(outDir),
@@ -37,7 +37,7 @@ export function entities(options: BasicOptions): Rule {
       template({
         titles,
         options,
-        logDebug,
+        log,
         ...strings,
       }),
       move(outDir),

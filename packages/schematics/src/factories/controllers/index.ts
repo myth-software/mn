@@ -1,13 +1,13 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ControllersOptions } from '@mountnotion/types';
-import { logDebug, logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 export function controllers(options: ControllersOptions): Rule {
-  logSuccess({ action: 'running', message: 'controllers schematic' });
-  logSuccess({ action: '-------', message: '---------------------' });
+  log.success({ action: 'running', message: 'controllers schematic' });
+  log.success({ action: '-------', message: '---------------------' });
   validateInputs(options);
 
   const outDir = options.outDir;
@@ -25,16 +25,8 @@ export function controllers(options: ControllersOptions): Rule {
           title: cache.title,
           cache,
           options,
-          org: options.org,
-          entities: options.entities,
-          locals: options.locals,
-          strategies: options.strategies,
-          userColumn: options.userColumn,
-          accessorProperty: options.accessorProperty,
-          usersDatabase: options.usersDatabase,
           isPublic: options.public?.includes(cache.title) ?? false,
-          debug: options.debug,
-          logDebug,
+          log,
           ...strings,
         }),
         move(outDir),
@@ -43,10 +35,24 @@ export function controllers(options: ControllersOptions): Rule {
     const controllersIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles,
+        options,
         ...strings,
       }),
       move(outDir),
     ]);
-    return chain([...controllersRules, controllersIndexRule]);
+
+    const controllersMnRule = applyWithOverwrite(url('./files/mn'), [
+      template({
+        titles,
+        options,
+        ...strings,
+      }),
+      move(outDir),
+    ]);
+    return chain([
+      ...controllersRules,
+      controllersIndexRule,
+      controllersMnRule,
+    ]);
   };
 }

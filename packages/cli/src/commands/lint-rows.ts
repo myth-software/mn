@@ -22,7 +22,9 @@ function assert(
 }
 
 function dependencies(config: MountNotionConfig) {
-  const hasRules = Object.keys(config.workspace.lint.rows).length > 0;
+  const hasRules =
+    config.workspace?.lint?.rows &&
+    Object.keys(config.workspace.lint.rows).length > 0;
 
   if (!hasRules) {
     throw new Error('no rules configured');

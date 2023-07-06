@@ -17,7 +17,7 @@ export declare type BasicOptions = {
   debug: boolean;
 };
 
-export declare type MockApiOptions = { locals: string } & BasicOptions &
+export declare type MirageOptions = { locals: string } & BasicOptions &
   AuthOptions;
 
 export declare type RtkQueryOptions = BasicOptions & AuthOptions;
@@ -30,14 +30,11 @@ export declare type ControllersOptions = {
   accessorProperty: string;
   locals: string;
   public: Array<string>;
+  drizzle: string;
 } & BasicOptions &
   AuthOptions;
 
-export declare type ExpressOptions = {
-  drizzle: string;
-} & ControllersOptions &
-  BasicOptions &
-  AuthOptions;
+export declare type ExpressOptions = ControllersOptions;
 
 export declare type LocalsOptions = BasicOptions & {
   all?: string[];

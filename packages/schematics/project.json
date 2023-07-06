@@ -38,6 +38,13 @@
       },
       "dependsOn": ["version", "prepublish"]
     },
+    "pack": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd dist/packages/schematics && npm pack --pack-destination ../../../"
+      },
+      "dependsOn": ["prepublish"]
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

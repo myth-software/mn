@@ -7,12 +7,12 @@ export function existencePropertyFilter({
   property,
 }: FilterArgs) {
   if (filter.is_empty) {
-    return { filter: isNull(database[property]) };
+    return isNull(database[property]);
   }
 
   if (filter.is_not_empty) {
-    return { filter: isNotNull(database[property]) };
+    return isNotNull(database[property]);
   }
 
-  return;
+  throw new Error('uncaught existence filter case');
 }

@@ -1,7 +1,7 @@
 import { Mappings } from '@mountnotion/types';
 
-export function queryMapper(query: any, mappings: Mappings) {
-  const filterMapper = (filter: any) => ({
+export function mapQuery(query: any, mappings: Mappings) {
+  const mapFilter = (filter: any) => ({
     ...filter,
     property: mappings[filter.property],
   });
@@ -13,7 +13,7 @@ export function queryMapper(query: any, mappings: Mappings) {
   if (!query.filter.or && !query.filter.and) {
     return {
       ...query,
-      filter: filterMapper(query.filter),
+      filter: mapFilter(query.filter),
     };
   }
 
@@ -21,7 +21,7 @@ export function queryMapper(query: any, mappings: Mappings) {
     return {
       ...query,
       filter: {
-        or: query.filter.or.map((orFilter: any) => filterMapper(orFilter)),
+        or: query.filter.or.map((orFilter: any) => mapFilter(orFilter)),
       },
     };
   }
@@ -35,10 +35,10 @@ export function queryMapper(query: any, mappings: Mappings) {
         and: [
           {
             or: query.filter.and[orIndex].or.map((orFilter: any) =>
-              filterMapper(orFilter)
+              mapFilter(orFilter)
             ),
           },
-          filterMapper(query.filter.and[otherIndex]),
+          mapFilter(query.filter.and[otherIndex]),
         ],
       },
     };
@@ -48,7 +48,7 @@ export function queryMapper(query: any, mappings: Mappings) {
     return {
       ...query,
       filter: {
-        and: query.filter.and.map((orFilter: any) => filterMapper(orFilter)),
+        and: query.filter.and.map((orFilter: any) => mapFilter(orFilter)),
       },
     };
   }

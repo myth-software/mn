@@ -4,8 +4,8 @@ import {
   Cache,
   Entity,
 } from '@mountnotion/types';
-import { logInfo } from '@mountnotion/utils';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { CACHE, getCache, log } from '@mountnotion/utils';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
 import { createRelations } from './create-relations.util';
@@ -20,18 +20,14 @@ export const createDatabaseCaches = async (
     mkdirSync('./.mountnotion');
   }
 
-  const CACHE = './.mountnotion/cache.json';
-  let cached;
-  try {
-    cached = readFileSync(CACHE, 'utf8');
-    logInfo({ action: 'loading', message: 'data from filesystem cache' });
-  } catch (error) {
-    logInfo({ action: 'loading', message: 'data from notion workspace' });
-  }
+  const cached = getCache();
 
   if (cached) {
-    return JSON.parse(cached) as Cache[];
+    log.info({ action: 'loading', message: 'data from filesystem cache' });
+    return cached;
   }
+
+  log.info({ action: 'loading', message: 'data from notion workspace' });
 
   const pageResponse = await infrastructure.pages.retrieve({
     page_id: pageIds[0],
@@ -43,9 +39,9 @@ export const createDatabaseCaches = async (
       page_size: 100,
     })
   );
-  logInfo({
+  log.info({
     action: 'listing',
-    message: 'databases page children',
+    message: 'page children',
     page: { emoji: page.icon, title: page.title },
   });
   const allResponses = (await Promise.all(promises)).flat();
@@ -65,9 +61,9 @@ export const createDatabaseCaches = async (
     .filter((result) => result.type === 'child_database')
     .map(({ id }) => id);
   const primaryIds = [...new Set(allPrimaryIds.concat(allParagraphIds))];
-  logInfo({
+  ({
     action: 'retrieving',
-    message: 'databases primary databases',
+    message: 'primary databases',
     page: { emoji: page.icon, title: page.title },
   });
   const primaryDatabases = await infrastructure.databases.retrieveAll(
@@ -83,9 +79,9 @@ export const createDatabaseCaches = async (
       allRelatedIds.filter((relatedId) => !primaryIds.includes(relatedId))
     ),
   ] as string[];
-  logInfo({
+  ({
     action: 'retrieving',
-    message: 'databases related databases',
+    message: 'related databases',
     page: { emoji: page.icon, title: page.title },
   });
   const relatedDatabases = await infrastructure.databases.retrieveAll(
@@ -101,9 +97,9 @@ export const createDatabaseCaches = async (
       { flattenResponse: true, resultsOnly: true }
     )
   );
-  logInfo({
+  ({
     action: 'querying',
-    message: 'databases primary and related databases',
+    message: 'primary and related databases',
     page: { emoji: page.icon, title: page.title },
   });
   const nestedPages = await Promise.all(pagePromises);
@@ -111,9 +107,9 @@ export const createDatabaseCaches = async (
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
     createRollups(database.properties, pages[i].id)
   );
-  logInfo({
+  ({
     action: 'querying',
-    message: 'databases property types',
+    message: 'property types',
     page: { emoji: page.icon, title: page.title },
   });
   const allRollups = await Promise.all(allRollupsPromises);
@@ -139,9 +135,9 @@ export const createDatabaseCaches = async (
       };
     });
 
-  logInfo({
+  ({
     action: 'caching',
-    message: 'databases',
+    message: '',
     page: { emoji: page.icon, title: page.title },
   });
   writeFileSync(CACHE, JSON.stringify(caches));

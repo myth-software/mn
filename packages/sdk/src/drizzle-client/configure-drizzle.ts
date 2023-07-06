@@ -10,7 +10,7 @@ import {
   MountNotionClientDrizzleConfig,
   MountNotionDrizzleClient,
 } from './configure-drizzle.type';
-import { notionToDrizzleWhereMapper } from './notion-to-drizzle-where.mapper';
+import { mapNotionToDrizzleWhere } from './notion-to-drizzle-where.mapper';
 
 export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
   config: Config
@@ -24,9 +24,18 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
       title,
       {
         query: async (args: MountNotionQueryParameters<any>) => {
-          const { filter } = notionToDrizzleWhereMapper(database, args);
+          const query = db.select().from(database);
+          const { filter, orderBy } = mapNotionToDrizzleWhere(database, args);
 
-          const response = await db.select().from(database).where(filter);
+          if (filter) {
+            query.where(filter);
+          }
+
+          if (orderBy) {
+            query.orderBy(...orderBy);
+          }
+
+          const response = await query;
 
           return response;
         },

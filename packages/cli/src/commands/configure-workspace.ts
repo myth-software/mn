@@ -1,12 +1,14 @@
-import { MountnCommand } from '@mountnotion/types';
-import { logError } from '@mountnotion/utils';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { ensure, getCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 export type WorkspaceOptions = {
   entities: string | null;
   baseUrl: string | null;
   authStrategies: Array<'email' | 'sms'> | null;
-  usersDatabase: 'people' | 'companies' | 'users' | null;
+  usersDatabase: string | null;
   userColumn: string | null;
 };
 
@@ -20,24 +22,24 @@ function assert(
 }
 
 function dependencies() {
-  const cache = [];
-  const hasCache = cache.length > 1;
+  const cache = getCache();
+  const hasCache = cache !== undefined && cache.length > 1;
   if (!hasCache) {
-    logError({
-      action: 'erroring',
+    log.fatal({
+      action: 'aborting',
       message: 'missing mount notion cache',
     });
-    throw new Error('missing mount notion cache');
   }
 }
 
 export async function optionsPrompt(options: WorkspaceOptions) {
   const prompts = [];
+  const cache = ensure(getCache());
 
   if (!options.entities) {
     prompts.push({
       type: 'input',
-      message: 'name of entities package:',
+      message: 'name of entities package',
       name: 'entities',
     });
   }
@@ -45,7 +47,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.baseUrl) {
     prompts.push({
       type: 'input',
-      message: 'base url for api:',
+      message: 'base url for api',
       name: 'baseUrl',
     });
   }
@@ -53,7 +55,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   if (!options.authStrategies) {
     prompts.push({
       type: 'multiselect',
-      message: 'authentication strategies:',
+      message: 'authentication strategies',
       name: 'authStrategies',
       choices: ['email', 'sms'],
     });
@@ -61,31 +63,49 @@ export async function optionsPrompt(options: WorkspaceOptions) {
 
   if (!options.usersDatabase) {
     prompts.push({
-      type: 'list',
-      message: 'users database:',
+      type: 'select',
+      message: 'users database',
       name: 'usersDatabase',
-      choices: ['people', 'companies', 'users'],
-    });
-  }
-
-  if (!options.userColumn) {
-    prompts.push({
-      type: 'input',
-      message: 'user column:',
-      name: 'userColumn',
+      choices: cache.map((c) => {
+        return {
+          name: c.title,
+          value: c.title,
+        };
+      }),
     });
   }
 
   if (prompts.length) {
     const results = await prompt<WorkspaceOptions>(prompts);
-    return { ...options, ...results };
+    let userColunn;
+    if (results.usersDatabase && !options.userColumn) {
+      const database = ensure(
+        cache.find((c) => c.title === results.usersDatabase)
+      );
+      const choices = Object.keys(database.columns);
+      const result = await prompt<{ userColumn: string }>([
+        {
+          type: 'select',
+          message: 'user column',
+          name: 'userColumn',
+          choices: choices,
+        },
+      ]);
+      userColunn = result.userColumn;
+    }
+
+    return {
+      ...options,
+      ...results,
+      userColunn: userColunn ?? options.userColumn ?? results.userColumn,
+    };
   }
   return options;
 }
 
 export default {
   name: 'configure-workspace',
-  description: '',
+  description: 'configures mount notion workspace',
   options: [
     {
       name: '-e, --entities [name]',
@@ -104,14 +124,34 @@ export default {
       description: 'users database',
     },
     {
-      name: '-c, --user-column	 [name]',
+      name: '-c, --user-colum [name]',
       description: 'user column',
     },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
     assert(args);
+    dependencies();
     const options = await optionsPrompt(args);
-    console.log(options);
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      options: {
+        ...config.options,
+        basic: {
+          ...config.options.basic,
+          entities: options.entities ?? config.options.basic.entities,
+          baseUrl: options.baseUrl ?? config.options.basic.baseUrl,
+        },
+        auth: {
+          ...config.options.auth,
+          strategies: options.authStrategies ?? config.options.auth.strategies,
+          userColumn: options.userColumn ?? config.options.auth.userColumn,
+          usersDatabase:
+            options.usersDatabase ?? config.options.auth.usersDatabase,
+        },
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
 
     return;
   },

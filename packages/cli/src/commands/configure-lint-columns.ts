@@ -1,8 +1,14 @@
-import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import {
+  ColumnsLintRules,
+  MountnCommand,
+  MountNotionConfig,
+} from '@mountnotion/types';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { COLUMNS_LINT_RULES, CONFIG_FILE } from '../utils';
 
 type ConfigureLintColumnsOptions = {
-  use: string;
+  use: Array<string>;
 };
 
 function assert(
@@ -19,19 +25,15 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
   if (!options.use) {
     prompts.push({
       type: 'multiselect',
-      message: 'select lint rules to use:',
+      message: 'select lint rules to use',
       name: 'use',
-      choices: [
-        { name: "consistent titles as 'name'" },
-        { name: 'automatic created_by' },
-        { name: 'automatic created_time' },
-        { name: 'automatic last_edited_by' },
-        { name: 'automatic last_edited_time' },
-        { name: 'consistent select colors using first color' },
-        { name: 'consistent multi_select colors using first color' },
-        { name: 'lowercase column names' },
-        { name: 'relations with leading emoji' },
-      ],
+      choices: COLUMNS_LINT_RULES.map((rule) => {
+        return {
+          name: rule.name,
+          value: rule.id,
+          hint: rule.description ?? '',
+        };
+      }),
     });
   }
 
@@ -66,7 +68,24 @@ export default {
     dependencies(config);
     assert(args);
     const options = await optionsPrompt(args);
-    console.log(options);
+
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      workspace: {
+        ...config.workspace,
+        lint: {
+          ...config.workspace.lint,
+          columns: options.use?.reduce((acc, column) => {
+            return {
+              ...acc,
+              [column]: column,
+            };
+          }, {} as Partial<ColumnsLintRules>),
+        },
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
 
     return;
   },

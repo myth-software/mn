@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { Cache, LocalsOptions } from '@mountnotion/types';
-import { logSuccess, strings } from '@mountnotion/utils';
+import { log, strings } from '@mountnotion/utils';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
@@ -12,8 +12,8 @@ import { getlocals } from '../../utils';
  * not include '?', though 'title' strings do
  */
 export function locals(options: LocalsOptions): Rule {
-  logSuccess({ action: 'running', message: 'locals schematic' });
-  logSuccess({ action: '-------', message: '----------------' });
+  log.success({ action: 'running', message: 'locals schematic' });
+  log.success({ action: '-------', message: '----------------' });
   const { outDir, entities } = options;
   const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
@@ -43,6 +43,7 @@ export function locals(options: LocalsOptions): Rule {
               local: rest,
               entities,
               databaseName: title,
+              log,
               ...strings,
             }),
             move(`${outDir}/${strings.dasherize(title)}`),
@@ -59,6 +60,7 @@ export function locals(options: LocalsOptions): Rule {
               })),
               titles: titlesRef,
               entities,
+              log,
               databaseName: title,
               ...strings,
             }),
@@ -73,6 +75,7 @@ export function locals(options: LocalsOptions): Rule {
       template({
         titles: titlesRef,
         entities,
+        log,
         ...strings,
       }),
       move(outDir),

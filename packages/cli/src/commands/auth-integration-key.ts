@@ -1,5 +1,8 @@
-import { MountnCommand } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import { writeFileSync } from 'fs';
+import { CONFIG_FILE } from '../utils';
 
 type AuthIntegrationKeyOptions = {
   integrationKey: string;
@@ -10,7 +13,7 @@ async function optionsPrompt(options: AuthIntegrationKeyOptions) {
   if (!options.integrationKey) {
     prompts.push({
       type: 'input',
-      message: 'integration key:',
+      message: 'integration key',
       name: 'integrationKey',
     });
   }
@@ -42,11 +45,21 @@ export default {
       description: 'notion integration key',
     },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
     assert(args);
     const options = await optionsPrompt(args);
-    console.log(options);
 
+    const updatedConfig: MountNotionConfig = {
+      ...config,
+      auth: {
+        ...config.auth,
+        key: options.integrationKey,
+      },
+    };
+
+    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+
+    log.success({ action: 'writing', message: 'auth key written to config' });
     return;
   },
 } satisfies MountnCommand;

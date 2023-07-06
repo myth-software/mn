@@ -8,95 +8,114 @@ export const warn = chalk.bold.hex('#FFA500');
 export const info = chalk.bold;
 export const debug = chalk.bold;
 
-export const log = console.log;
-
 export const logger = {
   info: (s: string) => s,
-  debug: (s: string) => log(debug(s)),
-  warn: (s: string) => log(chalk.bold.hex('#FFA500')(s)),
-  error: (s: string) => log(chalk.bold.red(s)),
-  fatal: (s: string) => log(chalk.bold.red(s)),
+  debug: (s: string) => console.log(debug(s)),
+  warn: (s: string) => console.log(chalk.bold.hex('#FFA500')(s)),
+  error: (s: string) => console.log(chalk.bold.red(s)),
+  fatal: (s: string) => console.log(chalk.bold.red(s)),
 };
 
 function formatPageTitle(str: string) {
   return str.length >= 15 ? str.substring(0, 11) + '...' : str;
 }
 
-export function logSuccess({ action, message, page }: LogInput) {
+function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(
+    console.log(
       `${success(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  log(`${success(paddedAction)} ${message}`);
+  console.log(`${success(paddedAction)} ${message}`);
   return;
 }
 
-export function logInfo({ action, message, page }: LogInput) {
+function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(
+    console.log(
       `${info(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  log(`${info(paddedAction)} ${message}`);
+  console.log(`${info(paddedAction)} ${message}`);
   return;
 }
 
-export function logWarn({ action, message, page }: LogInput) {
+function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(
+    console.log(
       `${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  log(`${warn(paddedAction)} ${message}`);
+  console.log(`${warn(paddedAction)} ${message}`);
   return;
 }
 
-export function logError({ action, message, page }: LogInput) {
+function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(
+    console.log(
       `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  log(`${error(paddedAction)} ${message}`);
+  console.log(`${error(paddedAction)} ${message}`);
   return;
 }
 
-export function logDebug({ action, message, page }: LogInput) {
+function logFatal({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
-    log(
+    console.log(
+      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+        page.title
+      )} ${message}`
+    );
+  }
+  throw new Error(`${error(paddedAction)} ${message}`);
+}
+
+function logDebug({ action, message, page }: LogInput) {
+  const paddedAction = action.padEnd(10);
+  if (page) {
+    console.log(
       `${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  log(`${debug(paddedAction)} ${message}`);
+  console.log(`${debug(paddedAction)} ${message}`);
   return;
 }
 
 export function styleQuestion(input: string) {
-  log(success(input));
+  console.log(success(input));
   return;
 }
 
 export function styleResponse(input: string) {
   return success(input);
 }
+
+export const log = {
+  fatal: logFatal,
+  error: logError,
+  warn: logWarn,
+  info: logInfo,
+  debug: logDebug,
+  success: logSuccess,
+};

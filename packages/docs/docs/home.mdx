@@ -25,7 +25,7 @@ for running commands
 | i18n        | for the world                     |
 | interfaces  | for typescript                    |
 | locals      | for zero latency                  |
-| mock-api    | for intercepting network requests |
+| mirage      | for intercepting network requests |
 | open-api    | for swagger                       |
 | react-query | for tanstack                      |
 | rtk-query   | for redux                         |
@@ -33,16 +33,24 @@ for running commands
 
 **[sdk](/sdk)**
 
+:::tip try this when you're starting...
+filter by a select option. you'll see there is intellisense for all of your column's options
+:::
+
 the notion sdk that's better than the notion sdk
+
+the **client** gives you intellisense for your database
 
 ## getting started
 
 ### what you'll need
 
 - [nx monorepo](https://nx.dev//) version 16 or above
-- [notion account](https://affiliate.notion.so/xysfb04gkht8) (affiliate link)
+- [notion account](https://affiliate.notion.so/xysfb04gkht8)
 
 ### installation
+
+in your nx monorepo
 
 ```sh title="terminal"
 npm i --save-dev @mountnotion/{cli,types,schematics,sdk,utils}
@@ -51,5 +59,9 @@ npm i --save-dev @mountnotion/{cli,types,schematics,sdk,utils}
 ### running
 
 ```sh title="terminal"
-npx mn apply-schematics
+npx mn setup
 ```
+
+:::danger caution
+all this is subject to change and disappear for version 2. as in, version 1 docs are not archived
+:::

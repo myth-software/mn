@@ -14,14 +14,12 @@ export function peoplePropertyFilter({
   }
 
   if (filter.contains) {
-    return { filter: ilike(database[property], `%${filter.contains}%`) };
+    return ilike(database[property], `%${filter.contains}%`);
   }
 
   if (filter.does_not_contain) {
-    return {
-      filter: notIlike(database[property], `%${filter.does_not_contain}%`),
-    };
+    return notIlike(database[property], `%${filter.does_not_contain}%`);
   }
 
-  return;
+  throw new Error('uncaught people filter case');
 }

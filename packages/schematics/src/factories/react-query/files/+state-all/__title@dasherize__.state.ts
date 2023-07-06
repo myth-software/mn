@@ -2,11 +2,11 @@ import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOpti
 import { } from <>;
 import { } from <>;
 %= camelize(title) %>Request, InfrastructureOptions } from '../infrastructure';
-%= classify(title) %> } from '@mountnotion/flexin-entities';
+%= classify(title) %> } from '<%= options.entities %>';
 
 export const use<%= classify(title) %>GetById = ({ id }: InfrastructureOptions<<%= classify(title) %>>, options?: UseQueryOptions<<%= classify(title) %>, unknown, <%= classify(title) %>, string[]>) => {
   const results = useQuery(
-    ['<%= icon %> <%= title %>', id],
+    ['<%= options.icon %> <%= title %>', id],
     () => <%= camelize(title) %>Request.getById({ id }),
     { ...options }
   );
@@ -17,9 +17,9 @@ export const use<%= classify(title) %>GetById = ({ id }: InfrastructureOptions<<
   };
 };
 
-export const use<%= classify(title) %>GetByQuery = ({ query }: InfrastructureOptions<<%= classify(title) %>>, options?: UseQueryOptions<<%= classify(title) %>[], unknown, <%= classify(title) %>[], '<%= icon %> <%= title %>'>) => {
+export const use<%= classify(title) %>GetByQuery = ({ query }: InfrastructureOptions<<%= classify(title) %>>, options?: UseQueryOptions<<%= classify(title) %>[], unknown, <%= classify(title) %>[], '<%= options.icon %> <%= title %>'>) => {
   const results = useQuery(
-    '<%= icon %> <%= title %>',
+    '<%= options.icon %> <%= title %>',
     () => <%= camelize(title) %>Request.getByQuery({ query }),
     { ...options }
   );
@@ -47,7 +47,7 @@ export const use<%= classify(title) %>UpdateById = (
   >(({ id, data }) => <%= camelize(title) %>Request.updateById({ id, data }), {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries('<%= icon %> <%= title %>');
+        queryClient.invalidateQueries('<%= options.icon %> <%= title %>');
         options?.onSuccess?.(data, variables, context);
       },
     }
@@ -76,9 +76,9 @@ export const use<%= classify(title) %>Create = (
   >(({ data }) => <%= camelize(title) %>Request.create({ data }), {
     ...options,
     onMutate: async ({ data }) => {
-      await queryClient.cancelQueries('<%= icon %> <%= title %>');
-      const previous = queryClient.getQueryData('<%= icon %> <%= title %>');
-      queryClient.setQueryData('<%= icon %> <%= title %>', (<%= camelize(title) %>: <%= classify(title) %>[]) => {
+      await queryClient.cancelQueries('<%= options.icon %> <%= title %>');
+      const previous = queryClient.getQueryData('<%= options.icon %> <%= title %>');
+      queryClient.setQueryData('<%= options.icon %> <%= title %>', (<%= camelize(title) %>: <%= classify(title) %>[]) => {
         if (!<%= camelize(title) %>) {
           return [data];
         }
@@ -88,11 +88,11 @@ export const use<%= classify(title) %>Create = (
       return previous;
     },
     onError: (error, variables, context) => {
-      queryClient.setQueryData('<%= icon %> <%= title %>', context);
+      queryClient.setQueryData('<%= options.icon %> <%= title %>', context);
       options?.onError?.(error, variables, context);
     },
     onSettled: (data, error, variables, context) => {
-      queryClient.invalidateQueries('<%= icon %> <%= title %>');
+      queryClient.invalidateQueries('<%= options.icon %> <%= title %>');
       options?.onSettled?.(data, error, variables, context);
     },
   });
@@ -117,7 +117,7 @@ export const use<%= classify(title) %>DeleteById = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries('<%= icon %> <%= title %>');
+        queryClient.invalidateQueries('<%= options.icon %> <%= title %>');
         options?.onSuccess?.(data, variables, context);
       },
     }
