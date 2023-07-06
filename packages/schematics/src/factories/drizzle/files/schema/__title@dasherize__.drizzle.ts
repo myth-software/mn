@@ -20,8 +20,8 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
 
 export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   id: uuid('id').defaultRandom().primaryKey(),
-  icon: text('icon').notNull(),
-  cover: text('cover').notNull(),
+  icon: text('icon'),
+  cover: text('cover'),
   <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
     <% if(type === 'rollup' || type === 'last_edited_by' || type === 'last_edited_time' || type === 'created_by' || type === 'created_time' ) { %>
     <% } %>
