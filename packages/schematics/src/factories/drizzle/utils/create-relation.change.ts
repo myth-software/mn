@@ -58,25 +58,29 @@ export function createRelationChange(
       name > title
         ? `${camelize(title)}To${classify(name)}`
         : `${camelize(name)}To${classify(title)}`;
+    const camelName = camelize(name);
+    const snakeName = decamelize(name);
+    const camelTitle = camelize(title);
+    const snakeTitle = decamelize(title);
     if (!sourceText.includes(`export const ${relation}`)) {
       relationsToCreate += `export const ${relation} = pgTable('${decamelize(
         relation
       )}', {
-          ${name}Id: uuid('${name}_id').notNull().references(() => ${name}.id),
-          ${title}Id: uuid('${title}_id').notNull().references(() => ${title}.id),
+          ${camelName}Id: uuid('${snakeName}_id').notNull().references(() => ${camelName}.id),
+          ${camelTitle}Id: uuid('${snakeTitle}_id').notNull().references(() => ${camelTitle}.id),
         }, (t) => ({
-          pk: primaryKey(t.${name}Id, t.${title}Id),
+          pk: primaryKey(t.${camelName}Id, t.${camelTitle}Id),
         }),
       );
       
       export const ${relation}Relations = relations(${relation}, ({ one }) => ({
-        ${title}: one(${title}, {
-          fields: [${relation}.${title}Id],
-          references: [${title}.id],
+        ${camelTitle}: one(${camelTitle}, {
+          fields: [${relation}.${camelTitle}Id],
+          references: [${camelTitle}.id],
         }),
-        ${name}: one(${name}, {
-          fields: [${relation}.${name}Id],
-          references: [${name}.id],
+        ${camelName}: one(${camelName}, {
+          fields: [${relation}.${camelName}Id],
+          references: [${camelName}.id],
         }),
       }));`;
     }
