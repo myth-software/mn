@@ -30,11 +30,11 @@ export function locals(options: LocalsOptions): Rule {
     const localsPromises = includedCaches.map((cache) =>
       getlocals({ ...options, pageId: cache.id })
     );
-    const locals = await Promise.all(localsPromises);
-    const rules = locals
-      .map(({ title, locals: locals_1 }) => {
+    const localsResponse = await Promise.all(localsPromises);
+    const rules = localsResponse
+      .map(({ title, locals }) => {
         titlesRef = cachesRef.map((cache) => cache.title) as string[];
-        const localsRules = locals_1.map((local) => {
+        const localsRules = locals.map((local) => {
           const { title: localTitle, ...rest } = local;
           const formattedTitle = strings.titlize(localTitle);
           return applyWithOverwrite(url('./files/all-for-entity'), [
@@ -54,9 +54,9 @@ export function locals(options: LocalsOptions): Rule {
           url('./files/index-for-entity'),
           [
             template({
-              locals: locals_1.map((local_2) => ({
-                ...local_2,
-                title: strings.titlize(local_2.title),
+              locals: locals.map((local) => ({
+                ...local,
+                title: strings.titlize(local.title),
               })),
               titles: titlesRef,
               entities,
