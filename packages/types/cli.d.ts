@@ -44,6 +44,10 @@ export declare type I18nOptions = BasicOptions & {
   languages: ('en' | 'es')[];
 };
 
+export declare type DrizzleOptions = BasicOptions & {
+  experimentalRelations: boolean;
+};
+
 export declare type Schematics = {
   name: string;
   disable?: boolean;

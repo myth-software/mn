@@ -1,6 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
-import { BasicOptions, Relations } from '@mountnotion/types';
+import { DrizzleOptions, Relations } from '@mountnotion/types';
 import { ensure, log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { rimraf } from 'rimraf';
@@ -15,7 +15,7 @@ import { prettifyIndexRule } from './rules/prettify-index.rule';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
-export function drizzle(options: BasicOptions): Rule {
+export function drizzle(options: DrizzleOptions): Rule {
   log.success({ action: 'running', message: 'drizzle schematic' });
   log.success({ action: '-------', message: '-----------------' });
   validateInputs(options);
@@ -45,11 +45,13 @@ export function drizzle(options: BasicOptions): Rule {
       ]);
     });
 
-    const newRelationRules = includedCaches
-      .filter((cache) => cache.relations)
-      .map((cache) => {
-        return createRelationRule(options, cache);
-      });
+    const newRelationRules = options.experimentalRelations
+      ? includedCaches
+          .filter((cache) => cache.relations)
+          .map((cache) => {
+            return createRelationRule(options, cache);
+          })
+      : [];
 
     const drizzleIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
@@ -77,37 +79,38 @@ export function drizzle(options: BasicOptions): Rule {
     }
 
     rules.push(...newRelationRules);
-
-    const uniqueRelations: Relations = includedCaches
-      .filter((cache) => cache.relations)
-      .reduce((acc, cache) => {
-        const { title, relations } = cache;
-        const orderedRelations = Object.values(ensure(relations)).reduce(
-          (innerAcc, name) => {
-            if (name > title) {
+    if (options.experimentalRelations) {
+      const uniqueRelations: Relations = includedCaches
+        .filter((cache) => cache.relations)
+        .reduce((acc, cache) => {
+          const { title, relations } = cache;
+          const orderedRelations = Object.values(ensure(relations)).reduce(
+            (innerAcc, name) => {
+              if (name > title) {
+                return {
+                  ...innerAcc,
+                  [title]: name,
+                };
+              }
               return {
                 ...innerAcc,
-                [title]: name,
+                [name]: title,
               };
-            }
-            return {
-              ...innerAcc,
-              [name]: title,
-            };
-          },
-          acc
-        );
+            },
+            acc
+          );
 
-        return {
-          ...acc,
-          ...orderedRelations,
-        };
-      }, {} as Record<string, string>);
+          return {
+            ...acc,
+            ...orderedRelations,
+          };
+        }, {} as Record<string, string>);
 
-    if (uniqueRelations) {
-      Object.entries(uniqueRelations).forEach((relation) => {
-        rules.push(addRelationToIndexRule(options, relation));
-      });
+      if (uniqueRelations) {
+        Object.entries(uniqueRelations).forEach((relation) => {
+          rules.push(addRelationToIndexRule(options, relation));
+        });
+      }
     }
 
     rules.push(prettifyIndexRule(options));
