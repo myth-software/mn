@@ -24,7 +24,7 @@ function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${success(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${success(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -38,7 +38,7 @@ function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${info(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${info(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -52,7 +52,7 @@ function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -66,7 +66,7 @@ function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -80,7 +80,7 @@ function logFatal({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -92,7 +92,7 @@ function logDebug({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
@@ -100,15 +100,6 @@ function logDebug({ action, message, page }: LogInput) {
   }
   console.log(`${debug(paddedAction)} ${message}`);
   return;
-}
-
-export function styleQuestion(input: string) {
-  console.log(success(input));
-  return;
-}
-
-export function styleResponse(input: string) {
-  return success(input);
 }
 
 export const log = {
