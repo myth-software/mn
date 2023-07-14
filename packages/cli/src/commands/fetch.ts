@@ -2,6 +2,12 @@ import { createDatabaseCaches } from '@mountnotion/sdk';
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 
 function dependencies(config: MountNotionConfig) {
+  const workspaceDefined = config.workspace;
+
+  if (!workspaceDefined) {
+    throw new Error('workspace not defined in .mountnotion.config.json');
+  }
+
   const pagesSelected = config.workspace.selectedPages.length > 0;
 
   if (!pagesSelected) {
