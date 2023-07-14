@@ -1,7 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { Cache, LocalsOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
@@ -15,14 +14,13 @@ export function locals(options: LocalsOptions): Rule {
   log.success({ action: 'running', message: 'locals schematic' });
   log.success({ action: '-------', message: '----------------' });
   const { outDir, entities } = options;
-  const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
   let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];
 
   return async () => {
     await rimraf(outDir);
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );
@@ -40,6 +38,7 @@ export function locals(options: LocalsOptions): Rule {
           return applyWithOverwrite(url('./files/all-for-entity'), [
             template({
               title: formattedTitle,
+              options,
               local: rest,
               entities,
               databaseName: title,
@@ -54,6 +53,7 @@ export function locals(options: LocalsOptions): Rule {
           url('./files/index-for-entity'),
           [
             template({
+              options,
               locals: locals.map((local) => ({
                 ...local,
                 title: strings.titlize(local.title),
@@ -74,6 +74,7 @@ export function locals(options: LocalsOptions): Rule {
     const localsRootIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles: titlesRef,
+        options,
         entities,
         log,
         ...strings,
