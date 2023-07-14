@@ -3,7 +3,7 @@ import { BasicOptions } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
 import { prettify } from '../../../utils';
 
-export function prettifyIndexRule(options: BasicOptions): Rule {
+export function prettifyRelationsRule(options: BasicOptions): Rule {
   return (tree: Tree) => {
     const path = `${options.outDir}/schema/relations.ts`;
 
