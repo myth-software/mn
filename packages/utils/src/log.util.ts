@@ -30,7 +30,7 @@ function logSuccess({ action, message, page }: LogInput) {
     );
     return;
   }
-  console.log(`${success(paddedAction)} ${message}`);
+  console.log(`(mn) ${success(paddedAction)} ${message}`);
   return;
 }
 
@@ -44,7 +44,7 @@ function logInfo({ action, message, page }: LogInput) {
     );
     return;
   }
-  console.log(`${info(paddedAction)} ${message}`);
+  console.log(`(mn) ${info(paddedAction)} ${message}`);
   return;
 }
 
@@ -58,7 +58,7 @@ function logWarn({ action, message, page }: LogInput) {
     );
     return;
   }
-  console.log(`${warn(paddedAction)} ${message}`);
+  console.log(`(mn) ${warn(paddedAction)} ${message}`);
   return;
 }
 
@@ -72,7 +72,7 @@ function logError({ action, message, page }: LogInput) {
     );
     return;
   }
-  console.log(`${error(paddedAction)} ${message}`);
+  console.log(`(mn) ${error(paddedAction)} ${message}`);
   return;
 }
 
@@ -85,7 +85,7 @@ function logFatal({ action, message, page }: LogInput) {
       )} ${message}`
     );
   }
-  throw new Error(`${error(paddedAction)} ${message}`);
+  throw new Error(`(mn) ${error(paddedAction)} ${message}`);
 }
 
 function logDebug({ action, message, page }: LogInput) {
@@ -98,7 +98,7 @@ function logDebug({ action, message, page }: LogInput) {
     );
     return;
   }
-  console.log(`${debug(paddedAction)} ${message}`);
+  console.log(`(mn) ${debug(paddedAction)} ${message}`);
   return;
 }
 
