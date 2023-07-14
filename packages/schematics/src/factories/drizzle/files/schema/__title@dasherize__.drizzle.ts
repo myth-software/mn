@@ -38,6 +38,7 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
     <% } else if(cache.rollupsOptions?.[property]) {  %>
       '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
     <% } else if(type === 'rollup') { %>
+    '<%= property %>': text('<%= property %>').array(),
     <% } else if(type === 'files') { %>
       '<%= property %>': text('<%= property %>').array(),
     <% } else if(type === 'number') { %>
