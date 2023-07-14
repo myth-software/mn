@@ -1,7 +1,6 @@
 <% if (options.debug) { %>
   <%= log.debug({ action: 'debugging', message: 'locals index-for-entity' }) %>
   <%= log.debug({ action: 'debugging', message: `databaseName is ${databaseName}` }) %>
-  <%= log.debug({ action: 'debugging', message: `title is ${title}` }) %>
 <% } %>
 
 
