@@ -1,7 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { DrizzleOptions, Relations } from '@mountnotion/types';
-import { ensure, log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
@@ -27,7 +26,7 @@ export function drizzle(options: DrizzleOptions): Rule {
     await rimraf(outDir);
     addPackageToPackageJson(tree, 'drizzle-orm', '0.27.0');
     addDevPackageToPackageJson(tree, 'drizzle-kit', '0.19.3');
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );
