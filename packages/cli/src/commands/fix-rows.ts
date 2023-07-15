@@ -1,10 +1,13 @@
 import { expandProperties, notion } from '@mountnotion/sdk';
 import {
+  Entity,
   FullGetDatabaseResponse,
   LogInput,
   MountnCommand,
 } from '@mountnotion/types';
+import { getTitleColumnFromEntity } from '@mountnotion/utils';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { hasCachedLintErrors } from '../dependencies';
 import { printPhraseList } from '../utils';
 
 type FixRowsOptions = {
@@ -21,77 +24,75 @@ function assert(
 }
 
 function dependencies() {
-  const cache: Array<any> = [];
-  const databasesWithRowsFails = cache.filter(
-    (database) => database.lintFails.rows.length > 0
-  );
-  const canFix = databasesWithRowsFails.length > 1;
-
-  if (!canFix) {
-    throw new Error('no rows to fix');
-  }
+  hasCachedLintErrors();
 }
 
 export default {
   name: 'fix-rows',
-  description: 'standardizes any rows that failed grading',
+  description: 'fixes any rows that have lint errors',
   options: [],
   actionFactory: () => async (options) => {
-    assert(options);
     dependencies();
+    assert(options);
     const database_id = options.pageId;
-    const [entities, properties] = await notion.databases.query<any>(
+    const [instances, columns] = await notion.databases.query<any>(
       {
         database_id,
         page_size: 100,
       },
       { all: true, resultsOnly: true, flattenResponse: true }
     );
-
+    const entity = {
+      columns,
+    } as Entity;
+    const TITLE = getTitleColumnFromEntity(entity);
     const database = (await notion.databases.retrieve({
       database_id,
     })) as FullGetDatabaseResponse;
 
-    while (entities.length) {
-      const entity = entities.shift();
+    while (instances.length) {
+      const instance = instances.shift();
 
-      if (entity.name && entity.name !== entity.name.toLowerCase()) {
+      if (
+        instance[TITLE] &&
+        instance[TITLE] !== instance[TITLE].toLowerCase()
+      ) {
         await notion.pages.update({
-          page_id: entity.page_id,
+          page_id: instance.page_id,
           properties: expandProperties<any>(
             {
-              name: entity.name.toLowerCase(),
+              [TITLE]: instance[TITLE].toLowerCase(),
             },
             {
-              columns: properties,
+              columns,
               mappings: {},
             }
           ),
         });
       }
 
-      if (!entity.name) {
+      if (!instance[TITLE]) {
         await notion.pages.update({
-          page_id: entity.page_id,
+          page_id: instance.page_id,
           properties: expandProperties<any>(
             {
-              name: uniqueNamesGenerator({
+              [TITLE]: uniqueNamesGenerator({
                 dictionaries: [animals, colors],
                 separator: ' ',
                 length: 2,
               }),
             },
             {
-              columns: properties,
+              columns,
               mappings: {},
             }
           ),
         });
       }
 
-      if (!entity.icon) {
+      if (!instance.icon) {
         await notion.pages.update({
-          page_id: entity.page_id,
+          page_id: instance.page_id,
           icon: database.icon,
         });
       }

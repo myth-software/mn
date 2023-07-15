@@ -12,6 +12,11 @@ import {
 import { MountNotionQueryParameters } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from '../mn';
+import {
+    getTitleFromEntity
+} from '@mountnotion/utils';
+
+const TITLE = getTitleFromEntity(<%= underscore(title).toUpperCase() %>);
 
 export const <%= camelize(title) %>Router = express.Router();
 
@@ -46,14 +51,14 @@ export const <%= camelize(title) %>Router = express.Router();
 <%= camelize(title) %>Router.post('/', async (req: Request, res: Response) => {
   try {
     const item: Partial<<%= classify(title) %>Writeonly> = req.body;
-    const name = uniqueNamesGenerator({
+    const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
       separator: '-',
       length: 2,
     });
 
     const newItem = await mn.<%= camelize(title) %>.create({
-      name,
+      [TITLE]: title,
       ...item,
     });
 

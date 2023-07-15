@@ -12,8 +12,8 @@
 import { QueryDatabaseParametersSchema } from '<%= options.org %>/types';
 import { api, param, requestBody } from '@loopback/rest';
 import {
-    configure
-} from '@mountnotion/sdk';
+    getTitleFromEntity
+} from '@mountnotion/utils';
 import {
     Filter,
     OrFilter,
@@ -28,13 +28,14 @@ import {
   <%= classify(title) %>,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>Index,
-  <%= underscore(title).toUpperCase() %>,
-  indicies 
+  <%= underscore(title).toUpperCase() %>
 } from '<%= options.entities %>';
 import { 
   local<%= classify(title) %>,
 } from '<%= options.locals %>';
 import { mn } from './mn';
+
+const TITLE = getTitleFromEntity(<%= underscore(title).toUpperCase() %>);
 
 @api({
   basePath: '/',
@@ -344,7 +345,7 @@ export class <%= classify(title) %>Controller {
       <% } %>
     ): Promise<<%= classify(title) %>> {
 
-      const name = uniqueNamesGenerator({
+      const title = uniqueNamesGenerator({
         dictionaries: [animals, colors],
         separator: '-',
         length: 2,
@@ -352,13 +353,13 @@ export class <%= classify(title) %>Controller {
 
       <% if (options.strategies) { %>
         return mn.<%= camelize(title) %>.create({
-          name,
+          [TITLE]: title,
           '<%= options.userColumn %>': [user[securityId]],
           ...body,
         });
       <% } else { %> 
         return mn.<%= camelize(title) %>.create({
-          name,
+          [TITLE]: title,
           ...body,
         });
       <% } %>

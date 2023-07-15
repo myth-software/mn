@@ -14,6 +14,7 @@ import {
   Horses,
   HorsesIndex,
   HorsesWriteonly,
+  HORSES,
 } from '@pferd/domain-pferd-entities';
 import express, { Request, Response } from 'express';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
@@ -43,12 +44,12 @@ horsesRouter.get('/:id', async (req: Request, res: Response) => {
 horsesRouter.post('/', async (req: Request, res: Response) => {
   try {
     const item: Partial<HorsesWriteonly> = req.body;
-    const name = uniqueNamesGenerator({
+    const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
       separator: '-',
       length: 2,
     });
-    const newHorses = await mn.horses.create({ name, ...item });
+    const newHorses = await mn.horses.create({ [TITLE]: title, ...item });
     res.status(201).json(newHorses);
   } catch (e) {
     res.status(500).send({ status: 500, message: e.message });

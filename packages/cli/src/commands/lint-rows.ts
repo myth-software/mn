@@ -1,11 +1,5 @@
-import { expandProperties, notion } from '@mountnotion/sdk';
-import {
-  FullGetDatabaseResponse,
-  LogInput,
-  MountnCommand,
-  MountNotionConfig,
-} from '@mountnotion/types';
-import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
+import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { hasRowLintRules, workspaceHasPages } from '../dependencies';
 import { printPhraseList } from '../utils';
 
 type LintRowsOptions = {
@@ -22,13 +16,8 @@ function assert(
 }
 
 function dependencies(config: MountNotionConfig) {
-  const hasRules =
-    config.workspace?.lint?.rows &&
-    Object.keys(config.workspace.lint.rows).length > 0;
-
-  if (!hasRules) {
-    throw new Error('no rules configured');
-  }
+  workspaceHasPages(config);
+  hasRowLintRules(config);
 }
 
 export default {
@@ -41,63 +30,6 @@ export default {
   actionFactory: (config) => async (options) => {
     dependencies(config);
     assert(options);
-    const database_id = options.pageId;
-    const [entities, properties] = await notion.databases.query<any>(
-      {
-        database_id,
-        page_size: 100,
-      },
-      { all: true, resultsOnly: true, flattenResponse: true }
-    );
-
-    const database = (await notion.databases.retrieve({
-      database_id,
-    })) as FullGetDatabaseResponse;
-
-    while (entities.length) {
-      const entity = entities.shift();
-
-      if (entity.name && entity.name !== entity.name.toLowerCase()) {
-        await notion.pages.update({
-          page_id: entity.page_id,
-          properties: expandProperties<any>(
-            {
-              name: entity.name.toLowerCase(),
-            },
-            {
-              columns: properties,
-              mappings: {},
-            }
-          ),
-        });
-      }
-
-      if (!entity.name) {
-        await notion.pages.update({
-          page_id: entity.page_id,
-          properties: expandProperties<any>(
-            {
-              name: uniqueNamesGenerator({
-                dictionaries: [animals, colors],
-                separator: ' ',
-                length: 2,
-              }),
-            },
-            {
-              columns: properties,
-              mappings: {},
-            }
-          ),
-        });
-      }
-
-      if (!entity.icon) {
-        await notion.pages.update({
-          page_id: entity.page_id,
-          icon: database.icon,
-        });
-      }
-    }
 
     console.log('3 databases rows to lint: 🔢 sets, 🔵 overlays, 📝 logs');
     const phraseList: LogInput[] = [
