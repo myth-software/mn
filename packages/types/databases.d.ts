@@ -25,7 +25,7 @@ export declare type Cache = FlatDatabase & {
 
 export declare type Entity = DeepReadonly<FlatDatabase>;
 
-export declare type InferReadonly<T extends Entity> = {
+export declare type InferReadonly<T extends Cache> = {
   [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? P
     : never]: T['columns'][T['mappings'][P]] extends infer ColumnType
@@ -38,7 +38,28 @@ export declare type InferReadonly<T extends Entity> = {
       : ColumnType extends 'last_edited_time'
       ? string | null
       : ColumnType extends 'rollup'
-      ? number | number[] | boolean | boolean[] | string | string[] | null
+      ? T['rollups'][T['mappings'][P]] extends 'relation'
+        ? Array<string> | null
+        : T['rollups'][T['mappings'][P]] extends
+            | 'rich_text'
+            | 'title'
+            | 'phone_number'
+            | 'email'
+        ? string | null
+        : T['rollups'][T['mappings'][P]] extends 'select' | 'status'
+        ? T['rollupsOptions'][T['mappings'][P]][number] | null
+        : T['rollups'][T['mappings'][P]] extends 'multi_select'
+        ? T['rollupsOptions'][T['mappings'][P]] | null
+        : T['rollups'][T['mappings'][P]] extends 'number'
+        ? number | null
+        :
+            | number
+            | Array<number>
+            | boolean
+            | Array<boolean>
+            | string
+            | Array<string>
+            | null
       : ColumnType extends 'formula'
       ? string | null
       : never

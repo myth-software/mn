@@ -1,12 +1,12 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
-import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
-import { printPhraseList } from '../utils';
+import { workspaceHasPages } from '../dependencies';
 
 type RenameColumnsOptions = {
-  pageId: string;
-  fromColumnName: string;
-  toColumnName: string;
+  from: string;
+  to: string;
 };
 
 function assert(
@@ -20,11 +20,19 @@ function assert(
 
 async function optionsPrompt(options: RenameColumnsOptions) {
   const prompts = [];
-  if (!options.pageId) {
+  if (!options.from) {
     prompts.push({
       type: 'input',
-      message: 'page id:',
-      name: 'pageId',
+      message: 'from column',
+      name: 'from',
+    });
+  }
+
+  if (!options.to) {
+    prompts.push({
+      type: 'input',
+      message: 'to column',
+      name: 'to',
     });
   }
 
@@ -37,26 +45,23 @@ async function optionsPrompt(options: RenameColumnsOptions) {
 }
 
 function dependencies(config: MountNotionConfig) {
-  const hasPages = config.workspace.selectedPages.length > 0;
-
-  if (!hasPages) {
-    throw new Error('no pages selected');
-  }
+  workspaceHasPages(config);
 }
 
 export default {
   name: 'rename-columns',
   description: 'rename all matching columns',
   options: [
-    { name: '-p, --page-id', description: 'id of page with databases' },
+    { name: '-f, --from', description: 'id of page with databases' },
+    { name: '-t, --to', description: 'id of page with databases' },
   ],
   actionFactory: (config) => async (args) => {
     assert(args);
     dependencies(config);
     const options = await optionsPrompt(args);
-    const page_id = options.pageId;
-    const fromColumnName = options.fromColumnName;
-    const toColumnName = options.toColumnName;
+    const page_id = config.workspace.selectedPages[0];
+    const fromColumnName = options.from;
+    const toColumnName = options.to;
     const allResponses = await notion.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
@@ -65,7 +70,7 @@ export default {
       .flatMap(({ results }) => results as { type: string; id: string }[])
       .filter((result) => result.type === 'child_database')
       .map(({ id }) => id);
-    const rename = [];
+
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
@@ -81,23 +86,15 @@ export default {
         });
 
         const flat = flattenDatabaseResponse(database);
-        rename.push({
-          title: flat.title,
-          icon: flat.icon,
-          from: fromColumnName,
-          to: toColumnName,
+        log.success({
+          action: 'renaming',
+          page: {
+            emoji: flat.icon,
+            title: flat.title,
+          },
+          message: `from ${fromColumnName} to ${toColumnName}`,
         });
       }
     }
-
-    const phraseList: LogInput[] = rename.map((n) => ({
-      page: {
-        emoji: n.icon,
-        title: n.title,
-      },
-      message: `from ${n.from} to ${n.to}`,
-      action: 'rename',
-    }));
-    phraseList.forEach(printPhraseList);
   },
 } satisfies MountnCommand;
