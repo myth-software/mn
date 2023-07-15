@@ -95,11 +95,13 @@ export declare type Displayable = {
 };
 
 export declare type TypedSelectDisplayable<
-  T extends Entity,
-  P extends string | symbol | number,
-  K extends T['options'] = T['options']
+  TEntity extends Entity,
+  TColumn extends string,
+  TOptions extends TEntity['options'] = TEntity['options']
 > = {
-  defaultValue?: K extends DeepReadonly<Options> ? K[P][number] : never;
+  defaultValue?: TOptions extends DeepReadonly<Options>
+    ? TOptions[TColumn][number]
+    : never;
 };
 
 export declare type SelectDisplayable = {
@@ -137,10 +139,10 @@ export declare type FilesDisplayable = {
 };
 
 export declare type TypedDisplayable<
-  T extends Entity,
-  K extends keyof T['columns'] = keyof T['columns']
+  TEntity extends Entity,
+  TColumns extends keyof TEntity['columns'] = keyof TEntity['columns']
 > = {
-  [P in K]: Merge<
+  [P in TColumns]: Merge<
     {
       property: P;
       isRequired?: boolean;
@@ -150,9 +152,9 @@ export declare type TypedDisplayable<
       isSubtitle?: boolean;
     },
     {
-      [Q in P]: T['columns'][Q] extends infer ColumnType
+      [Q in P]: TEntity['columns'][Q] extends infer ColumnType
         ? ColumnType extends 'select'
-          ? { config?: TypedSelectDisplayable<T, Q> }
+          ? { config?: TypedSelectDisplayable<TEntity, Q & string> }
           : ColumnType extends 'rich_text'
           ? { config?: RichTextDisplayable }
           : ColumnType extends 'title'
@@ -166,11 +168,11 @@ export declare type TypedDisplayable<
           : ColumnType extends 'date'
           ? { config?: DateDisplayable }
           : ColumnType extends 'status'
-          ? { config?: TypedSelectDisplayable<T, P> }
+          ? { config?: TypedSelectDisplayable<TEntity, P & string> }
           : ColumnType extends 'email'
           ? { config?: never }
           : ColumnType extends 'multi_select'
-          ? { config?: TypedSelectDisplayable<T, P> }
+          ? { config?: TypedSelectDisplayable<TEntity, P & string> }
           : ColumnType extends 'relation'
           ? { config?: RelationDisplayable }
           : ColumnType extends 'files'
@@ -195,7 +197,7 @@ export declare type TypedDisplayable<
         : never;
     }[P]
   >;
-}[K];
+}[TColumns];
 
 /**
  * display configuration is used to describe all of the necessary information

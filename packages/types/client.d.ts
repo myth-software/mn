@@ -16,7 +16,7 @@ import { Merge } from './helpers';
 
 export declare type TypedMultiSelectColumnFilter<
   T extends Entity,
-  Property extends string | symbol | number,
+  Property extends string,
   K extends T['options'] = T['options']
 > =
   | {
@@ -29,7 +29,7 @@ export declare type TypedMultiSelectColumnFilter<
 
 export declare type TypedSelectColumnFilter<
   T extends Entity,
-  Property extends string | symbol | number,
+  Property extends string,
   K extends T['options'] = T['options']
 > =
   | {
@@ -42,7 +42,7 @@ export declare type TypedSelectColumnFilter<
 
 export declare type TypedSelectColumnFilterTwo<
   T extends Entity,
-  Property extends string | symbol | number,
+  Property extends string,
   K extends T['options'] = T['options']
 > =
   | {

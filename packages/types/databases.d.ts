@@ -1,9 +1,9 @@
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
-export declare type Mappings = Record<string | number | symbol, string>;
-export declare type Relations = Record<string | number | symbol, string>;
-export declare type Options = Record<string | number | symbol, string[]>;
+export declare type Mappings = Record<string, string>;
+export declare type Relations = Record<string, string>;
+export declare type Options = Record<string, string[]>;
 export type Instance = Record<string, any> & AdditionalProperties;
 
 export declare type FlatDatabase = {
