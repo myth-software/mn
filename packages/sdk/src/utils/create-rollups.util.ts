@@ -86,6 +86,17 @@ export async function createRollups(
         [property]: type,
       };
     }
+    const isDate =
+      func === 'latest_date' ||
+      func === 'earliest_date' ||
+      func === 'date_range';
+    if (isDate) {
+      const type = 'date';
+      return {
+        ...acc,
+        [property]: type,
+      };
+    }
 
     const result = propertyType.results?.[0];
     if (result) {
