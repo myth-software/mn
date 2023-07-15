@@ -23,9 +23,9 @@ export declare type Cache = FlatDatabase & {
   rollupsOptions: Options | null;
 };
 
-export declare type Entity = DeepReadonly<FlatDatabase>;
+export declare type Entity = DeepReadonly<Cache>;
 
-export declare type InferReadonly<T extends Cache> = {
+export declare type InferReadonly<T extends Entity> = {
   [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
     ? P
     : never]: T['columns'][T['mappings'][P]] extends infer ColumnType

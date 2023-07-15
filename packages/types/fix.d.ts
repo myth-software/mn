@@ -1,5 +1,5 @@
+import { LogInput } from './cli';
 import { ColumnsLintRules } from './lint-rules';
-import { LogInput } from './log';
 
 export declare type Fix = {
   id: keyof ColumnsLintRules;
