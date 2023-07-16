@@ -94,6 +94,9 @@ export default {
 
     while (instances.length) {
       const instance = instances.shift();
+      const mappings = Object.fromEntries(
+        Object.keys(columns).map((key) => [key, key])
+      );
 
       await notion.pages.update({
         page_id: instance.id,
@@ -104,9 +107,7 @@ export default {
           },
           {
             columns,
-            mappings: Object.fromEntries(
-              Object.keys(columns).map((key) => [key, key])
-            ),
+            mappings,
           }
         ),
       });
