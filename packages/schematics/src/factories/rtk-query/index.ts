@@ -39,6 +39,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -47,6 +48,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -56,6 +58,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(outDir),
@@ -64,6 +67,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(outDir),
