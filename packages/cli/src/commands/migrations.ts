@@ -1,4 +1,5 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { execSync } from 'child_process';
 import { prompt } from 'enquirer';
 
@@ -92,6 +93,10 @@ export default {
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
         ).toString('utf-8');
         console.log(result);
+        log.success({
+          action: 'generating',
+          message: 'succesful',
+        });
       } catch (e) {
         console.error(e);
       }
@@ -99,10 +104,12 @@ export default {
     }
 
     if (command === 'migrate') {
-      const result = execSync(
-        `npx ts-node ${outDir}/migrate.ts ${outDir}`
-      ).toString('utf-8');
-      console.log(result);
+      execSync(`npx ts-node ${outDir}/migrate.ts ${outDir}`).toString('utf-8');
+
+      log.success({
+        action: 'migrating',
+        message: 'succesful',
+      });
 
       return;
     }

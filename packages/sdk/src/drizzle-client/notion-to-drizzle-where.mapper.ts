@@ -30,7 +30,7 @@ export function mapNotionToDrizzleWhere(
   }
 
   if (!where.filter.or && !where.filter.and) {
-    drizzleWhere.filter = mapNotionToDrizzleFilter(where, database);
+    drizzleWhere.filter = mapNotionToDrizzleFilter(where.filter, database);
   }
 
   if (where.filter.or) {

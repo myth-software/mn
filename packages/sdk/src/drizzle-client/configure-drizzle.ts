@@ -24,8 +24,9 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
       title,
       {
         query: async (args: MountNotionQueryParameters<any>) => {
-          const query = db.select().from(database);
-          const { filter, orderBy } = mapNotionToDrizzleWhere(database, args);
+          const where = typeof args === 'string' ? JSON.parse(args) : args;
+          const query = await db.select().from(database);
+          const { filter, orderBy } = mapNotionToDrizzleWhere(database, where);
 
           if (filter) {
             query.where(filter);
