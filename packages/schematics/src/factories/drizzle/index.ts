@@ -29,7 +29,7 @@ export function drizzle(options: DrizzleOptions): Rule {
     addDevPackageToPackageJson(tree, 'drizzle-kit', '0.19.3');
     const caches = await createDatabaseCaches(pageIds, options);
     const includedCaches = caches.filter(
-      ({ title }) => title && !excludes.includes(title)
+      (cache) => cache.title && !excludes.includes(cache.title)
     );
     const titles = includedCaches.map((cache) => cache.title);
     const drizzleRules = includedCaches.map((cache) => {

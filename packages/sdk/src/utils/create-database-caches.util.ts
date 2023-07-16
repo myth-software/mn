@@ -4,7 +4,7 @@ import {
   Cache,
   Entity,
 } from '@mountnotion/types';
-import { CACHE, getCache, log } from '@mountnotion/utils';
+import { CACHE, log } from '@mountnotion/utils';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
 import * as infrastructure from '../infrastructure';
@@ -13,18 +13,11 @@ import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';
 
 export const createDatabaseCaches = async (
-  pageIds: string[],
+  pageIds: Array<string>,
   options: BasicOptions
-): Promise<Cache[]> => {
+): Promise<Array<Cache>> => {
   if (!existsSync('./.mountnotion')) {
     mkdirSync('./.mountnotion');
-  }
-
-  const cached = getCache();
-
-  if (cached) {
-    log.info({ action: 'loading', message: 'data from filesystem cache' });
-    return cached;
   }
 
   log.info({ action: 'loading', message: 'data from notion workspace' });
@@ -114,7 +107,7 @@ export const createDatabaseCaches = async (
   });
   const allRollups = await Promise.all(allRollupsPromises);
 
-  const caches: Cache[] = allUsableDatabases
+  const caches: Array<Cache> = allUsableDatabases
     .map((database) => {
       return flattenDatabaseResponse(database, options);
     })
