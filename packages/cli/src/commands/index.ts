@@ -7,6 +7,7 @@ import configureLintColumns from './configure-lint-columns';
 import configureLintRows from './configure-lint-rows';
 import configureSchematics from './configure-schematics';
 import configureWorkspace from './configure-workspace';
+import createColumns from './create-columns';
 import deleteRecursive from './delete-recursive';
 import fetch from './fetch';
 import fixColumns from './fix-columns';
@@ -29,6 +30,7 @@ export const commands: Array<MountnCommand> = [
   configureLintRows,
   configureSchematics,
   configureWorkspace,
+  createColumns,
   deleteRecursive,
   fetch,
   fixColumns,
