@@ -12,7 +12,7 @@
 import { QueryDatabaseParametersSchema } from '<%= options.org %>/types';
 import { api, param, requestBody } from '@loopback/rest';
 import {
-    getTitleFromEntity
+    getTitleColumnFromEntity
 } from '@mountnotion/utils';
 import {
     Filter,
@@ -35,7 +35,7 @@ import {
 } from '<%= options.locals %>';
 import { mn } from './mn';
 
-const TITLE = getTitleFromEntity(<%= underscore(title).toUpperCase() %>);
+const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 
 @api({
   basePath: '/',

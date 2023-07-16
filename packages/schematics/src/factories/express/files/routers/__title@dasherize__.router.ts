@@ -13,10 +13,10 @@ import { MountNotionQueryParameters } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from '../mn';
 import {
-    getTitleFromEntity
+    getTitleColumnFromEntity
 } from '@mountnotion/utils';
 
-const TITLE = getTitleFromEntity(<%= underscore(title).toUpperCase() %>);
+const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 
 export const <%= camelize(title) %>Router = express.Router();
 
