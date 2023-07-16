@@ -1,6 +1,12 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { Cache, LocalsOptions } from '@mountnotion/types';
-import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { Cache, Entity, LocalsOptions } from '@mountnotion/types';
+import {
+  ensure,
+  getCache,
+  getTitleColumnFromEntity,
+  log,
+  strings,
+} from '@mountnotion/utils';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
@@ -32,14 +38,16 @@ export function locals(options: LocalsOptions): Rule {
     const rules = localsResponse
       .map(({ title, locals }) => {
         titlesRef = cachesRef.map((cache) => cache.title) as string[];
+        const cache = cachesRef.find((cache) => cache.title === title);
+        const TITLE = getTitleColumnFromEntity(cache as Entity);
         const localsRules = locals.map((local) => {
-          const { title: localTitle, ...rest } = local;
+          const { [TITLE]: localTitle } = local;
           const formattedTitle = strings.titlize(localTitle);
           return applyWithOverwrite(url('./files/all-for-entity'), [
             template({
               title: formattedTitle,
               options,
-              local: rest,
+              local,
               entities,
               databaseName: title,
               log,

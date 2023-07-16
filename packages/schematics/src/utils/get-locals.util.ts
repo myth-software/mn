@@ -1,6 +1,11 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
-import { LocalsOptions } from '@mountnotion/types';
-import { flip, log, systemize } from '@mountnotion/utils';
+import { Cache, LocalsOptions } from '@mountnotion/types';
+import {
+  flip,
+  getTitleColumnFromEntity,
+  log,
+  systemize,
+} from '@mountnotion/utils';
 
 type LocalResponse = {
   locals: any[];
@@ -17,6 +22,7 @@ export const getlocals = async (
     database_id: options.pageId,
   });
   const flatDatabase = flattenDatabaseResponse(database, options);
+  const TITLE = getTitleColumnFromEntity(flatDatabase as Cache);
   const useAll = options.all?.includes(flatDatabase.title);
   const query = useAll
     ? notion.databases.query<any>(
@@ -64,7 +70,7 @@ export const getlocals = async (
     );
 
     return {
-      title: systemize(local.name),
+      title: systemize(local[TITLE]),
       id: local.id,
       icon: local.icon,
       cover: local.cover,

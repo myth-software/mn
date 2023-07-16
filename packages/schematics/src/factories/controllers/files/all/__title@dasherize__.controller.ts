@@ -267,22 +267,20 @@ export class <%= classify(title) %>Controller {
     <% if (isPublic || !options.strategies) { %>
       return mn.<%= camelize(title) %>.query(where);
     <% } else if (options.strategies && options.userColumn && options.accessorProperty) { %>
-      const userFilter: OrFilter<<%= classify(title) %>Index> = {
-        or: [
-          {
+      const userFilter: Filter<AppointmentsIndex> =
+        user.role === 'client'
+          ? {
             property: '<%= options.userColumn %>',
             relation: { contains: user[securityId] },
-          },
-          {
-            property: '<%= options.accessorProperty %>',
-            rollup: {
-              any: {
-                relation: { contains: user.<%= options.accessorProperty %> },
+            }
+          : {
+              property: '<%= options.accessorProperty %>',
+              rollup: {
+                any: {
+                  relation: { contains: user.<%= options.accessorProperty %> },
+                },
               },
-            },
-          },
-        ],
-      };
+            };
 
       const filter = where?.filter
         ? ({
@@ -339,7 +337,7 @@ export class <%= classify(title) %>Controller {
   <% if (title !== options.usersDatabase) { %>
     async create(
       @requestBody()
-      body: Partial<<%= classify(title) %>Writeonly>,
+      body: Partial<<%= classify(title) %>>,
       <% if (options.strategies) { %> @inject(SecurityBindings.USER, { optional: true })
         user: UserProfile, 
       <% } %>
@@ -355,6 +353,9 @@ export class <%= classify(title) %>Controller {
         return mn.<%= camelize(title) %>.create({
           [TITLE]: title,
           '<%= options.userColumn %>': [user[securityId]],
+          <% if (options.accessorProperty) { %>
+            '<%= options.accessorProperty %>': [user.<%= options.accessorProperty %>],
+          <% } %>
           ...body,
         });
       <% } else { %> 
