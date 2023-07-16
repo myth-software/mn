@@ -30,7 +30,12 @@ function dependencies() {
 export default {
   name: 'fix-rows',
   description: 'fixes any rows that have lint errors',
-  options: [],
+  options: [
+    {
+      name: '-p, --page-id',
+      description: 'database page id',
+    },
+  ],
   actionFactory: () => async (options) => {
     dependencies();
     assert(options);

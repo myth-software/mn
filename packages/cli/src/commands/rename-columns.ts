@@ -52,8 +52,8 @@ export default {
   name: 'rename-columns',
   description: 'rename all matching columns',
   options: [
-    { name: '-f, --from', description: 'id of page with databases' },
-    { name: '-t, --to', description: 'id of page with databases' },
+    { name: '-f, --from', description: 'original name to rename from' },
+    { name: '-t, --to', description: 'new name to rename to' },
   ],
   actionFactory: (config) => async (args) => {
     assert(args);

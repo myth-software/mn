@@ -86,7 +86,7 @@ export default {
           database_id,
           properties: {
             [name]: {
-              [type]: null,
+              [type]: {},
             },
           },
         } as any);
