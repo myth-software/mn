@@ -55,8 +55,8 @@ function dependencies(config: MountNotionConfig) {
 }
 
 export default {
-  name: 'rename-columns',
-  description: 'rename all matching columns',
+  name: 'create-columns',
+  description: 'create new columns',
   options: [
     { name: '-n, --name', description: 'name of column' },
     { name: '-t, --type', description: 'type of column' },
