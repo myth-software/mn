@@ -1,7 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { DrizzleOptions, Relations } from '@mountnotion/types';
-import { ensure, log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
@@ -14,21 +14,21 @@ import { createRelationRule } from './rules/create-relation.rule';
 import { prettifyRelationsRule } from './rules/prettify-relations.rule';
 import { validateInputs } from './validate-inputs';
 
+createDatabaseCaches;
 dotenv.config();
 export function drizzle(options: DrizzleOptions): Rule {
   log.success({ action: 'running', message: 'drizzle schematic' });
   log.success({ action: '-------', message: '-----------------' });
   validateInputs(options);
   const { outDir } = options;
-  const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
 
   return async (tree) => {
     await rimraf(outDir);
     addPackageToPackageJson(tree, 'drizzle-orm', '0.27.0');
     addDevPackageToPackageJson(tree, 'drizzle-kit', '0.19.3');
-    const caches = await createDatabaseCaches(pageIds, options);
-    const includedCaches = caches.filter(
+    const c = ensure(getCache());
+    const includedCaches = c.filter(
       (cache) => cache.title && !excludes.includes(cache.title)
     );
     const titles = includedCaches.map((cache) => cache.title);
