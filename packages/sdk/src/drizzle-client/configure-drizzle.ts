@@ -51,7 +51,9 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
             return response;
           }
 
-          throw new Error('unexpected unqueryable');
+          const response = await db.select().from(database);
+
+          return response;
         },
         retrieve: async ({ id }: { id: string }) => {
           const [response] = await db
