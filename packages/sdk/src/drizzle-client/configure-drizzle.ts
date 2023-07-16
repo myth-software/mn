@@ -25,20 +25,33 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
       {
         query: async (args: MountNotionQueryParameters<any>) => {
           const where = typeof args === 'string' ? JSON.parse(args) : args;
-          const query = await db.select().from(database);
           const { filter, orderBy } = mapNotionToDrizzleWhere(database, where);
 
+          if (filter && orderBy) {
+            const response = await db
+              .select()
+              .from(database)
+              .where(filter)
+              .orderBy(...orderBy);
+
+            return response;
+          }
           if (filter) {
-            query.where(filter);
+            const response = await db.select().from(database).where(filter);
+
+            return response;
           }
 
           if (orderBy) {
-            query.orderBy(...orderBy);
+            const response = await db
+              .select()
+              .from(database)
+              .orderBy(...orderBy);
+
+            return response;
           }
 
-          const response = await query;
-
-          return response;
+          throw new Error('unexpected unqueryable');
         },
         retrieve: async ({ id }: { id: string }) => {
           const [response] = await db
