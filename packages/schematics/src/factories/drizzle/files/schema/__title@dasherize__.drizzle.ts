@@ -11,9 +11,9 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
     export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
       <% cache.options[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
-  <% } else if(cache.rollupsOptions?.[property]) {  %>
+  <% } else if(cache.rollupsOptions?.[column]) {  %>
     export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
-      <% cache.rollupsOptions[property].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
+      <% cache.rollupsOptions[column].forEach((option, i, arr) => { %>'<%= option %>', <% }) %>
     ]);
   <% } %>  
 <% } %>
@@ -35,12 +35,15 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
       '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
     <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
       '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>'),
-    <% } else if(cache.rollupsOptions?.[property]) {  %>
+    <% } else if(cache.rollupsOptions?.[column] === 'multi_select') {  %>
       '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
-    <% } else if(type === 'rollup') { %>
+    <% } else if(cache.rollups?.[column] === 'select' || cache.rollups?.[column] === 'status') {  %>
+      '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>'),
     <% } else if(cache.rollups?.[column] === 'title') {  %>
       '<%= property %>': text('<%= property %>'),
-    <% } else if(cache.rollups?.[column] === 'rich_tect') {  %>
+    <% } else if(cache.rollups?.[column] === 'rich_text') {  %>
+      '<%= property %>': text('<%= property %>'),
+    <% } else if(cache.rollups?.[column] === 'phone_number') {  %>
       '<%= property %>': text('<%= property %>'),
     <% } else if(cache.rollups?.[column] === 'date') {  %>
       '<%= property %>': timestamp('<%= property %>'),
@@ -48,6 +51,7 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
       '<%= property %>': numeric('<%= property %>'),
     <% } else if(cache.rollups?.[column] === 'relation') {  %>
       '<%= property %>': text('<%= property %>').array(),
+    <% } else if(type === 'rollup') { %>
     <% } else if(type === 'files') { %>
       '<%= property %>': text('<%= property %>').array(),
     <% } else if(type === 'number') { %>
