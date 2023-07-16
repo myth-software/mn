@@ -112,7 +112,7 @@ export default {
         });
       }
 
-      if (!instance[TITLE]) {
+      if (!instance[TITLE] || instance[TITLE] === 'untitled') {
         const title = uniqueNamesGenerator({
           dictionaries: [animals, colors],
           separator: ' ',
