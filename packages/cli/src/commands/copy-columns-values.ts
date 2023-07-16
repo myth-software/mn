@@ -1,4 +1,8 @@
-import { expandProperties, notion } from '@mountnotion/sdk';
+import {
+  expandProperties,
+  flattenDatabaseResponse,
+  notion,
+} from '@mountnotion/sdk';
 import {
   FullGetDatabaseResponse,
   MountnCommand,
@@ -65,9 +69,9 @@ export default {
   name: 'copy-columns-values',
   description: 'copy values from one column to another',
   options: [
-    { name: '-p, --page-id', description: 'database page id' },
-    { name: '-f, --from', description: 'column to copy from' },
-    { name: '-t, --to', description: 'column to copy to' },
+    { name: '-p, --page-id <pageId>', description: 'database page id' },
+    { name: '-f, --from <from>', description: 'column to copy from' },
+    { name: '-t, --to <to>', description: 'column to copy to' },
   ],
   actionFactory: (config) => async (args) => {
     dependencies(config);
@@ -92,7 +96,7 @@ export default {
       const instance = instances.shift();
 
       await notion.pages.update({
-        page_id: instance.page_id,
+        page_id: instance.id,
         properties: expandProperties<any>(
           {
             [from]: null,
@@ -100,16 +104,18 @@ export default {
           },
           {
             columns,
-            mappings: {},
+            mappings: Object.fromEntries(
+              Object.keys(columns).map((key) => [key, key])
+            ),
           }
         ),
       });
-
+      const flat = flattenDatabaseResponse(database);
       log.success({
         action: 'copying',
         page: {
-          emoji: database.icon,
-          title: database.title,
+          emoji: flat.icon,
+          title: flat.title,
         },
         message: `value ${instance[from]} from ${from} to ${to}`,
       });
