@@ -267,7 +267,7 @@ export class <%= classify(title) %>Controller {
     <% if (isPublic || !options.strategies) { %>
       return mn.<%= camelize(title) %>.query(where);
     <% } else if (options.strategies && options.userColumn && options.accessorProperty) { %>
-      const userFilter: Filter<AppointmentsIndex> =
+      const userFilter: Filter<<% classify(title) %>Index> =
         user.role === 'client'
           ? {
             property: '<%= options.userColumn %>',

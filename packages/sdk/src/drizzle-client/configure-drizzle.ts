@@ -84,7 +84,8 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
         ) => {
-          return await db.insert(database).values(body).returning();
+          const response = await db.insert(database).values(body).returning();
+          return response[0];
         },
         delete: async ({ id }: { id: string }) => {
           const [response] = await db
