@@ -22,7 +22,7 @@ export function express(options: ExpressOptions): Rule {
       ({ title }) => title && !excludes.includes(title)
     );
     const titles = includedCaches.map((cache) => cache.title);
-    const expressRules = includedCaches.map((cache) => {
+    const routerRules = includedCaches.map((cache) => {
       return applyWithOverwrite(url('./files/routers'), [
         template({
           title: cache.title,
@@ -34,6 +34,27 @@ export function express(options: ExpressOptions): Rule {
         move(`${outDir}/routers`),
       ]);
     });
+    const controllerRules = includedCaches.map((cache) => {
+      return applyWithOverwrite(url('./files/controllers'), [
+        template({
+          title: cache.title,
+          cache,
+          options,
+          log,
+          ...strings,
+        }),
+        move(`${outDir}/controllers`),
+      ]);
+    });
+    const middlewareRule = applyWithOverwrite(url('./files/middleware'), [
+      template({
+        titles,
+        options,
+        log,
+        ...strings,
+      }),
+      move(`${outDir}/middleware`),
+    ]);
     const expressIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles,
@@ -43,6 +64,11 @@ export function express(options: ExpressOptions): Rule {
       }),
       move(outDir),
     ]);
-    return chain([...expressRules, expressIndexRule]);
+    return chain([
+      ...routerRules,
+      ...controllerRules,
+      middlewareRule,
+      expressIndexRule,
+    ]);
   };
 }
