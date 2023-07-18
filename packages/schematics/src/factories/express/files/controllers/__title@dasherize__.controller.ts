@@ -18,18 +18,35 @@ import {
 
 const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 
-async function query (req: Request, res: Response) {
-  const where = req.query.where as MountNotionQueryParameters<<%= classify(title) %>Index>;
-  try {
-    const items: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query(where);
-    
-    res.status(200).send(items);
-  } catch (e) {
-    res.status(500).send({ status: 500, message: e.message });
-  }
+async function query(req: Request, res: Response) {
+    const where = req.query
+      .where as MountNotionQueryParameters<<%= classify(title) %>Index>;
+    const principal = res.locals.principal;
+    const principalFilter: QueryFilter<<%= classify(title) %>Index> =
+      principal.role === 'client'
+        ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
+        : {
+            property: '<%= options.accessorProperty %>',
+            rollup: { any: { relation: { contains: principal.<%= options.accessorProperty %> } } },
+          };
+    const filter = where?.filter
+      ? ({
+          and: [where.filter, principalFilter],
+        } as QueryFilter<<%= classify(title) %>Index>)
+      : principalFilter;
+
+    try {
+      const items: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query({
+        ...where,
+        filter,
+      });
+      res.status(200).send(items);
+    } catch (e) {
+      res.status(500).send({ status: 500, message: e.message });
+    }
 };
 
-async function getById (req: Request, res: Response) {
+async function getById(req: Request, res: Response) {
   const id = req.params.id;
 
   try {
@@ -46,8 +63,9 @@ async function getById (req: Request, res: Response) {
   }
 }
 
-async function create (req: Request, res: Response) {
+async function create(req: Request, res: Response) {
   try {
+    const { <%= options.userColumn %>, <%= options.accessorProperty %> } = res.locals.principal;
     const item: Partial<<%= classify(title) %>Writeonly> = req.body;
     const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
@@ -57,6 +75,8 @@ async function create (req: Request, res: Response) {
 
     const newItem = await mn.<%= camelize(title) %>.create({
       [TITLE]: title,
+      <%= options.userColumn %>: [<%= options.userColumn %>],
+      <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
       ...item,
     });
 
