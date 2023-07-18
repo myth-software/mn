@@ -5,7 +5,6 @@
 import { Request, Response } from 'express';
 import { 
   <%= classify(title) %>,
-  <%= classify(title) %>Writeonly,
   <%= classify(title) %>Index,
   <%= underscore(title).toUpperCase() %>
 } from '<%= options.entities %>';
@@ -65,8 +64,8 @@ async function getById(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { <%= options.userColumn %>, <%= options.accessorProperty %> } = res.locals.principal;
-    const item: Partial<<%= classify(title) %>Writeonly> = req.body;
+    const { id: <%= options.userColumn %>, <%= options.accessorProperty %> } = res.locals.principal;
+    const item: Partial<<%= classify(title) %>> = req.body;
     const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
       separator: '-',
@@ -75,7 +74,7 @@ async function create(req: Request, res: Response) {
 
     const newItem = await mn.<%= camelize(title) %>.create({
       [TITLE]: title,
-      <%= options.userColumn %>: [<%= options.userColumn %>],
+      <%= options.userColumn %>: [id: <%= options.userColumn %>],
       <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
       ...item,
     });
@@ -90,7 +89,7 @@ async function updateById (req: Request, res: Response) {
   const id = req.params.id;
 
   try {
-    const item: Partial<<%= classify(title) %>Writeonly> = req.body;
+    const item: Partial<<%= classify(title) %>> = req.body;
 
     const updatedItem = mn.<%= camelize(title) %>.update({
       id,

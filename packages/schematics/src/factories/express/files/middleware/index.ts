@@ -9,7 +9,7 @@ export default {
   create,
   deleteById,
   getById,
-  updateById,
   query,
   router,
+  updateById,
 };
