@@ -18,6 +18,6 @@ export const <%= camelize(title) %>Router = express.Router();
 
 <%= camelize(title) %>Router.post('/', middleware.create, <%= classify(title) %>Controller.create);
 
-<%= camelize(title) %>Router.patch('/:id',  middleware.updateById, <%= Classify(title) %>Controller.updateById);
+<%= camelize(title) %>Router.patch('/:id',  middleware.updateById, <%= classify(title) %>Controller.updateById);
 
 <%= camelize(title) %>Router.delete('/:id', middleware.deleteById, <%= classify(title) %>Controller.deleteById);
