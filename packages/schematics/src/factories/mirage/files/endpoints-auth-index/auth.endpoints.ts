@@ -6,7 +6,7 @@ export function authEndpoints(server: Server) {
     return new Response(200, {}, local<%= classify(options.usersDatabase) %>.example);
   });
 
-  server.post(`/a/sms/login-initalization`, () => {
+  server.post(`/a/sms/login-initialization`, () => {
     return new Response(204, {});
   });
 

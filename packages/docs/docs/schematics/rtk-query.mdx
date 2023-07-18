@@ -28,7 +28,7 @@ export const authApi = createApi({
   endpoints: (build) => ({
     postASmsLoginInitialization: build.mutation<void, { phone: string }>({
       query: (body) => ({
-        url: `/sms/login-initalization`,
+        url: `/sms/login-initialization`,
         method: 'POST',
         body,
       }),

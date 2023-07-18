@@ -51,7 +51,7 @@ export const authApi = createApi({
         }
       >({
         query: body => ({
-          url: `/sms/login-initalization`,
+          url: `/sms/login-initialization`,
           method: 'POST',
           body,
         }),
