@@ -9,7 +9,7 @@ import {
   <%= classify(title) %>Index,
   <%= underscore(title).toUpperCase() %>
 } from '<%= options.entities %>';
-import { MountNotionQueryParameters } from '@mountnotion/types';
+import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from '../mn';
 import {

@@ -1,6 +1,15 @@
-export * from './create.middleware';
-export * from './delete-by-id.middleware';
-export * from './get-by-id.middleware';
-export * from './query.middleware';
-export * from './router.middleware';
-export * from './update-by-id.middleware';
+import create from './create.middleware';
+import deleteById from './delete-by-id.middleware';
+import getById from './get-by-id.middleware';
+import query from './query.middleware';
+import router from './router.middleware';
+import updateById from './update-by-id.middleware';
+
+export default {
+  create,
+  deleteById,
+  getById,
+  updateById,
+  query,
+  router,
+};
