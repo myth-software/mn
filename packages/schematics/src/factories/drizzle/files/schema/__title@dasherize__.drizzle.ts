@@ -30,7 +30,7 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
     <% } else if(type === 'last_edited_time' || type === 'created_time') { %>
       '<%= property %>': timestamp('<%= property %>').defaultNow(),
     <% } else if(type === 'checkbox') { %>
-      '<%= property %>': boolean('<%= property %>'),
+      '<%= property %>': boolean('<%= property %>').default(false),
     <% } else if(cache.options?.[column] && type === 'multi_select') {  %>
       '<%= property %>': <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>('<%= property %>').array(),
     <% } else if(cache.options?.[column] && (type === 'select' || type === 'status')) {  %>
