@@ -12,6 +12,8 @@ export const mn =
     ? (client as unknown as typeof notion)
     : notion;
 
+export { client, notion };
+
 <% if (options.debug) { %>
   <%= log.debug({ action: 'debugging', message: 'end mn.ts' }) %>
 <% } %>

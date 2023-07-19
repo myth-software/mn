@@ -25,33 +25,29 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
       {
         query: async (args: MountNotionQueryParameters<any>) => {
           const where = typeof args === 'string' ? JSON.parse(args) : args;
-          const { filter, orderBy } = mapNotionToDrizzleWhere(database, where);
+          const { filter, orderBy, limit, offset } = mapNotionToDrizzleWhere(
+            database,
+            where
+          );
+          const query = db.select().from(database);
 
-          if (filter && orderBy) {
-            const response = await db
-              .select()
-              .from(database)
-              .where(filter)
-              .orderBy(...orderBy);
-
-            return response;
-          }
           if (filter) {
-            const response = await db.select().from(database).where(filter);
-
-            return response;
+            query.where(filter);
           }
 
           if (orderBy) {
-            const response = await db
-              .select()
-              .from(database)
-              .orderBy(...orderBy);
-
-            return response;
+            query.orderBy(...orderBy);
           }
 
-          const response = await db.select().from(database);
+          if (limit) {
+            query.limit(limit);
+          }
+
+          if (offset) {
+            query.offset(offset);
+          }
+
+          const response = await query;
 
           return response;
         },

@@ -4,11 +4,15 @@ import { mapNotionToDrizzleFilter } from './notion-to-drizzle-filter.mapper';
 type DrizzleWhere = {
   filter?: any;
   orderBy?: Array<any>;
+  offset?: number;
+  limit?: number;
 };
 
 type NotionWhere = {
   sorts?: Array<any>;
   filter?: any;
+  start_cursor?: string | number;
+  page_size?: number;
 };
 
 export function mapNotionToDrizzleWhere(
@@ -18,6 +22,17 @@ export function mapNotionToDrizzleWhere(
   const drizzleWhere = {} as DrizzleWhere;
   if (!where) {
     return drizzleWhere;
+  }
+
+  if (where.page_size) {
+    drizzleWhere.limit = where.page_size;
+  }
+
+  if (where.start_cursor) {
+    drizzleWhere.offset =
+      typeof where.start_cursor === 'number'
+        ? where.start_cursor
+        : +where.start_cursor;
   }
 
   if (where.sorts) {
