@@ -91,7 +91,7 @@ async function updateById (req: Request, res: Response) {
   try {
     const item: Partial<<%= classify(title) %>> = req.body;
 
-    const updatedItem = mn.<%= camelize(title) %>.update({
+    const updatedItem = await mn.<%= camelize(title) %>.update({
       id,
       ...item,
     });;

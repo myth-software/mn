@@ -33,16 +33,27 @@ export function express(options: ExpressOptions): Rule {
       ]);
     });
     const controllerRules = includedCaches.map((cache) => {
-      return applyWithOverwrite(url('./files/controllers'), [
-        template({
-          title: cache.title,
-          cache,
-          options,
-          log,
-          ...strings,
-        }),
-        move(`${outDir}/controllers`),
-      ]);
+      return options.eject
+        ? applyWithOverwrite(url('./files/controllers-eject'), [
+            template({
+              title: cache.title,
+              cache,
+              options,
+              log,
+              ...strings,
+            }),
+            move(`${outDir}/controllers`),
+          ])
+        : applyWithOverwrite(url('./files/controllers'), [
+            template({
+              title: cache.title,
+              cache,
+              options,
+              log,
+              ...strings,
+            }),
+            move(`${outDir}/controllers`),
+          ]);
     });
     const middlewareRule = applyWithOverwrite(url('./files/middleware'), [
       template({

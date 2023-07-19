@@ -34,7 +34,9 @@ export declare type ControllersOptions = {
 } & BasicOptions &
   AuthOptions;
 
-export declare type ExpressOptions = ControllersOptions;
+export declare type ExpressOptions = ControllersOptions & {
+  eject: boolean;
+};
 
 export declare type LocalsOptions = BasicOptions & {
   all?: string[];
