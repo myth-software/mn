@@ -28,16 +28,11 @@ async function query(req: Request, res: Response) {
   }
 }
 async function getById(req: Request, res: Response) {
-  const id = req.params.id;
-  try {
-    const item: <%= classify(title) %> = await client.<%= camelize(title) %>.retrieve({ id });
-    if (item) {
-      return res.status(200).send(item);
-    }
-    res.status(404).send({ status: 404, message: '<%= camelize(title) %> not found' });
-  } catch (e) {
-    res.status(500).send({ status: 500, message: e.message });
+  const item = res.locals.item as <%= classify(title) %>;
+  if (item) {
+    return res.status(200).send(item);
   }
+  res.status(404).send({ status: 404, message: '<%= title %> not found' });
 }
 async function create(req: Request, res: Response) {
   try {
