@@ -12,8 +12,8 @@
 import { QueryDatabaseParametersSchema } from '<%= options.org %>/types';
 import { api, param, requestBody } from '@loopback/rest';
 import {
-    configure
-} from '@mountnotion/sdk';
+    getTitleColumnFromEntity
+} from '@mountnotion/utils';
 import {
     Filter,
     OrFilter,
@@ -28,13 +28,14 @@ import {
   <%= classify(title) %>,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>Index,
-  <%= underscore(title).toUpperCase() %>,
-  indicies 
+  <%= underscore(title).toUpperCase() %>
 } from '<%= options.entities %>';
 import { 
   local<%= classify(title) %>,
 } from '<%= options.locals %>';
 import { mn } from './mn';
+
+const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 
 @api({
   basePath: '/',
@@ -266,22 +267,20 @@ export class <%= classify(title) %>Controller {
     <% if (isPublic || !options.strategies) { %>
       return mn.<%= camelize(title) %>.query(where);
     <% } else if (options.strategies && options.userColumn && options.accessorProperty) { %>
-      const userFilter: OrFilter<<%= classify(title) %>Index> = {
-        or: [
-          {
+      const userFilter: Filter<<% classify(title) %>Index> =
+        user.role === 'client'
+          ? {
             property: '<%= options.userColumn %>',
             relation: { contains: user[securityId] },
-          },
-          {
-            property: '<%= options.accessorProperty %>',
-            rollup: {
-              any: {
-                relation: { contains: user.<%= options.accessorProperty %> },
+            }
+          : {
+              property: '<%= options.accessorProperty %>',
+              rollup: {
+                any: {
+                  relation: { contains: user.<%= options.accessorProperty %> },
+                },
               },
-            },
-          },
-        ],
-      };
+            };
 
       const filter = where?.filter
         ? ({
@@ -338,13 +337,13 @@ export class <%= classify(title) %>Controller {
   <% if (title !== options.usersDatabase) { %>
     async create(
       @requestBody()
-      body: Partial<<%= classify(title) %>Writeonly>,
+      body: Partial<<%= classify(title) %>>,
       <% if (options.strategies) { %> @inject(SecurityBindings.USER, { optional: true })
         user: UserProfile, 
       <% } %>
     ): Promise<<%= classify(title) %>> {
 
-      const name = uniqueNamesGenerator({
+      const title = uniqueNamesGenerator({
         dictionaries: [animals, colors],
         separator: '-',
         length: 2,
@@ -352,13 +351,16 @@ export class <%= classify(title) %>Controller {
 
       <% if (options.strategies) { %>
         return mn.<%= camelize(title) %>.create({
-          name,
+          [TITLE]: title,
           '<%= options.userColumn %>': [user[securityId]],
+          <% if (options.accessorProperty) { %>
+            '<%= options.accessorProperty %>': [user.<%= options.accessorProperty %>],
+          <% } %>
           ...body,
         });
       <% } else { %> 
         return mn.<%= camelize(title) %>.create({
-          name,
+          [TITLE]: title,
           ...body,
         });
       <% } %>

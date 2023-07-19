@@ -24,13 +24,13 @@ function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${success(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${success(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  console.log(`${success(paddedAction)} ${message}`);
+  console.log(`(mn) ${success(paddedAction)} ${message}`);
   return;
 }
 
@@ -38,13 +38,13 @@ function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${info(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${info(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  console.log(`${info(paddedAction)} ${message}`);
+  console.log(`(mn) ${info(paddedAction)} ${message}`);
   return;
 }
 
@@ -52,13 +52,13 @@ function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  console.log(`${warn(paddedAction)} ${message}`);
+  console.log(`(mn) ${warn(paddedAction)} ${message}`);
   return;
 }
 
@@ -66,13 +66,13 @@ function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  console.log(`${error(paddedAction)} ${message}`);
+  console.log(`(mn) ${error(paddedAction)} ${message}`);
   return;
 }
 
@@ -80,35 +80,26 @@ function logFatal({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${error(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
   }
-  throw new Error(`${error(paddedAction)} ${message}`);
+  throw new Error(`(mn) ${error(paddedAction)} ${message}`);
 }
 
 function logDebug({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
+      `(mn) ${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
         page.title
       )} ${message}`
     );
     return;
   }
-  console.log(`${debug(paddedAction)} ${message}`);
+  console.log(`(mn) ${debug(paddedAction)} ${message}`);
   return;
-}
-
-export function styleQuestion(input: string) {
-  console.log(success(input));
-  return;
-}
-
-export function styleResponse(input: string) {
-  return success(input);
 }
 
 export const log = {

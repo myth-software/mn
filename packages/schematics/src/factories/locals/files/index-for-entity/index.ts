@@ -1,3 +1,9 @@
+<% if (options.debug) { %>
+  <%= log.debug({ action: 'debugging', message: 'locals index-for-entity' }) %>
+  <%= log.debug({ action: 'debugging', message: `databaseName is ${databaseName}` }) %>
+<% } %>
+
+
 import { <%= classify(databaseName) %> } from '<%= entities %>';
 <% for(const {title} of locals) { %>
   export * from './<%= dasherize(title) %>.<%= dasherize(databaseName) %>'; 

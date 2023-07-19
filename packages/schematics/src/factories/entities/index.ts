@@ -1,7 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { BasicOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
@@ -12,11 +11,10 @@ export function entities(options: BasicOptions): Rule {
   log.success({ action: '-------', message: '------------------' });
   validateInputs(options);
   const { outDir } = options;
-  const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
 
   return async () => {
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );

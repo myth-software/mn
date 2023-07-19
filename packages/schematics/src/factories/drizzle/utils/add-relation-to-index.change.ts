@@ -1,5 +1,5 @@
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
-import { classify } from '@mountnotion/utils';
+import { camelize, classify } from '@mountnotion/utils';
 import * as ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { Change, getSourceNodes, InsertChange } from 'schematics-utilities';
 export function addRelationToIndexChange(
@@ -59,9 +59,9 @@ export function addRelationToIndexChange(
     throw new SchematicsException(`default list node is not defined`);
   }
   const defaultListText = defaultListNode.getText();
-  const firstRelation = `${relation[0]}Relations`;
-  const secondRelation = `${relation[1]}Relations`;
-  const manyToMany = `${relation[0]}To${classify(relation[1])}`;
+  const firstRelation = `${camelize(relation[0])}Relations`;
+  const secondRelation = `${camelize(relation[1])}Relations`;
+  const manyToMany = `${camelize(relation[0])}To${classify(relation[1])}`;
   let defaultToAdd = '';
   if (!defaultListText.endsWith(',')) {
     defaultToAdd = ', ';

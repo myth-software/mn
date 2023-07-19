@@ -1,9 +1,7 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { ExpressOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
-import { rimraf } from 'rimraf';
-import { applyWithOverwrite } from '../../rules';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { applyWithoutOverwrite, applyWithOverwrite } from '../../rules';
 import { addPackageToPackageJson } from '../../utils';
 import { validateInputs } from './validate-inputs';
 
@@ -13,19 +11,17 @@ export function express(options: ExpressOptions): Rule {
   validateInputs(options);
 
   const outDir = options.outDir;
-  const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
   return async (tree) => {
-    await rimraf(outDir);
     addPackageToPackageJson(tree, 'helmet', '7.0.0');
     addPackageToPackageJson(tree, 'cors', '2.8.5');
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );
     const titles = includedCaches.map((cache) => cache.title);
-    const expressRules = includedCaches.map((cache) => {
-      return applyWithOverwrite(url('./files/routers'), [
+    const routerRules = includedCaches.map((cache) => {
+      return applyWithoutOverwrite(url('./files/routers'), [
         template({
           title: cache.title,
           cache,
@@ -36,7 +32,39 @@ export function express(options: ExpressOptions): Rule {
         move(`${outDir}/routers`),
       ]);
     });
-    const expressIndexRule = applyWithOverwrite(url('./files/index'), [
+    const controllerRules = includedCaches.map((cache) => {
+      return options.eject
+        ? applyWithOverwrite(url('./files/controllers-eject'), [
+            template({
+              title: cache.title,
+              cache,
+              options,
+              log,
+              ...strings,
+            }),
+            move(`${outDir}/controllers`),
+          ])
+        : applyWithoutOverwrite(url('./files/controllers'), [
+            template({
+              title: cache.title,
+              cache,
+              options,
+              log,
+              ...strings,
+            }),
+            move(`${outDir}/controllers`),
+          ]);
+    });
+    const middlewareRule = applyWithoutOverwrite(url('./files/middleware'), [
+      template({
+        titles,
+        options,
+        log,
+        ...strings,
+      }),
+      move(`${outDir}/middleware`),
+    ]);
+    const expressIndexRule = applyWithoutOverwrite(url('./files/index'), [
       template({
         titles,
         options,
@@ -45,6 +73,11 @@ export function express(options: ExpressOptions): Rule {
       }),
       move(outDir),
     ]);
-    return chain([...expressRules, expressIndexRule]);
+    return chain([
+      ...routerRules,
+      ...controllerRules,
+      middlewareRule,
+      expressIndexRule,
+    ]);
   };
 }

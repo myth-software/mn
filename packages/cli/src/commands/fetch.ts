@@ -1,12 +1,9 @@
 import { createDatabaseCaches } from '@mountnotion/sdk';
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { workspaceHasPages } from '../dependencies';
 
 function dependencies(config: MountNotionConfig) {
-  const pagesSelected = config.workspace.selectedPages.length > 0;
-
-  if (!pagesSelected) {
-    throw new Error('no pages selected');
-  }
+  workspaceHasPages(config);
 }
 
 export default {

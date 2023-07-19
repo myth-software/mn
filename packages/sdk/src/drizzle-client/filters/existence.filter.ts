@@ -14,5 +14,5 @@ export function existencePropertyFilter({
     return isNotNull(database[property]);
   }
 
-  throw new Error('uncaught existence filter case');
+  return;
 }

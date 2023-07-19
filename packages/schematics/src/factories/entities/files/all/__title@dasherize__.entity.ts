@@ -45,6 +45,28 @@ export const <%= underscore(cache.title).toUpperCase() %> = {
   <% } else { %>
     mappings: null,
   <% }  %>
+  <% if(cache.rollups) { %>
+    rollups: {
+      <% for(const [property, rollup] of Object.entries(cache.rollups)) { %>
+        '<%= property %>': '<%= rollup %>',
+      <% } %>
+    },
+  <% } else { %>
+    rollups: null,
+  <% }  %>
+  <% if(cache.rollupsOptions) { %>
+    rollupsOptions: {
+      <% for(const [property, rollupsOption] of Object.entries(cache.rollupsOptions)) { %>
+        '<%= property %>': [
+          <% rollupsOption.map((option) => { %>
+            '<%= option %>',
+          <% }) %>
+        ],
+      <% } %>
+    },
+  <% } else { %>
+    rollupsOptions: null,
+  <% }  %>
 } as const;
 
 export declare type <%= classify(cache.title) %>Index = typeof <%= underscore(cache.title).toUpperCase() %>;

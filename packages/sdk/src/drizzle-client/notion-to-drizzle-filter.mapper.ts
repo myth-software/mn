@@ -219,7 +219,19 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
     }
   }
 
-  if (filter.rollup) {
+  if (filter.rollup?.any?.relation) {
+    const property = filter.property;
+    const relation = filter.rollup?.any?.relation;
+    const drizzleFilter = relationPropertyFilter({
+      database,
+      filter: relation,
+      property,
+    });
+
+    if (drizzleFilter) {
+      return drizzleFilter;
+    }
+  } else if (filter.rollup) {
     throw new Error('rollup filter is unimplemented');
   }
 

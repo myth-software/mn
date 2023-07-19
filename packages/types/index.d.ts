@@ -7,6 +7,6 @@ export * from './file';
 export * from './fix';
 export * from './helpers';
 export * from './lint-rules';
-export * from './log';
+export * from './schematics';
 export * from './sdk-client';
 export * from './tools-configuration';

@@ -2,9 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { RtkQueryOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
@@ -15,8 +14,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
   const { outDir } = options;
   const excludes = options.excludes ?? [];
   return async () => {
-    const pageIds = [options.pageId].flat();
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );
@@ -41,6 +39,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -49,6 +48,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(`${outDir}/apis`),
@@ -58,6 +58,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(outDir),
@@ -66,6 +67,7 @@ export function rtkQuery(options: RtkQueryOptions): Rule {
           template({
             titles,
             log,
+            options,
             ...strings,
           }),
           move(outDir),

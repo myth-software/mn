@@ -21,6 +21,14 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use((err, req, res, next) => {
+  if (!err) {
+    next();
+  }
+
+  console.error(err.stack);
+  res.status(err.status).json({ message: err.message });
+});
 
 <% for(const title of titles) { %>
   app.use('/<%= dasherize(title) %>', <%= camelize(title) %>Router);

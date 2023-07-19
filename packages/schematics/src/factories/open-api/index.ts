@@ -1,7 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { AuthOptions, BasicOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
 
@@ -12,10 +11,9 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
   validateAuthInputs(options);
 
   const outDir = options.outDir;
-  const pageIds = [options.pageId].flat();
   const excludes = options.excludes ?? [];
   return async () => {
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );

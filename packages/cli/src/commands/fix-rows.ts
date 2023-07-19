@@ -1,11 +1,16 @@
-import { expandProperties, notion } from '@mountnotion/sdk';
 import {
+  expandProperties,
+  flattenDatabaseResponse,
+  notion,
+} from '@mountnotion/sdk';
+import {
+  Entity,
   FullGetDatabaseResponse,
-  LogInput,
   MountnCommand,
 } from '@mountnotion/types';
+import { getTitleColumnFromEntity, log } from '@mountnotion/utils';
+import { prompt } from 'enquirer';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
-import { printPhraseList } from '../utils';
 
 type FixRowsOptions = {
   pageId: string;
@@ -20,106 +25,137 @@ function assert(
   }
 }
 
-function dependencies() {
-  const cache: Array<any> = [];
-  const databasesWithRowsFails = cache.filter(
-    (database) => database.lintFails.rows.length > 0
-  );
-  const canFix = databasesWithRowsFails.length > 1;
-
-  if (!canFix) {
-    throw new Error('no rows to fix');
+async function optionsPrompt(options: FixRowsOptions) {
+  const prompts = [];
+  if (!options.pageId) {
+    prompts.push({
+      type: 'input',
+      message: 'database page id',
+      name: 'pageId',
+    });
   }
+
+  if (prompts.length) {
+    const results = await prompt<FixRowsOptions>(prompts);
+
+    return results;
+  }
+  return options;
+}
+
+function dependencies() {
+  return;
 }
 
 export default {
   name: 'fix-rows',
-  description: 'standardizes any rows that failed grading',
-  options: [],
-  actionFactory: () => async (options) => {
-    assert(options);
+  description: 'fixes any rows that have lint errors',
+  options: [
+    {
+      name: '-p, --page-id <pageId>',
+      description: 'database page id',
+    },
+  ],
+  actionFactory: () => async (args) => {
     dependencies();
+    assert(args);
+    const options = await optionsPrompt(args);
     const database_id = options.pageId;
-    const [entities, properties] = await notion.databases.query<any>(
+    const [instances, columns] = await notion.databases.query<any>(
       {
         database_id,
         page_size: 100,
       },
       { all: true, resultsOnly: true, flattenResponse: true }
     );
-
+    const entity = {
+      columns,
+    } as Entity;
+    const TITLE = getTitleColumnFromEntity(entity);
     const database = (await notion.databases.retrieve({
       database_id,
     })) as FullGetDatabaseResponse;
+    const flat = flattenDatabaseResponse(database);
 
-    while (entities.length) {
-      const entity = entities.shift();
+    while (instances.length) {
+      const instance = instances.shift();
+      const mappings = Object.fromEntries(
+        Object.keys(columns).map((key) => [key, key])
+      );
 
-      if (entity.name && entity.name !== entity.name.toLowerCase()) {
+      if (
+        instance[TITLE] &&
+        instance[TITLE] !== instance[TITLE].toLowerCase()
+      ) {
         await notion.pages.update({
-          page_id: entity.page_id,
+          page_id: instance.id,
           properties: expandProperties<any>(
             {
-              name: entity.name.toLowerCase(),
+              [TITLE]: instance[TITLE].toLowerCase(),
             },
             {
-              columns: properties,
-              mappings: {},
+              columns,
+              mappings,
             }
           ),
         });
-      }
 
-      if (!entity.name) {
-        await notion.pages.update({
-          page_id: entity.page_id,
-          properties: expandProperties<any>(
-            {
-              name: uniqueNamesGenerator({
-                dictionaries: [animals, colors],
-                separator: ' ',
-                length: 2,
-              }),
-            },
-            {
-              columns: properties,
-              mappings: {},
-            }
-          ),
+        log.success({
+          action: 'fixing',
+          page: {
+            emoji: flat.icon,
+            title: flat.title,
+          },
+          message: `id '${instance.id}' title property '${TITLE}' from '${
+            instance[TITLE]
+          }' to ${instance[TITLE].toLowerCase()}`,
         });
       }
 
-      if (!entity.icon) {
+      if (!instance[TITLE] || instance[TITLE] === 'untitled') {
+        const title = uniqueNamesGenerator({
+          dictionaries: [animals, colors],
+          separator: ' ',
+          length: 2,
+        });
         await notion.pages.update({
-          page_id: entity.page_id,
+          page_id: instance.id,
+          properties: expandProperties<any>(
+            {
+              [TITLE]: title,
+            },
+            {
+              columns,
+              mappings,
+            }
+          ),
+        });
+
+        log.success({
+          action: 'fixing',
+          page: {
+            emoji: flat.icon,
+            title: flat.title,
+          },
+          message: `id '${instance.id}' title property '${TITLE}' to ${title}`,
+        });
+      }
+
+      if (!instance.icon) {
+        await notion.pages.update({
+          page_id: instance.id,
           icon: database.icon,
+        });
+
+        log.success({
+          action: 'fixing',
+          page: {
+            emoji: flat.icon,
+            title: flat.title,
+          },
+          message: `id '${instance.id}' icon to ${flat.icon}`,
         });
       }
     }
-
-    console.log('1 databases rows to lint: 📝 logs');
-    const phraseList: LogInput[] = [
-      {
-        action: `update`,
-        page: { emoji: '📝', title: 'logs' },
-        message: `page_id 'bd7beed3-ba4a-499b-8f9d-16a4dd73e24f' title "Ticked" to "ticked"`,
-      },
-      {
-        action: `update`,
-        page: { emoji: '📝', title: 'logs' },
-        message: `page_id '5bf11310-23ae-429b-8f0a-d3d33fbc8b23' title "Untitled" to "zebra white"`,
-      },
-      {
-        action: `update`,
-        page: { emoji: '📝', title: 'logs' },
-        message: `page_id '41f0d2d4-9ddb-44f9-aeac-bf68c17704e0' title "Untitled" to "giraffe orange"`,
-      },
-      {
-        action: `update`,
-        page: { emoji: '📝', title: 'logs' },
-        message: `page_id '41f0d2d4-9ddb-44f9-aeac-bf68c17704e0' icon to 📝`,
-      },
-    ];
-    phraseList.forEach(printPhraseList);
   },
 } satisfies MountnCommand;

@@ -46,7 +46,7 @@ function dependencies() {
 
 export default {
   name: 'fix-columns',
-  description: 'fixes any columns that failed linting',
+  description: 'fixes any columns that have lint errors',
   options: [],
   actionFactory: () => async (options) => {
     assert(options);

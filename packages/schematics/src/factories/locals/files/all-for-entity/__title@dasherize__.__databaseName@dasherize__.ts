@@ -1,3 +1,9 @@
+<% if (options.debug) { %>
+  <%= log.debug({ action: 'debugging', message: 'locals all-for-entity' }) %>
+  <%= log.debug({ action: 'debugging', message: `databaseName is ${databaseName}` }) %>
+  <%= log.debug({ action: 'debugging', message: `title is ${title}` }) %>
+<% } %>
+
 import { <%= classify(databaseName) %> } from '<%= entities %>';
 
 export const <%= camelize(databaseName) %><%= classify(title) %>: <%= classify(databaseName) %> = {

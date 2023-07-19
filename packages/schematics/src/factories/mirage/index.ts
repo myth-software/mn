@@ -1,22 +1,20 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { MirageOptions } from '@mountnotion/types';
-import { log, strings } from '@mountnotion/utils';
+import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 dotenv.config();
 
 export function mirage(options: MirageOptions): Rule {
-  log.success({ action: 'running', message: 'mock api schematic' });
-  log.success({ action: '-------', message: '------------------' });
+  log.success({ action: 'running', message: 'mirage schematic' });
+  log.success({ action: '-------', message: '----------------' });
   validateInputs(options);
 
   const { outDir } = options;
   const excludes = options.excludes ?? [];
   return async () => {
-    const pageIds = [options.pageId].flat();
-    const caches = await createDatabaseCaches(pageIds, options);
+    const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
     );

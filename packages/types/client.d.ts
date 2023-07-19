@@ -15,41 +15,28 @@ import { Entity } from './databases';
 import { Merge } from './helpers';
 
 export declare type TypedMultiSelectColumnFilter<
-  T extends Entity,
-  Property extends string | symbol | number,
-  K extends T['options'] = T['options']
+  TEntity extends Entity,
+  TProperty extends string,
+  TOptions extends TEntity['options'] = TEntity['options']
 > =
   | {
-      contains: K[Property][number];
+      contains: TOptions[TProperty][number];
     }
   | {
-      does_not_contain: K[Property][number];
+      does_not_contain: TOptions[TProperty][number];
     }
   | ExistencePropertyFilter;
 
 export declare type TypedSelectColumnFilter<
-  T extends Entity,
-  Property extends string | symbol | number,
-  K extends T['options'] = T['options']
+  TEntity extends Entity,
+  TProperty extends string,
+  TOptions extends TEntity['options'] = TEntity['options']
 > =
   | {
-      equals: K[Property][number];
+      equals: TOptions[TProperty][number];
     }
   | {
-      does_not_equal: K[Property][number];
-    }
-  | ExistencePropertyFilter;
-
-export declare type TypedSelectColumnFilterTwo<
-  T extends Entity,
-  Property extends string | symbol | number,
-  K extends T['options'] = T['options']
-> =
-  | {
-      equals: K[Property][number];
-    }
-  | {
-      does_not_equal: K[Property][number];
+      does_not_equal: TOptions[TProperty][number];
     }
   | ExistencePropertyFilter;
 
@@ -125,27 +112,27 @@ export declare type MajorAndFilter<T extends Entity> = {
   and: Array<Filter<T> | OrFilter<T> | AndFilter<T>>;
 };
 
-export declare type QueryFilter<T extends Entity> =
-  | Filter<T>
-  | MajorOrFilter<T>
-  | MajorAndFilter<T>;
+export declare type QueryFilter<TEntity extends Entity> =
+  | Filter<TEntity>
+  | MajorOrFilter<TEntity>
+  | MajorAndFilter<TEntity>;
 
 /**
  *
  * [notion docs for filtering](https://developers.notion.com/reference/post-database-query-filter)
  * [notion docs for sorting](https://developers.notion.com/reference/post-database-query-sort)
  * */
-export declare type MountNotionQueryParameters<T extends Entity> = {
-  [Property in keyof QueryDatabaseBodyParameters]: Property extends 'filter'
-    ? QueryFilter<T>
-    : Property extends 'sorts'
-    ? QuerySorts<T>
-    : QueryDatabaseParameters[Property];
+export declare type MountNotionQueryParameters<TEntity extends Entity> = {
+  [Key in keyof QueryDatabaseBodyParameters]: Key extends 'filter'
+    ? QueryFilter<TEntity>
+    : Key extends 'sorts'
+    ? QuerySorts<TEntity>
+    : QueryDatabaseParameters[Key];
 };
 
-export declare type QuerySorts<T extends Entity> = Array<
+export declare type QuerySorts<TEntity extends Entity> = Array<
   | {
-      property: keyof T['mappings'];
+      property: keyof TEntity['mappings'];
       direction: 'ascending' | 'descending';
     }
   | {

@@ -1,4 +1,4 @@
-import { inArray, notInArray } from 'drizzle-orm';
+import { eq, ne } from 'drizzle-orm';
 import { FilterArgs } from '../configure-drizzle.type';
 import { existencePropertyFilter } from './existence.filter';
 
@@ -14,11 +14,11 @@ export function relationPropertyFilter({
   }
 
   if (filter.contains) {
-    return inArray(database[property], filter.contains);
+    return eq(database[property], [filter.contains]);
   }
 
   if (filter.does_not_contain) {
-    return notInArray(database[property], filter.does_not_contain);
+    return ne(database[property], [filter.does_not_contain]);
   }
 
   throw new Error('uncaught relation filter case');

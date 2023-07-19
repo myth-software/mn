@@ -1,9 +1,9 @@
 import { AdditionalProperties, Columns, ReadonlyColumnTypes } from './columns';
 import { DeepReadonly } from './helpers';
 
-export declare type Mappings = Record<string | number | symbol, string>;
-export declare type Relations = Record<string | number | symbol, string>;
-export declare type Options = Record<string | number | symbol, string[]>;
+export declare type Mappings = Record<string, string>;
+export declare type Relations = Record<string, string>;
+export declare type Options = Record<string, string[]>;
 export type Instance = Record<string, any> & AdditionalProperties;
 
 export declare type FlatDatabase = {
@@ -23,7 +23,7 @@ export declare type Cache = FlatDatabase & {
   rollupsOptions: Options | null;
 };
 
-export declare type Entity = DeepReadonly<FlatDatabase>;
+export declare type Entity = DeepReadonly<Cache>;
 
 export declare type InferReadonly<T extends Entity> = {
   [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
@@ -38,7 +38,28 @@ export declare type InferReadonly<T extends Entity> = {
       : ColumnType extends 'last_edited_time'
       ? string | null
       : ColumnType extends 'rollup'
-      ? number | number[] | boolean | boolean[] | string | string[] | null
+      ? T['rollups'][T['mappings'][P]] extends 'relation'
+        ? Array<string> | null
+        : T['rollups'][T['mappings'][P]] extends
+            | 'rich_text'
+            | 'title'
+            | 'phone_number'
+            | 'email'
+        ? string | null
+        : T['rollups'][T['mappings'][P]] extends 'select' | 'status'
+        ? T['rollupsOptions'][T['mappings'][P]][number] | null
+        : T['rollups'][T['mappings'][P]] extends 'multi_select'
+        ? T['rollupsOptions'][T['mappings'][P]] | null
+        : T['rollups'][T['mappings'][P]] extends 'number'
+        ? number | null
+        :
+            | number
+            | Array<number>
+            | boolean
+            | Array<boolean>
+            | string
+            | Array<string>
+            | null
       : ColumnType extends 'formula'
       ? string | null
       : never
