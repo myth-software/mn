@@ -95,7 +95,7 @@ export default {
         console.log(result);
         log.success({
           action: 'generating',
-          message: 'succesful',
+          message: 'successful',
         });
       } catch (e) {
         console.error(e);
@@ -108,7 +108,7 @@ export default {
 
       log.success({
         action: 'migrating',
-        message: 'succesful',
+        message: 'successful',
       });
 
       return;
