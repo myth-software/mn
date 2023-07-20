@@ -3,6 +3,7 @@ import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { workspaceHasPages } from '../dependencies';
+import { getDatabaseIdsInWorkspace } from '../utils';
 
 type RenameColumnsOptions = {
   from: string;
@@ -59,17 +60,10 @@ export default {
     assert(args);
     dependencies(config);
     const options = await optionsPrompt(args);
-    const page_id = config.workspace.selectedPages[0];
+    const pageId = config.workspace.selectedPages[0];
     const fromColumnName = options.from;
     const toColumnName = options.to;
-    const allResponses = await notion.blocks.children.listAll({
-      block_id: page_id,
-      page_size: 100,
-    });
-    const ids = allResponses
-      .flatMap(({ results }) => results as { type: string; id: string }[])
-      .filter((result) => result.type === 'child_database')
-      .map(({ id }) => id);
+    const ids = await getDatabaseIdsInWorkspace(pageId);
 
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];

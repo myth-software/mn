@@ -7,7 +7,7 @@ import {
   SelectDatabasePropertyConfigResponse,
 } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
-import { EMOJI, printPhraseList } from '../utils';
+import { EMOJI, getDatabaseIdsInWorkspace, printPhraseList } from '../utils';
 import { lintColumnsAutomaticCreatedBy } from './lint/automatic-created-by-columns.rule';
 import { lintColumnsAutomaticCreatedTime } from './lint/automatic-created-time-columns.rule';
 import { lintColumnsAutomaticLastEditedBy } from './lint/automatic-last-edited-by-columns.rule';
@@ -51,15 +51,8 @@ export default {
     assert(options);
     dependencies(config);
     const selectedPages = config.workspace.selectedPages;
-    const page_id = options.pageId ?? selectedPages[0];
-    const allResponses = await notion.blocks.children.listAll({
-      block_id: page_id,
-      page_size: 100,
-    });
-    const ids = allResponses
-      .flatMap(({ results }) => results as { type: string; id: string }[])
-      .filter((result) => result.type === 'child_database')
-      .map(({ id }) => id);
+    const pageId = options.pageId ?? selectedPages[0];
+    const ids = await getDatabaseIdsInWorkspace(pageId);
     const outputs: LogInput[] = [];
 
     while (ids.length) {

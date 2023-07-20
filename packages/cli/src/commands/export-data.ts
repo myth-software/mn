@@ -1,13 +1,14 @@
+import { notion } from '@mountnotion/sdk';
 import {
+  Entity,
   MountnCommand,
   MountNotionConfig,
   Schematics,
 } from '@mountnotion/types';
-import { log } from '@mountnotion/utils';
+import { ensure, getTitleColumnFromEntity } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
-import { writeFileSync } from 'fs';
 import { workspaceHasPages } from '../dependencies';
-import { CONFIG_FILE } from '../utils';
+import { exportCSVFile, getDatabaseIdsInWorkspace } from '../utils';
 
 type ConfigureSchematicsOptions = {
   schematics: Array<Schematics>;
@@ -84,33 +85,35 @@ function dependencies(config: MountNotionConfig) {
 }
 
 export default {
-  name: 'configure-schematics',
-  description: 'configures schematics to apply in configuration',
-  options: [
-    {
-      name: '-s, --schematics <schematic>',
-      description: 'schematics to scheme',
-    },
-    {
-      name: '-e, --exclude-all <exclude>',
-      description: 'databases to exclude from all schematics',
-    },
-  ],
-  actionFactory: (config) => async (args) => {
+  name: 'export-data',
+  description: 'export data',
+
+  actionFactory: (config) => async () => {
     dependencies(config);
-    assert(args);
-    const options = await optionsPrompt(args);
-    log.info({
-      action: 'informing',
-      message: 'entities schematic is required, schemed automatially',
-    });
+    const pageId = config.workspace.selectedPages[0];
+    /**
+     * collect all databases
+     */
+    const ids = await getDatabaseIdsInWorkspace(pageId);
+    /**
+     * for all databases, collect all rows
+     */
+    while (ids.length > 0) {
+      const id = ensure(ids.shift());
+      const [instances, columns] = await notion.databases.query<any>(
+        {
+          database_id: id,
+          page_size: 100,
+        },
+        { all: true, resultsOnly: true, flattenResponse: true }
+      );
+      const mappings = Object.fromEntries(
+        Object.keys(columns).map((key) => [key, key])
+      );
+      const TITLE = getTitleColumnFromEntity({ columns } as Entity);
 
-    const updatedConfig: MountNotionConfig = {
-      ...config,
-      schematics: [...config.schematics, ...options.schematics],
-    };
-
-    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+      exportCSVFile(mappings, instances, TITLE);
+    }
 
     return;
   },
