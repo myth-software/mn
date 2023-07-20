@@ -35,5 +35,5 @@ export function exportCSVFile<
   // Convert Object to JSON
   const csv = convertToCSV(headersWithId, items);
   const exportedFilename = fileTitle.replace(' ', '_') + '.csv';
-  writeFileSync(exportedFilename, JSON.stringify(csv));
+  writeFileSync(exportedFilename, csv);
 }

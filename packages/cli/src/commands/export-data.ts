@@ -1,84 +1,8 @@
 import { notion } from '@mountnotion/sdk';
-import {
-  Entity,
-  MountnCommand,
-  MountNotionConfig,
-  Schematics,
-} from '@mountnotion/types';
-import { ensure, getTitleColumnFromEntity } from '@mountnotion/utils';
-import { prompt } from 'enquirer';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { ensure, variablize } from '@mountnotion/utils';
 import { workspaceHasPages } from '../dependencies';
 import { exportCSVFile, getDatabaseIdsInWorkspace } from '../utils';
-
-type ConfigureSchematicsOptions = {
-  schematics: Array<Schematics>;
-  exclude: Array<string>;
-};
-
-function assert(
-  condition: unknown,
-  msg?: string
-): asserts condition is ConfigureSchematicsOptions {
-  if (typeof condition !== 'object') {
-    throw new Error(msg);
-  }
-}
-
-export const optionsPrompt = async (options: ConfigureSchematicsOptions) => {
-  const prompts = [];
-  if (!options.schematics) {
-    prompts.push({
-      type: 'multiselect',
-      message: 'schematics to scheme',
-      name: 'schematics',
-      choices: [
-        {
-          name: 'controllers',
-        },
-        {
-          name: 'interfaces',
-        },
-        {
-          name: 'mirage',
-        },
-        {
-          name: 'react-query',
-        },
-        {
-          name: 'rtk-query',
-        },
-        {
-          name: 'locals',
-        },
-      ],
-    });
-  }
-
-  if (!options.exclude) {
-    prompts.push({
-      type: 'multiselect',
-      message: 'databases to exclude from all schematics',
-      name: 'exclude',
-      choices: [
-        {
-          name: '🔵 overlays',
-          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        },
-        {
-          name: '🔢 sets',
-          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        },
-      ],
-    });
-  }
-
-  if (prompts.length) {
-    const results = await prompt<ConfigureSchematicsOptions>(prompts);
-
-    return results;
-  }
-  return options;
-};
 
 function dependencies(config: MountNotionConfig) {
   workspaceHasPages(config);
@@ -108,11 +32,10 @@ export default {
         { all: true, resultsOnly: true, flattenResponse: true }
       );
       const mappings = Object.fromEntries(
-        Object.keys(columns).map((key) => [key, key])
+        Object.keys(columns).map((key) => [[variablize(key)], key])
       );
-      const TITLE = getTitleColumnFromEntity({ columns } as Entity);
 
-      exportCSVFile(mappings, instances, TITLE);
+      exportCSVFile(mappings, instances, id);
     }
 
     return;
