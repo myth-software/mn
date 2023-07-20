@@ -4,6 +4,7 @@ import type {
   ReadonlyColumnTypes,
 } from '@mountnotion/types';
 import { InferModel } from 'drizzle-orm';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export declare type FilterArgs = {
   database: any;
@@ -12,7 +13,7 @@ export declare type FilterArgs = {
 };
 
 export declare type MountNotionClientDrizzleConfig = {
-  connectionString: string;
+  db: PostgresJsDatabase;
   indicies: {
     [key: string]: any;
   };

@@ -4,8 +4,6 @@ import {
   ReadonlyColumnTypes,
 } from '@mountnotion/types';
 import { eq, InferModel } from 'drizzle-orm';
-import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import * as postgres from 'postgres';
 import {
   MountNotionClientDrizzleConfig,
   MountNotionDrizzleClient,
@@ -15,8 +13,7 @@ import { mapNotionToDrizzleWhere } from './notion-to-drizzle-where.mapper';
 export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
   config: Config
 ): MountNotionDrizzleClient<Config> {
-  const client = postgres(config.connectionString, { ssl: true });
-  const db: PostgresJsDatabase = drizzle(client);
+  const db = config.db;
 
   const databases = Object.entries(config.indicies).map(([title, database]) => {
     type Database = typeof database;
