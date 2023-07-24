@@ -5,7 +5,10 @@ import {
 import { Request, Response } from 'express';
 import { client } from '../mn';
 async function query(req: Request, res: Response) {
-  const where = req.query.where as any;
+  const where =
+    typeof req.query?.where === 'string'
+      ? JSON.parse(req.query?.where)
+      : (req.query?.where as any);
   const principal = res.locals.principal;
   const principalFilter =
     principal.role === 'client'
