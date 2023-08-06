@@ -83,7 +83,8 @@ async function create(req: Request, res: Response) {
 
     const newItem = await mn.<%= camelize(title) %>.create({
       [TITLE]: title,
-      <%= options.userColumn %>: [id: <%= options.userColumn %>],
+      id: <%= options.userColumn %>,
+      <%= options.userColumn %>: [<%= options.userColumn %>],
       <% if (options.accessorProperty) { %>
         <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
       <% } %> 
