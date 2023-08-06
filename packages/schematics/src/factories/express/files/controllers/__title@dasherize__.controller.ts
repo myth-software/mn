@@ -29,7 +29,7 @@ async function query(req: Request, res: Response) {
               property: '<%= options.accessorProperty %>',
               rollup: { any: { relation: { contains: principal.<%= options.accessorProperty %> } } },
             };
-    <% } else {
+    <% } else { %>
       const principalFilter: QueryFilter<<%= classify(title) %>Index> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
     <% } %>
     const filter = where?.filter
@@ -68,14 +68,12 @@ async function getById(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    <% if (options.accessorProperty) { %>
     const { 
       id: <%= options.userColumn %>,
       <% if (options.accessorProperty) { %>
         <%= options.accessorProperty %>
       <% } $> 
     } = res.locals.principal;
-    <% } %>
     const item: Partial<<%= classify(title) %>> = req.body;
     const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
