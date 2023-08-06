@@ -64,7 +64,7 @@ export function locals(options: LocalsOptions): Rule {
               options,
               locals: locals.map((local) => ({
                 ...local,
-                title: strings.titlize(local.title),
+                title: strings.titlize(local[TITLE]),
               })),
               titles: titlesRef,
               entities,
