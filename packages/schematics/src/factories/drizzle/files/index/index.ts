@@ -22,7 +22,7 @@ export const schema = {
   <% } %>
 };
 
-export const db: PostgresJsDatabase = drizzle(postgres(process.env['CONNECTION_STRING']!), { ssl: true });
+export const db: PostgresJsDatabase = drizzle(postgres(process.env['CONNECTION_STRING']!, { ssl: true }));
 export const client = configureDrizzle({
   db,
   indicies: schema,
