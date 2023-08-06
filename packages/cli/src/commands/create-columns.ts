@@ -7,7 +7,7 @@ import {
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { workspaceHasPages } from '../dependencies';
-import { COLUMN_TYPES } from '../utils';
+import { COLUMN_TYPES, getDatabaseIdsInWorkspace } from '../utils';
 
 type CreateColumnsOptions = {
   name: string;
@@ -65,17 +65,10 @@ export default {
     assert(args);
     dependencies(config);
     const options = await optionsPrompt(args);
-    const page_id = config.workspace.selectedPages[0];
+    const pageId = config.workspace.selectedPages[0];
     const name = options.name;
     const type = options.type;
-    const allResponses = await notion.blocks.children.listAll({
-      block_id: page_id,
-      page_size: 100,
-    });
-    const ids = allResponses
-      .flatMap(({ results }) => results as { type: string; id: string }[])
-      .filter((result) => result.type === 'child_database')
-      .map(({ id }) => id);
+    const ids = await getDatabaseIdsInWorkspace(pageId);
 
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];

@@ -6,7 +6,7 @@ import {
   SelectDatabasePropertyConfigResponse,
 } from '@mountnotion/types';
 import { ensure, getLintColumns, log } from '@mountnotion/utils';
-import { printPhraseList } from '../utils';
+import { getDatabaseIdsInWorkspace, printPhraseList } from '../utils';
 import {
   fixColumnsAutomaticCreatedBy,
   fixColumnsAutomaticCreatedTime,
@@ -108,15 +108,8 @@ export default {
       }
     }
 
-    const page_id = options.pageId;
-    const allResponses = await notion.blocks.children.listAll({
-      block_id: page_id,
-      page_size: 100,
-    });
-    const ids = allResponses
-      .flatMap(({ results }) => results as { type: string; id: string }[])
-      .filter((result) => result.type === 'child_database')
-      .map(({ id }) => id);
+    const pageId = options.pageId;
+    const ids = await getDatabaseIdsInWorkspace(pageId);
 
     const missingEmojis: { database: string; relations: string[] }[] = [];
     const mismatchedSelects: { database: string; name: string }[] = [];

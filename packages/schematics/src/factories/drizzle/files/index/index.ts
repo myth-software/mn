@@ -1,3 +1,6 @@
+import postgres from 'postgres';
+import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+
 import { configureDrizzle } from '@mountnotion/sdk';
 <% for(const title of titles) { %>
   export * from  './schema/<%= dasherize(title) %>.drizzle';
@@ -10,7 +13,7 @@ import { configureDrizzle } from '@mountnotion/sdk';
   import * as relations from  './schema/relations';
 <% } %>
 
-export const indicies = {
+export const schema = {
   <% for(const title of titles) { %>
     <%= camelize(title) %>,
   <% } %>
@@ -19,7 +22,8 @@ export const indicies = {
   <% } %>
 };
 
+export const db: PostgresJsDatabase = drizzle(postgres(process.env['CONNECTION_STRING']!), { ssl: true });
 export const client = configureDrizzle({
-  connectionString: process.env['CONNECTION_STRING']!,
-  indicies,
+  db,
+  indicies: schema,
 });

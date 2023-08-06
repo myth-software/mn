@@ -6,6 +6,7 @@ import {
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { writeFileSync } from 'fs';
+import { workspaceHasPages } from '../dependencies';
 import { CONFIG_FILE } from '../utils';
 
 type ConfigureSchematicsOptions = {
@@ -79,11 +80,7 @@ export const optionsPrompt = async (options: ConfigureSchematicsOptions) => {
 };
 
 function dependencies(config: MountNotionConfig) {
-  const hasPages = config.workspace.selectedPages.length > 0;
-
-  if (!hasPages) {
-    throw new Error('no pages selected');
-  }
+  workspaceHasPages(config);
 }
 
 export default {

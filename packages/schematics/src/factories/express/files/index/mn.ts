@@ -3,7 +3,7 @@
 <% } %>
 
 import { configure } from '@mountnotion/sdk';
-import { client } from '<%= options.drizzle %>';
+import { db, client } from '<%= options.drizzle %>';
 import { indicies } from '<%= options.entities %>';
 
 const notion = configure({ indicies });
@@ -12,7 +12,7 @@ export const mn =
     ? (client as unknown as typeof notion)
     : notion;
 
-export { client, notion };
+export { db, client, notion };
 
 <% if (options.debug) { %>
   <%= log.debug({ action: 'debugging', message: 'end mn.ts' }) %>

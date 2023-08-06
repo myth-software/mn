@@ -10,6 +10,7 @@ import configureWorkspace from './configure-workspace';
 import copyColumnsValues from './copy-columns-values';
 import createColumns from './create-columns';
 import deleteRecursive from './delete-recursive';
+import exportData from './export-data';
 import fetch from './fetch';
 import fixColumns from './fix-columns';
 import fixRows from './fix-rows';
@@ -34,6 +35,7 @@ export const commands: Array<MountnCommand> = [
   copyColumnsValues,
   createColumns,
   deleteRecursive,
+  exportData,
   fetch,
   fixColumns,
   fixRows,
