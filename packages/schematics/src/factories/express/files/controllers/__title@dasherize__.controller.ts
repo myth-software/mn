@@ -21,13 +21,17 @@ async function query(req: Request, res: Response) {
     const where = req.query
       .where as MountNotionQueryParameters<<%= classify(title) %>Index>;
     const principal = res.locals.principal;
-    const principalFilter: QueryFilter<<%= classify(title) %>Index> =
-      principal.role === 'client'
-        ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
-        : {
-            property: '<%= options.accessorProperty %>',
-            rollup: { any: { relation: { contains: principal.<%= options.accessorProperty %> } } },
-          };
+    <% if (options.accessorProperty) { %>
+      const principalFilter: QueryFilter<<%= classify(title) %>Index> =
+        principal.role === 'client'
+          ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
+          : {
+              property: '<%= options.accessorProperty %>',
+              rollup: { any: { relation: { contains: principal.<%= options.accessorProperty %> } } },
+            };
+    <% } else {
+      const principalFilter: QueryFilter<<%= classify(title) %>Index> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
+    <% } %>
     const filter = where?.filter
       ? ({
           and: [where.filter, principalFilter],
@@ -64,7 +68,14 @@ async function getById(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { id: <%= options.userColumn %>, <%= options.accessorProperty %> } = res.locals.principal;
+    <% if (options.accessorProperty) { %>
+    const { 
+      id: <%= options.userColumn %>,
+      <% if (options.accessorProperty) { %>
+        <%= options.accessorProperty %>
+      <% } $> 
+    } = res.locals.principal;
+    <% } %>
     const item: Partial<<%= classify(title) %>> = req.body;
     const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
@@ -75,7 +86,9 @@ async function create(req: Request, res: Response) {
     const newItem = await mn.<%= camelize(title) %>.create({
       [TITLE]: title,
       <%= options.userColumn %>: [id: <%= options.userColumn %>],
-      <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
+      <% if (options.accessorProperty) { %>
+        <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
+      <% } $> 
       ...item,
     });
 
