@@ -1,7 +1,6 @@
 import { ReadonlyColumnTypes } from '@mountnotion/types';
 import { InferModel } from 'drizzle-orm';
 import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
   <% if(cache.options?.[column] && type === 'multi_select') {  %>
     export const <%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %> = pgEnum('<%= camelize(title).toLowerCase() %><%= camelize(property).toLowerCase() %>', [
@@ -62,8 +61,6 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
   <% } %>
 });
 
-export const insert<%= classify(title) %>Schema = createInsertSchema(<%= camelize(title) %>);
-export const select<%= classify(title) %>Schema = createSelectSchema(<%= camelize(title) %>);
 <% if(cache.description) { %>
 /** <%= cache.description %> */
 <% } %>
