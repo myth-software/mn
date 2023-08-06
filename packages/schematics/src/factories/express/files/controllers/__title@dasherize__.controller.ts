@@ -72,7 +72,7 @@ async function create(req: Request, res: Response) {
       id: <%= options.userColumn %>,
       <% if (options.accessorProperty) { %>
         <%= options.accessorProperty %>
-      <% } $> 
+      <% } %> 
     } = res.locals.principal;
     const item: Partial<<%= classify(title) %>> = req.body;
     const title = uniqueNamesGenerator({
@@ -86,7 +86,7 @@ async function create(req: Request, res: Response) {
       <%= options.userColumn %>: [id: <%= options.userColumn %>],
       <% if (options.accessorProperty) { %>
         <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
-      <% } $> 
+      <% } %> 
       ...item,
     });
 
