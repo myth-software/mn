@@ -1,6 +1,7 @@
 import { MountnCommand } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import ensureGitignore from '../utils/ensure-gitignore';
 import authIntegrationKey from './auth-integration-key';
 import authOauth from './auth-oauth';
 import campInteractive from './camp-interactive';
@@ -45,6 +46,8 @@ export default {
   name: 'setup',
   description: 'interactive setup for mount notion',
   actionFactory: (config) => async () => {
+    ensureGitignore();
+
     const { flow } = await authPrompt();
 
     if (flow === 'integration key') {

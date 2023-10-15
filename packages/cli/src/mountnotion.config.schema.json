@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mount Notion Config",
+  "type": "object",
+  "properties": {
+    "workspace": {
+      "type": "object",
+      "properties": {
+        "selectedPages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "basic": {
+          "type": "object",
+          "properties": {
+            "pageId": {
+              "type": "string"
+            },
+            "baseUrl": {
+              "type": "string"
+            },
+            "entities": {
+              "type": "string"
+            },
+            "javascriptizeColumns": {
+              "type": "boolean"
+            },
+            "outDir": {
+              "type": "string"
+            }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "properties": {
+            "strategies": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "usersDatabase": {
+              "type": "string"
+            },
+            "userColumn": {
+              "type": "string"
+            },
+            "accessorProperty": {
+              "type": "string"
+            },
+            "public": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "schematics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "disable": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "basic": {
+                "type": "object",
+                "properties": {
+                  "pageId": {
+                    "type": "string"
+                  },
+                  "outDir": {
+                    "type": "string"
+                  },
+                  "locals": {
+                    "type": "string"
+                  },
+                  "all": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "eject": {
+                    "type": "boolean"
+                  },
+                  "excludes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "drizzle": {
+                    "type": "string"
+                  }
+                }
+              },
+              "auth": {
+                "type": "object",
+                "properties": {
+                  "userColumn": {
+                    "type": "string"
+                  },
+                  "accessorProperty": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

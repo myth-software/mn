@@ -4,6 +4,7 @@
  * imports
  */
 import { MountNotionConfig } from '@mountnotion/types';
+import { log } from '@mountnotion/utils';
 import { Command } from 'commander';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -13,7 +14,13 @@ import { CONFIG_FILE } from './utils';
 
 export async function cli(): Promise<0> {
   process.chdir(path.dirname(CONFIG_FILE));
-  const unparsedConfig = await fs.readFile(CONFIG_FILE, { encoding: 'utf8' });
+  let unparsedConfig = '';
+  try {
+    unparsedConfig = await fs.readFile(CONFIG_FILE, { encoding: 'utf8' });
+  } catch (error) {
+    log.fatal({ action: 'failing', message: `missing ${CONFIG_FILE}` });
+  }
+
   const config = JSON.parse(unparsedConfig) as MountNotionConfig;
   /**
    * third thing in "" should be surrounded by <> for a required argument to

@@ -97,6 +97,12 @@ export const createDatabaseCaches = async (
   });
   const nestedPages = await Promise.all(pagePromises);
   const pages = nestedPages.map(([nestedPage]) => nestedPage).flat();
+  if (pages.length < allUsableDatabases.length) {
+    log.fatal({
+      action: 'failing',
+      message: `found ${allUsableDatabases.length} databases and ${pages.length}. these amounts should match. do all of your databases have pages?`,
+    });
+  }
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
     createRollups(database.properties, pages[i].id)
   );

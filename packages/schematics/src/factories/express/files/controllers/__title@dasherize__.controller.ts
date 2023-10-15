@@ -20,8 +20,8 @@ const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 async function query(req: Request, res: Response) {
     const where = req.query
       .where as MountNotionQueryParameters<<%= classify(title) %>Index>;
-    const principal = res.locals.principal;
-    <% if (options.accessorProperty) { %>
+    <% if (options.accessorProperty && options.userColumn) { %>
+      const principal = res.locals.principal;
       const principalFilter: QueryFilter<<%= classify(title) %>Index> =
         principal.role === 'client'
           ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
@@ -29,14 +29,19 @@ async function query(req: Request, res: Response) {
               property: '<%= options.accessorProperty %>',
               rollup: { any: { relation: { contains: principal.<%= options.accessorProperty %> } } },
             };
-    <% } else { %>
+    <% } else if (options.userColumn) { %>
+      const principal = res.locals.principal;
       const principalFilter: QueryFilter<<%= classify(title) %>Index> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
     <% } %>
-    const filter = where?.filter
-      ? ({
-          and: [where.filter, principalFilter],
-        } as QueryFilter<<%= classify(title) %>Index>)
-      : principalFilter;
+    <% if (options.userColumn) { %>
+      const filter = where?.filter
+        ? ({
+            and: [where.filter, principalFilter],
+          } as QueryFilter<<%= classify(title) %>Index>)
+        : principalFilter;
+    <% } else { %>
+      const filter = where?.filter as QueryFilter<<%= classify(title) %>Index>;
+    <% } %>
 
     try {
       const items: <%= classify(title) %>[] = await mn.<%= camelize(title) %>.query({
@@ -68,12 +73,14 @@ async function getById(req: Request, res: Response) {
 
 async function create(req: Request, res: Response) {
   try {
-    const { 
-      id: <%= options.userColumn %>,
-      <% if (options.accessorProperty) { %>
-        <%= options.accessorProperty %>
-      <% } %> 
-    } = res.locals.principal;
+    <% if (options.userColumn) { %>
+      const { 
+        id: <%= options.userColumn %>,
+        <% if (options.accessorProperty) { %>
+          <%= options.accessorProperty %>
+        <% } %> 
+      } = res.locals.principal;
+    <% } %>
     const item: Partial<<%= classify(title) %>> = req.body;
     const title = uniqueNamesGenerator({
       dictionaries: [animals, colors],
@@ -83,8 +90,10 @@ async function create(req: Request, res: Response) {
 
     const newItem = await mn.<%= camelize(title) %>.create({
       [TITLE]: title,
-      id: <%= options.userColumn %>,
-      <%= options.userColumn %>: [<%= options.userColumn %>],
+      <% if (options.userColumn) { %>
+        id: <%= options.userColumn %>,
+        <%= options.userColumn %>: [<%= options.userColumn %>],
+      <% } %>
       <% if (options.accessorProperty) { %>
         <%= options.accessorProperty %>: [<%= options.accessorProperty %>],
       <% } %> 
