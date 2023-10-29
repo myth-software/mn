@@ -23,6 +23,11 @@ export declare type Cache = FlatDatabase & {
   rollupsOptions: Options | null;
 };
 
+export declare type NewFlatDatabase = Pick<
+  FlatDatabase,
+  'columns' | 'options' | 'title'
+>;
+
 export declare type Entity = DeepReadonly<Cache>;
 
 export declare type InferReadonly<T extends Entity> = {
@@ -105,3 +110,16 @@ export declare type InferWriteonly<T extends Entity> = {
 export type FullGetDatabaseResponse = GetDatabaseResponse & {
   icon: UpdatePageParameters['icon'];
 };
+
+type NotionProperties = Record<
+  string,
+  Record<
+    string,
+    {
+      options?: {
+        name: string;
+        color?: string;
+      }[];
+    }
+  >
+>;
