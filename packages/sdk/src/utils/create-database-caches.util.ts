@@ -100,7 +100,7 @@ export const createDatabaseCaches = async (
   if (pages.length < allUsableDatabases.length) {
     log.fatal({
       action: 'failing',
-      message: `found ${allUsableDatabases.length} databases and ${pages.length}. these amounts should match. do all of your databases have pages?`,
+      message: `found ${allUsableDatabases.length} databases and ${pages.length} pages. these amounts should match. do all of your databases have pages?`,
     });
   }
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
@@ -113,7 +113,7 @@ export const createDatabaseCaches = async (
   });
   const allRollups = await Promise.all(allRollupsPromises);
 
-  const caches: Array<Cache> = allUsableDatabases
+  const caches: Cache[] = allUsableDatabases
     .map((database) => {
       return flattenDatabaseResponse(database, options);
     })

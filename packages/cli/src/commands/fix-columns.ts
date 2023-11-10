@@ -111,10 +111,6 @@ export default {
     const pageId = options.pageId;
     const ids = await getDatabaseIdsInWorkspace(pageId);
 
-    const missingEmojis: { database: string; relations: string[] }[] = [];
-    const mismatchedSelects: { database: string; name: string }[] = [];
-    const mismatchedMultiselects: { database: string; name: string }[] = [];
-    const missingAllLower: { database: string; allLower: string[] }[] = [];
     while (ids.length) {
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
@@ -222,9 +218,13 @@ export default {
         //   (pages as any[]).shift();
         // }
 
-        mismatchedSelects.push({
-          database: database.title[0].plain_text,
-          name,
+        logs.push({
+          action: 'informing',
+          message: 'mismatched select: ' + name,
+          page: {
+            title: database.title[0].plain_text,
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+          },
         });
 
         selects.shift();
@@ -272,50 +272,31 @@ export default {
             },
           },
         });
-        mismatchedMultiselects.push({
-          database: database.title[0].plain_text,
-          name,
+
+        logs.push({
+          action: 'informing',
+          message: 'mismatched multi select: ' + name,
+          page: {
+            title: database.title[0].plain_text,
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+          },
         });
 
         multiselects.shift();
       }
 
       if (allLower.length) {
-        missingAllLower.push({
-          database: database.title[0].plain_text,
-          allLower,
+        logs.push({
+          action: 'informing',
+          message: 'missing all lower: ' + allLower,
+          page: {
+            title: database.title[0].plain_text,
+            emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+          },
         });
       }
     }
-    console.log(missingEmojis);
-    console.log(mismatchedSelects);
-    console.log(mismatchedMultiselects);
-    console.log(missingAllLower);
 
-    console.log('2 databases columns to fix: 🔢 sets, 📝 logs');
-    const phraseList: LogInput[] = [
-      ...logs,
-      {
-        action: 'update',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'title "Title" to "name"',
-      },
-      {
-        action: 'update',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'select "method" colors to brown',
-      },
-      {
-        action: 'update',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'multi_select "Tags" colors to green',
-      },
-      {
-        action: 'update',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'multi_select "Tags" to "tags"',
-      },
-    ];
-    phraseList.forEach(printPhraseList);
+    logs.forEach(printPhraseList);
   },
 } satisfies MountnCommand;

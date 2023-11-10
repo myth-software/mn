@@ -43,7 +43,9 @@ export function mapNotionToDrizzleWhere(
       return desc(sort.property ?? sort.timestamp);
     });
   }
-
+  if (!where.filter) {
+    return drizzleWhere;
+  }
   if (!where.filter.or && !where.filter.and) {
     drizzleWhere.filter = mapNotionToDrizzleFilter(where.filter, database);
   }

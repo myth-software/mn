@@ -1,6 +1,7 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Mount Notion Config",
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://docs.mountnotion.com/configuration",
+  "title": "json schema for mount notion configiguration",
   "type": "object",
   "properties": {
     "workspace": {

@@ -67,9 +67,14 @@ export default {
 
     if (command === 'check') {
       try {
-        execSync(
+        const result = execSync(
           `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
+        console.info(result);
+        log.success({
+          action: 'checking',
+          message: 'successful',
+        });
       } catch (e) {
         console.error(e);
       }
@@ -78,9 +83,14 @@ export default {
 
     if (command === 'drop') {
       try {
-        execSync(
+        const result = execSync(
           `npx drizzle-kit drop --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
+        console.info(result);
+        log.success({
+          action: 'dropping',
+          message: 'successful',
+        });
       } catch (e) {
         console.error(e);
       }
@@ -92,7 +102,7 @@ export default {
         const result = execSync(
           `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
         ).toString('utf-8');
-        console.log(result);
+        console.info(result);
         log.success({
           action: 'generating',
           message: 'successful',
@@ -104,8 +114,10 @@ export default {
     }
 
     if (command === 'migrate') {
-      execSync(`npx ts-node ${outDir}/migrate.ts ${outDir}`).toString('utf-8');
-
+      const result = execSync(
+        `npx ts-node ${outDir}/migrate.ts ${outDir}`
+      ).toString('utf-8');
+      console.info(result);
       log.success({
         action: 'migrating',
         message: 'successful',
@@ -116,9 +128,15 @@ export default {
 
     if (command === 'up') {
       try {
-        execSync(
+        const result = execSync(
           `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts`
         ).toString('utf-8');
+        console.info(result);
+
+        log.success({
+          action: 'upping',
+          message: 'successful',
+        });
       } catch (e) {
         console.error(e);
       }
