@@ -6,7 +6,7 @@ import {
   MultiSelectDatabasePropertyConfigResponse,
   SelectDatabasePropertyConfigResponse,
 } from '@mountnotion/types';
-import { ensure } from '@mountnotion/utils';
+import { ensure, log } from '@mountnotion/utils';
 import { EMOJI, getDatabaseIdsInWorkspace, printPhraseList } from '../utils';
 import { lintColumnsAutomaticCreatedBy } from './lint/automatic-created-by-columns.rule';
 import { lintColumnsAutomaticCreatedTime } from './lint/automatic-created-time-columns.rule';
@@ -53,11 +53,20 @@ export default {
     const selectedPages = config.workspace.selectedPages;
     const pageId = options.pageId ?? selectedPages[0];
     const ids = await getDatabaseIdsInWorkspace(pageId);
-    const outputs: LogInput[] = [];
 
     while (ids.length) {
+      const outputs: LogInput[] = [];
       const database_id = ids.splice(0, 1)[0];
       const database = await notion.databases.retrieve({ database_id });
+
+      log.info({
+        action: 'informing',
+        page: {
+          emoji: database.icon?.type === 'emoji' ? database.icon.emoji : '',
+          title: database.title[0].plain_text,
+        },
+        message: `linting`,
+      });
       outputs.push(lintColumnsAutomaticCreatedBy(database));
       outputs.push(lintColumnsAutomaticCreatedTime(database));
       outputs.push(lintColumnsAutomaticLastEditedBy(database));
@@ -170,90 +179,7 @@ export default {
           message: `missingAllLower ${allLower.join(', ')}`,
         });
       }
+      outputs.forEach(printPhraseList);
     }
-
-    console.log('3 databases columns to lint: 🔢 sets, 🔵 overlays, 📝 logs');
-    const phraseList: LogInput[] = [
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has consistent titles as "name"',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has consistent select colors using first color',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has consistent multi_select colors using first color',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has lowercase column names',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔢', title: 'sets' },
-        message: 'has relations with leading emoji',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has consistent titles as "name"',
-      },
-
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has consistent select colors using first color',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has consistent multi_select colors using first color',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has lowercase column names',
-      },
-      {
-        action: 'pass',
-        page: { emoji: '🔵', title: 'overlays' },
-        message: 'has relations with leading emoji',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'title "Title" has consistent titles as "name"',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message:
-          'select "method" has consistent select colors using first color',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message:
-          'multi_select "Tags" has consistent multi_select colors using first color',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'multi_select "Tags" has lowercase column names',
-      },
-      {
-        action: 'fail',
-        page: { emoji: '📝', title: 'logs' },
-        message: 'relation "user" has relations with leading emoji',
-      },
-      ...outputs,
-    ];
-    phraseList.forEach(printPhraseList);
   },
 } satisfies MountnCommand;

@@ -7,18 +7,18 @@ import {
   Source,
   Tree,
 } from '@angular-devkit/schematics';
-import { prettify } from '../utils';
+import { prettify } from '@mountnotion/utils';
 
 export function applyWithOverwrite(source: Source, rules: Rule[]): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const rule = mergeWith(
       apply(source, [
         ...rules,
-        forEach(fileEntry => {
+        forEach((fileEntry) => {
           const prettifiedEntry = {
             path: fileEntry.path,
             content: Buffer.from(
-              prettify(null, fileEntry.content.toString('utf-8')),
+              prettify(null, fileEntry.content.toString('utf-8'))
             ),
           };
 
@@ -29,7 +29,7 @@ export function applyWithOverwrite(source: Source, rules: Rule[]): Rule {
 
           return prettifiedEntry;
         }),
-      ]),
+      ])
     );
 
     return rule(tree, context);

@@ -1,7 +1,11 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { ensure, getCache, log } from '@mountnotion/utils';
+import {
+  ensure,
+  getCache,
+  log,
+  writeFileWithPrettyJson,
+} from '@mountnotion/utils';
 import { prompt } from 'enquirer';
-import { writeFileSync } from 'fs';
 import { CONFIG_FILE } from '../utils';
 
 export type WorkspaceOptions = {
@@ -151,7 +155,7 @@ export default {
       },
     };
 
-    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+    writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);
 
     return;
   },

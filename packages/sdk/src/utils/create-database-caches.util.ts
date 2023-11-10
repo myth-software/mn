@@ -54,7 +54,7 @@ export const createDatabaseCaches = async (
     .filter((result) => result.type === 'child_database')
     .map(({ id }) => id);
   const primaryIds = [...new Set(allPrimaryIds.concat(allParagraphIds))];
-  ({
+  log.info({
     action: 'retrieving',
     message: 'primary databases',
     page: { emoji: page.icon, title: page.title },
@@ -72,7 +72,7 @@ export const createDatabaseCaches = async (
       allRelatedIds.filter((relatedId) => !primaryIds.includes(relatedId))
     ),
   ] as string[];
-  ({
+  log.info({
     action: 'retrieving',
     message: 'related databases',
     page: { emoji: page.icon, title: page.title },
@@ -90,7 +90,7 @@ export const createDatabaseCaches = async (
       { flattenResponse: true, resultsOnly: true }
     )
   );
-  ({
+  log.info({
     action: 'querying',
     message: 'primary and related databases',
     page: { emoji: page.icon, title: page.title },
@@ -106,7 +106,7 @@ export const createDatabaseCaches = async (
   const allRollupsPromises = allUsableDatabases.map((database, i) =>
     createRollups(database.properties, pages[i].id)
   );
-  ({
+  log.info({
     action: 'querying',
     message: 'property types',
     page: { emoji: page.icon, title: page.title },
@@ -134,7 +134,7 @@ export const createDatabaseCaches = async (
       };
     });
 
-  ({
+  log.info({
     action: 'caching',
     message: '',
     page: { emoji: page.icon, title: page.title },

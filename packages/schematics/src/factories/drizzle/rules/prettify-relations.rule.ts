@@ -1,7 +1,6 @@
 import { Rule, Tree } from '@angular-devkit/schematics';
 import { BasicOptions } from '@mountnotion/types';
-import { ensure } from '@mountnotion/utils';
-import { prettify } from '../../../utils';
+import { ensure, prettify } from '@mountnotion/utils';
 
 export function prettifyRelationsRule(options: BasicOptions): Rule {
   return (tree: Tree) => {

@@ -3,8 +3,8 @@ import {
   MountNotionConfig,
   RowsLintRules,
 } from '@mountnotion/types';
+import { writeFileWithPrettyJson } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
-import { writeFileSync } from 'fs';
 import { CONFIG_FILE, ROWS_LINT_RULES } from '../utils';
 
 type ConfigureLintRowsOptions = {
@@ -84,7 +84,7 @@ export default {
       },
     };
 
-    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+    writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);
 
     return;
   },

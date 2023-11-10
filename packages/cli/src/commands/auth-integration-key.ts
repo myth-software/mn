@@ -1,7 +1,6 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { log } from '@mountnotion/utils';
+import { log, writeFileWithPrettyJson } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
-import { writeFileSync } from 'fs';
 import { CONFIG_FILE } from '../utils';
 
 type AuthIntegrationKeyOptions = {
@@ -57,7 +56,7 @@ export default {
       },
     };
 
-    writeFileSync(CONFIG_FILE, JSON.stringify(updatedConfig));
+    writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);
 
     log.success({ action: 'writing', message: 'auth key written to config' });
     return;
