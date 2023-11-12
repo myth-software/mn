@@ -1,7 +1,11 @@
-# utils
+# @mount-notion/utils
 
-This library was generated with [Nx](https://nx.dev).
+## install
 
-## Building
+```bash
+# npm
+npm i -S @mount-notion/cli
 
-Run `nx build utils` to build the library.
+# yarn
+yarn add @mount-notion/cli
+```
