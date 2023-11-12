@@ -1,4 +1,5 @@
 import {
+  AdditionalProperties,
   AdditionalPropertyTypes,
   MountNotionQueryParameters,
   ReadonlyColumnTypes,
@@ -48,7 +49,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
 
           return response;
         },
-        retrieve: async ({ id }: { id: string }) => {
+        retrieve: async ({ id }: Pick<AdditionalProperties, 'id'>) => {
           const [response] = await db
             .select()
             .from(database)
@@ -59,10 +60,11 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
         update: async ({
           id,
           ...body
-        }: { id: string } & Omit<
-          InferModel<Database, 'insert'>,
-          ReadonlyColumnTypes & AdditionalPropertyTypes
-        >) => {
+        }: Pick<AdditionalProperties, 'id'> &
+          Omit<
+            InferModel<Database, 'insert'>,
+            ReadonlyColumnTypes & AdditionalPropertyTypes
+          >) => {
           const [response] = await db
             .update(database)
             .set(body)
@@ -80,7 +82,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
           const response = await db.insert(database).values(body).returning();
           return response[0];
         },
-        delete: async ({ id }: { id: string }) => {
+        delete: async ({ id }: Pick<AdditionalProperties, 'id'>) => {
           const [response] = await db
             .delete(database)
             .where(eq(database.id, id))

@@ -1,6 +1,7 @@
 import {
+  AdditionalProperties,
   EmojiRequest,
-  InferReadonly,
+  Infer,
   InferWriteonly,
   MountNotionClient,
   MountNotionClientConfig,
@@ -20,83 +21,78 @@ export function configure<Config extends MountNotionClientConfig>(
 ): MountNotionClient<Config> {
   const notion = client(config.integrationKey);
 
-  const databases = Object.entries(config.indicies).map(([title, index]) => {
-    type Database = typeof index;
+  const databases = Object.entries(config.indicies).map(([title, cache]) => {
+    type Cache = typeof cache;
     return [
       title,
       {
-        query: async (args: MountNotionQueryParameters<Database>) => {
-          const query = args ? mapQuery(args, index.mappings) : {};
+        query: async (args: MountNotionQueryParameters<Cache>) => {
+          const query = args ? mapQuery(args, cache.mappings) : {};
           const response = await notion.databases.query({
-            database_id: index.id,
+            database_id: cache.id,
             ...(query as QueryDatabaseBodyParameters),
           });
 
           const results = response.results as PageObjectResponse[];
-          const [instances] = flattenPageResponses<
-            InferReadonly<Database> & InferWriteonly<Database>
-          >(results);
+          const [instances] = flattenPageResponses<Infer<Cache>>(results);
 
           return instances.map((instance) =>
-            mapInstance(instance, index.mappings)
+            mapInstance(instance, cache.mappings)
           );
         },
-        retrieve: async ({ id }: { id: string }) => {
+        retrieve: async ({ id }: Pick<AdditionalProperties, 'id'>) => {
           const response = (await notion.pages.retrieve({
             page_id: id,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<
-            InferReadonly<Database> & InferWriteonly<Database>
-          >(response);
+          const [instance] = flattenPageResponse<Infer<Cache>>(response);
 
-          return mapInstance(instance, index.mappings);
+          return mapInstance(instance, cache.mappings);
         },
         update: async ({
           id,
           ...body
-        }: { id: string } & Partial<InferWriteonly<Database>>) => {
-          const properties = expandProperties<
-            Partial<InferWriteonly<Database>>
-          >(body, {
-            columns: index.columns,
-            mappings: index.mappings,
-          });
+        }: Pick<AdditionalProperties, 'id'> &
+          Partial<InferWriteonly<Cache>>) => {
+          const properties = expandProperties<Partial<InferWriteonly<Cache>>>(
+            body,
+            {
+              columns: cache.columns,
+              mappings: cache.mappings,
+            }
+          );
 
           const response = (await notion.pages.update({
             page_id: id,
             properties,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<
-            InferReadonly<Database> & InferWriteonly<Database>
-          >(response);
+          const [instance] = flattenPageResponse<Infer<Cache>>(response);
 
-          return mapInstance(instance, index.mappings);
+          return mapInstance(instance, cache.mappings);
         },
-        create: async (body: Partial<InferWriteonly<Database>>) => {
-          const properties = expandProperties<
-            Partial<InferWriteonly<Database>>
-          >(body, {
-            columns: index.columns,
-            mappings: index.mappings,
-          });
+        create: async (body: Partial<InferWriteonly<Cache>>) => {
+          const properties = expandProperties<Partial<InferWriteonly<Cache>>>(
+            body,
+            {
+              columns: cache.columns,
+              mappings: cache.mappings,
+            }
+          );
 
           const response = (await notion.pages.create({
             parent: {
-              database_id: index.id,
+              database_id: cache.id,
             },
             icon: {
               type: 'emoji',
-              emoji: index.icon as EmojiRequest,
+              emoji: cache.icon as EmojiRequest,
             },
             properties,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<
-            InferReadonly<Database> & InferWriteonly<Database>
-          >(response);
+          const [instance] = flattenPageResponse<Infer<Cache>>(response);
 
-          return mapInstance(instance, index.mappings);
+          return mapInstance(instance, cache.mappings);
         },
-        delete: async ({ id }: { id: string }) =>
+        delete: async ({ id }: Pick<AdditionalProperties, 'id'>) =>
           notion.blocks.delete({
             block_id: id,
           }),

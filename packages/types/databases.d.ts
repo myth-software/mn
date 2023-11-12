@@ -102,6 +102,8 @@ export declare type InferWriteonly<T extends Entity> = {
     : never;
 };
 
+export type Infer<T extends Entity> = InferWriteonly<T> & InferReadonly<T>;
+
 export type FullGetDatabaseResponse = GetDatabaseResponse & {
   icon: UpdatePageParameters['icon'];
 };

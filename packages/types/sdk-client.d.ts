@@ -4,7 +4,8 @@ import {
   SearchResponse,
 } from './api-endpoints';
 import { MountNotionQueryParameters } from './client';
-import { Entity, InferReadonly, InferWriteonly } from './databases';
+import { AdditionalProperties } from './columns';
+import { Entity, Infer, InferWriteonly } from './databases';
 
 export declare type MountNotionClientConfig = {
   integrationKey?: string;
@@ -13,25 +14,23 @@ export declare type MountNotionClientConfig = {
   };
 };
 
+export declare type MountNotionCrud<TCache extends Entity> = {
+  query: (
+    query?: MountNotionQueryParameters<TCache>
+  ) => Promise<Infer<TCache>[]>;
+  retrieve: (body: Pick<AdditionalProperties, 'id'>) => Promise<Infer<TCache>>;
+  update: (
+    body: Pick<AdditionalProperties, 'id'> & Partial<InferWriteonly<TCache>>
+  ) => Promise<Infer<TCache>>;
+  create: (body: Partial<InferWriteonly<TCache>>) => Promise<Infer<TCache>>;
+  delete: (
+    body: Pick<AdditionalProperties, 'id'>
+  ) => Promise<DeleteBlockResponse>;
+};
+
 export declare type MountNotionClient<T extends MountNotionClientConfig> = {
   [Property in keyof T['indicies']]: T['indicies'][Property] extends infer Database extends T['indicies'][Property]
-    ? {
-        query: (
-          query?: MountNotionQueryParameters<Database>
-        ) => Promise<(InferReadonly<Database> & InferWriteonly<Database>)[]>;
-        retrieve: (body: {
-          id: string;
-        }) => Promise<InferReadonly<Database> & InferWriteonly<Database>>;
-        update: (
-          body: {
-            id: string;
-          } & Partial<InferWriteonly<Database>>
-        ) => Promise<InferReadonly<Database> & InferWriteonly<Database>>;
-        create: (
-          body: Partial<InferWriteonly<Database>>
-        ) => Promise<InferReadonly<Database> & InferWriteonly<Database>>;
-        delete: (body: { id: string }) => Promise<DeleteBlockResponse>;
-      }
+    ? MountNotionCrud<Database>
     : never;
 } & {
   search: (body: SearchBodyParameters) => Promise<SearchResponse>;

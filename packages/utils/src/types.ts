@@ -3,6 +3,7 @@ import {
   Entity,
   Instance,
   Merge,
+  MountNotionCrud,
   Options,
 } from '@mountnotion/types';
 
@@ -111,6 +112,9 @@ export declare type SelectDisplayable = {
 export declare type RelationDisplayable = {
   useGetQuery: () => any;
 };
+
+export declare type TypedRelationDisplayable<TCache extends Entity> =
+  MountNotionCrud<TCache>;
 
 export declare type DateDisplayable = {
   time?: boolean;
@@ -254,7 +258,7 @@ export declare type DisplayConfiguration = {
  */
 export declare type TypedDisplayConfiguration<
   T extends Entity,
-  L extends Array<Displayable> = Array<TypedDisplayable<T>>
+  L extends Array<TypedDisplayable<T>> = Array<TypedDisplayable<T>>
 > = {
   id: string;
   entity: T;

@@ -1,4 +1,5 @@
 import type {
+  AdditionalProperties,
   AdditionalPropertyTypes,
   MountNotionQueryParameters,
   ReadonlyColumnTypes,
@@ -27,7 +28,9 @@ export declare type MountNotionDrizzleClient<
         query: (
           query?: MountNotionQueryParameters<any>
         ) => Promise<InferModel<Database>[]>;
-        retrieve: (body: { id: string }) => Promise<InferModel<Database>>;
+        retrieve: (
+          body: Pick<AdditionalProperties, 'id'>
+        ) => Promise<InferModel<Database>>;
         update: (
           body: {
             id: string;
@@ -42,7 +45,9 @@ export declare type MountNotionDrizzleClient<
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
         ) => Promise<InferModel<Database>>;
-        delete: (body: { id: string }) => Promise<InferModel<Database>>;
+        delete: (
+          body: Pick<AdditionalProperties, 'id'>
+        ) => Promise<InferModel<Database>>;
       }
     : never;
 };
