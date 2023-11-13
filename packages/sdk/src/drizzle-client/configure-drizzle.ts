@@ -10,6 +10,7 @@ import {
   MountNotionDrizzleClient,
 } from './configure-drizzle.type';
 import { mapNotionToDrizzleWhere } from './notion-to-drizzle-where.mapper';
+import removeFalsyValues from './remove-falsy-values';
 
 export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
   config: Config
@@ -65,9 +66,10 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
             InferModel<Database, 'insert'>,
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >) => {
+          const clean = removeFalsyValues(body);
           const [response] = await db
             .update(database)
-            .set(body)
+            .set(clean)
             .where(eq(database.id, id))
             .returning();
 
@@ -79,7 +81,8 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
         ) => {
-          const response = await db.insert(database).values(body).returning();
+          const clean = removeFalsyValues(body);
+          const response = await db.insert(database).values(clean).returning();
           return response[0];
         },
         delete: async ({ id }: Pick<AdditionalProperties, 'id'>) => {
