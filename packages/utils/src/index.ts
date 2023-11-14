@@ -1,6 +1,7 @@
 export * from './constants.util';
 export * from './display';
 export * from './ensure.util';
+export * from './expand-query-to-filters.util';
 export * from './flip.util';
 export * from './get-cache.util';
 export * from './get-lint-columns.util';
