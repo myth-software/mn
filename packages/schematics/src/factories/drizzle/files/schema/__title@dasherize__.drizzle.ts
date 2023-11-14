@@ -1,5 +1,4 @@
 import { ReadonlyColumnTypes } from '@mountnotion/types';
-import { InferModel } from 'drizzle-orm';
 import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, timestamp } from "drizzle-orm/pg-core";
 <% for(const [property, column] of Object.entries(cache.mappings)) { const type = cache.columns[column];  %>
   <% if(cache.options?.[column] && type === 'multi_select') {  %>
@@ -64,6 +63,6 @@ export const <%= camelize(title) %> = pgTable('<%= dasherize(title) %>', {
 <% if(cache.description) { %>
 /** <%= cache.description %> */
 <% } %>
-export declare type <%= classify(title) %> = InferModel<typeof <%= camelize(title) %>>;
+export declare type <%= classify(title) %> = typeof <%= camelize(title) %>.$inferSelect;
 export declare type <%= classify(title) %>WriteOnly = Omit<<%= classify(title) %>, ReadonlyColumnTypes>;
-export declare type New<%= classify(title) %> = InferModel<typeof <%= camelize(title) %>, 'insert'>;
+export declare type New<%= classify(title) %> = typeof <%= camelize(title) %>.$inferInsert;
