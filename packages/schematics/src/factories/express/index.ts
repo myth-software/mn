@@ -33,6 +33,20 @@ export function express(options: ExpressOptions): Rule {
         move(`${outDir}/routers`),
       ]);
     });
+    const actionRouterRules = options.actionRouter
+      ? includedCaches.map((cache) => {
+          return applyWithoutOverwrite(url('./files/routers'), [
+            template({
+              title: cache.title,
+              cache,
+              options,
+              log,
+              ...strings,
+            }),
+            move(`${outDir}/routers`),
+          ]);
+        })
+      : [];
     const controllerRules = includedCaches.map((cache) => {
       return options.eject
         ? applyWithOverwrite(url('./files/controllers-eject'), [
@@ -76,6 +90,7 @@ export function express(options: ExpressOptions): Rule {
     ]);
     return chain([
       ...routerRules,
+      ...actionRouterRules,
       ...controllerRules,
       middlewareRule,
       expressIndexRule,

@@ -1,9 +1,5 @@
 {
   "schematics": {
-    "controllers": {
-      "factory": "./src/factories/controllers/index#controllers",
-      "description": "generate controllers"
-    },
     "drizzle": {
       "factory": "./src/factories/drizzle/index#drizzle",
       "description": "generate drizzle"
@@ -34,7 +30,7 @@
     },
     "openApi": {
       "factory": "./src/factories/open-api/index#openApi",
-      "description": "generate open api json"
+      "description": "generate oas json"
     },
     "react-query": {
       "factory": "./src/factories/react-query/index#reactQuery",

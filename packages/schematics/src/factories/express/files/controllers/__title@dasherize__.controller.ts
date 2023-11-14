@@ -5,17 +5,10 @@
 import { Request, Response } from 'express';
 import { 
   <%= classify(title) %>,
-  <%= classify(title) %>Index,
-  <%= underscore(title).toUpperCase() %>
+  <%= classify(title) %>Index
 } from '<%= options.entities %>';
 import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
-import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from '../mn';
-import {
-    getTitleColumnFromEntity
-} from '@mountnotion/utils';
-
-const TITLE = getTitleColumnFromEntity(<%= underscore(title).toUpperCase() %>);
 
 async function query(req: Request, res: Response) {
     const where = req.query
@@ -82,14 +75,7 @@ async function create(req: Request, res: Response) {
       } = res.locals.principal;
     <% } %>
     const item: Partial<<%= classify(title) %>> = req.body;
-    const title = uniqueNamesGenerator({
-      dictionaries: [animals, colors],
-      separator: '-',
-      length: 2,
-    });
-
     const newItem = await mn.<%= camelize(title) %>.create({
-      [TITLE]: title,
       <% if (options.userColumn) { %>
         id: <%= options.userColumn %>,
         <%= options.userColumn %>: [<%= options.userColumn %>],
