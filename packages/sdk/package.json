@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/sdk",
-  "version": "1.5.28",
+  "version": "1.5.29",
   "description": "tools for mounting notion",
   "main": "src/index.js",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/mountnotion/sdk.git"
   },
   "author": "Peter B Smith",
-  "license": "unlicensed",
+  "license": "BSL-1.1",
   "bugs": {
     "url": "https://github.com/mountnotion/sdk/issues"
   },

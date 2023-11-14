@@ -35,6 +35,7 @@ export declare type ControllersOptions = {
   AuthOptions;
 
 export declare type ExpressOptions = ControllersOptions & {
+  actionRouter: booelan;
   eject: boolean;
 };
 
