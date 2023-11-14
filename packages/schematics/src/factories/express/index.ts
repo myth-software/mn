@@ -35,7 +35,7 @@ export function express(options: ExpressOptions): Rule {
     });
     const actionRouterRules = options.actionRouter
       ? includedCaches.map((cache) => {
-          return applyWithoutOverwrite(url('./files/routers'), [
+          return applyWithoutOverwrite(url('./files/routers-action'), [
             template({
               title: cache.title,
               cache,

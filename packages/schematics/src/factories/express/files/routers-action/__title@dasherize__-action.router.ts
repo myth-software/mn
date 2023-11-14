@@ -11,10 +11,10 @@ import middleware from '../middleware';
 
 export const <%= camelize(title) %>ActionRouter = express.Router();
 
-<%= camelize(title) %>Router.use(middleware.router);
+<%= camelize(title) %>ActionRouter.use(middleware.router);
 
-<%= camelize(title) %>Router.post('/', middleware.create, <%= camelize(title) %>Controller.create);
+<%= camelize(title) %>ActionRouter.post('/', middleware.create, <%= camelize(title) %>Controller.create);
 
-<%= camelize(title) %>Router.post('/:id/update',  middleware.updateById, <%= camelize(title) %>Controller.updateById);
+<%= camelize(title) %>ActionRouter.post('/:id/update',  middleware.updateById, <%= camelize(title) %>Controller.updateById);
 
-<%= camelize(title) %>Router.post('/:id/delete', middleware.deleteById, <%= camelize(title) %>Controller.deleteById);
+<%= camelize(title) %>ActionRouter.post('/:id/delete', middleware.deleteById, <%= camelize(title) %>Controller.deleteById);
