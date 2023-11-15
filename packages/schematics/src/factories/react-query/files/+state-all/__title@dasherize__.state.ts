@@ -1,6 +1,4 @@
 import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from 'react-query';
-import { } from <>;
-import { } from <>;
 import { <%= camelize(title) %>Request, InfrastructureOptions } from '../infrastructure';
 import { <%= classify(title) %> } from '<%= options.caches %>';
 

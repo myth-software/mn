@@ -12,7 +12,7 @@
 import { MountNotionQueryParameters } from '@mountnotion/types';
 import {
   Horses,
-  HorsesIndex,
+  HorsesCache,
   HorsesWriteonly,
   HORSES,
 } from '@pferd/domain-pferd-caches';
@@ -21,7 +21,7 @@ import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from './mn';
 export const horsesRouter = express.Router();
 horsesRouter.get('/', async (req: Request, res: Response) => {
-  const where = req.query.where as MountNotionQueryParameters<HorsesIndex>;
+  const where = req.query.where as MountNotionQueryParameters<HorsesCache>;
   try {
     const horses: Horses[] = await mn.horses.query(where);
     res.status(200).send(horses);

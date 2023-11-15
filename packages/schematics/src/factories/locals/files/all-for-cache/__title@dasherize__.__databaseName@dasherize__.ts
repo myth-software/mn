@@ -4,8 +4,9 @@
   <% log.debug({ action: 'debugging', message: `title is ${title}` }) %>
 <% } %>
 
-  import { } from <>
-%= classify(databaseName) %> } from '<%= options.caches %>';
+import {
+  <%= classify(databaseName) %>
+} from '<%= options.caches %>';
 
 export const <%= camelize(databaseName) %><%= classify(title) %>: <%= classify(databaseName) %> = {
   <% for(const [property, value] of Object.entries(local)) { %>

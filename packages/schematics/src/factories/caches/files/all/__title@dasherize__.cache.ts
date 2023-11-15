@@ -69,10 +69,10 @@ export const <%= underscore(cache.title).toUpperCase() %> = {
   <% }  %>
 } as const;
 
-export declare type <%= classify(cache.title) %>Index = typeof <%= underscore(cache.title).toUpperCase() %>;
-export declare type <%= classify(cache.title) %>QueryParameters = MountNotionQueryParameters<<%= classify(cache.title) %>Index>;
-export declare type <%= classify(cache.title) %>Readonly = InferReadonly<<%= classify(cache.title) %>Index>;
-export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= classify(cache.title) %>Index>;
+export declare type <%= classify(cache.title) %>Cache = typeof <%= underscore(cache.title).toUpperCase() %>;
+export declare type <%= classify(cache.title) %>QueryParameters = MountNotionQueryParameters<<%= classify(cache.title) %>Cache>;
+export declare type <%= classify(cache.title) %>Readonly = InferReadonly<<%= classify(cache.title) %>Cache>;
+export declare type <%= classify(cache.title) %>Writeonly = InferWriteonly<<%= classify(cache.title) %>Cache>;
 <% if(cache.description) { %>
 /** <%= cache.description %> */
 <% } %>

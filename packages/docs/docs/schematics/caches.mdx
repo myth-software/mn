@@ -30,10 +30,10 @@ export const EQUIPMENT = {
     /** [notion docs for title](https://developers.notion.com/reference/property-object#title) */ name: 'name',
   },
 } as const;
-export declare type EquipmentIndex = typeof EQUIPMENT;
+export declare type EquipmentCache = typeof EQUIPMENT;
 export declare type EquipmentQueryParameters =
-  MountNotionQueryParameters<EquipmentIndex>;
-export declare type EquipmentReadonly = InferReadonly<EquipmentIndex>;
-export declare type EquipmentWriteonly = InferWriteonly<EquipmentIndex>;
+  MountNotionQueryParameters<EquipmentCache>;
+export declare type EquipmentReadonly = InferReadonly<EquipmentCache>;
+export declare type EquipmentWriteonly = InferWriteonly<EquipmentCache>;
 export declare type Equipment = EquipmentReadonly & EquipmentWriteonly;
 ```

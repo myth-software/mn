@@ -2,20 +2,24 @@
   <% log.debug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
-  import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
-  import { Request, Response } from 'express';
-  import { mn } from '../mn';
-  import { } from <>;
-%= classify(title) %>,
-  <%= classify(title) %>Index
+import {
+  <%= classify(title) %>,
+  <%= classify(title) %>Cache
 } from '<%= options.caches %>';
+import {
+  CuddyInvoices,
+  CuddyInvoicesIndex,
+} from '@myth-software/domain-cuddy/caches';
+import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
+import { Request, Response } from 'express';
+import { mn } from '../mn';
 
 async function query(req: Request, res: Response) {
     const where = req.query
-      .where as MountNotionQueryParameters<<%= classify(title) %>Index>;
+      .where as MountNotionQueryParameters<<%= classify(title) %>Cache>;
     <% if (options.accessorProperty && options.userColumn) { %>
       const principal = res.locals.principal;
-      const principalFilter: QueryFilter<<%= classify(title) %>Index> =
+      const principalFilter: QueryFilter<<%= classify(title) %>Cache> =
         principal.role === 'client'
           ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
           : {
@@ -24,16 +28,16 @@ async function query(req: Request, res: Response) {
             };
     <% } else if (options.userColumn) { %>
       const principal = res.locals.principal;
-      const principalFilter: QueryFilter<<%= classify(title) %>Index> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
+      const principalFilter: QueryFilter<<%= classify(title) %>Cache> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
     <% } %>
     <% if (options.userColumn) { %>
       const filter = where?.filter
         ? ({
             and: [where.filter, principalFilter],
-          } as QueryFilter<<%= classify(title) %>Index>)
+          } as QueryFilter<<%= classify(title) %>Cache>)
         : principalFilter;
     <% } else { %>
-      const filter = where?.filter as QueryFilter<<%= classify(title) %>Index>;
+      const filter = where?.filter as QueryFilter<<%= classify(title) %>Cache>;
     <% } %>
 
     try {

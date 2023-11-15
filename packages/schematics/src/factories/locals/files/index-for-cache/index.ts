@@ -2,8 +2,9 @@
   <% log.debug({ action: 'debugging', message: 'locals index-for-cache' }) %>
   <% log.debug({ action: 'debugging', message: `databaseName is ${databaseName}` }) %>
 <% } %>
-  import { } from <>
-%= classify(databaseName) %> } from '<%= options.caches %>';
+import {
+  <%= classify(databaseName) %>
+} from '<%= options.caches %>';
 
 <% for(const {title} of locals) { %>
   export * from './<%= dasherize(title) %>.<%= dasherize(databaseName) %>'; 
