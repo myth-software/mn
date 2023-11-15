@@ -3,7 +3,7 @@ import {
   <%= classify(title) %>Columns,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>QueryParameters,
-} from '<%= options.entities %>';
+} from '<%= options.caches %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 <% if (options.strategies) { %>
   import { RootState } from '../store';

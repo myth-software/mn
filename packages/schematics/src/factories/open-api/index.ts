@@ -24,7 +24,7 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
           title: cache.title,
           cache,
           options,
-          entities: options.entities,
+          caches: options.caches,
           strategies: options.strategies,
           userColumn: options.userColumn,
           usersDatabase: options.usersDatabase,

@@ -4,11 +4,11 @@ import {
   notion,
 } from '@mountnotion/sdk';
 import {
-  Entity,
+  Cache,
   FullGetDatabaseResponse,
   MountnCommand,
 } from '@mountnotion/types';
-import { getTitleColumnFromEntity, log } from '@mountnotion/utils';
+import { getTitleColumnFromCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
@@ -68,10 +68,10 @@ export default {
       },
       { all: true, resultsOnly: true, flattenResponse: true }
     );
-    const entity = {
+    const cache = {
       columns,
-    } as Entity;
-    const TITLE = getTitleColumnFromEntity(entity);
+    } as Cache;
+    const TITLE = getTitleColumnFromCache(cache);
     const database = (await notion.databases.retrieve({
       database_id,
     })) as FullGetDatabaseResponse;

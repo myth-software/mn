@@ -9,7 +9,7 @@ import { prompt } from 'enquirer';
 import { CONFIG_FILE } from '../utils';
 
 export type WorkspaceOptions = {
-  entities: string | null;
+  caches: string | null;
   baseUrl: string | null;
   authStrategies: Array<'email' | 'sms'> | null;
   usersDatabase: string | null;
@@ -40,11 +40,11 @@ export async function optionsPrompt(options: WorkspaceOptions) {
   const prompts = [];
   const cache = ensure(getCache());
 
-  if (!options.entities) {
+  if (!options.caches) {
     prompts.push({
       type: 'input',
-      message: 'name of entities package',
-      name: 'entities',
+      message: 'name of caches package',
+      name: 'caches',
     });
   }
 
@@ -112,23 +112,23 @@ export default {
   description: 'configures mount notion workspace',
   options: [
     {
-      name: '-e, --entities [name]',
-      description: 'name of entities package',
+      name: '-a, --auth-strategies [strategy]',
+      description: 'authentication strategy',
     },
     {
       name: '-b, --base-url [url]',
       description: 'base url for api',
     },
     {
-      name: '-a, --auth-strategies [strategy]',
-      description: 'authentication strategy',
-    },
-    {
       name: '-d, --users-database [name]',
       description: 'users database',
     },
     {
-      name: '-c, --user-colum [name]',
+      name: '-c, --caches [name]',
+      description: 'name of caches package',
+    },
+    {
+      name: '-u, --user-colum [name]',
       description: 'user column',
     },
   ],
@@ -142,7 +142,7 @@ export default {
         ...config.options,
         basic: {
           ...config.options.basic,
-          entities: options.entities ?? config.options.basic.entities,
+          caches: options.caches ?? config.options.basic.caches,
           baseUrl: options.baseUrl ?? config.options.basic.baseUrl,
         },
         auth: {

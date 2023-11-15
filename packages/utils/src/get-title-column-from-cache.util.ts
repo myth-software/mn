@@ -1,7 +1,7 @@
-import { Entity } from '@mountnotion/types';
+import { Cache } from '@mountnotion/types';
 
-export function getTitleColumnFromEntity(entity: Entity) {
-  const title = Object.entries(entity.columns).reduce(
+export function getTitleColumnFromCache(cache: Cache) {
+  const title = Object.entries(cache.columns).reduce(
     (acc, [column, columnType]) => {
       if (columnType === 'title') {
         return acc + column;

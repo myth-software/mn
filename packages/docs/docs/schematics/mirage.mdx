@@ -4,7 +4,7 @@ create a mock api using mirage.js
 
 ## depends on
 
-1. entities
+1. caches
 2. locals
 
 ## output
@@ -60,7 +60,7 @@ export function equipmentEndpoints(server: Server) {
 ### models
 
 ```typescript title="equipment.model.ts"
-import { Equipment } from '@pferd/domain-pferd-entities';
+import { Equipment } from '@pferd/domain-pferd-caches';
 import { Model } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 export const equipmentModel: ModelDefinition<Equipment> = Model.extend({});

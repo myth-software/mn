@@ -1,9 +1,9 @@
-import { Entity, Infer, Mappings } from '@mountnotion/types';
+import { Cache, Infer, Mappings } from '@mountnotion/types';
 
-export function mapInstance<T extends Infer<Entity>>(
-  instance: T,
+export function mapInstance<TInstance extends Infer<Cache>>(
+  instance: TInstance,
   mappings: Mappings
-): T {
+): TInstance {
   return Object.entries(mappings).reduce(
     (acc, [mappedName, columnName]) => {
       return {
@@ -15,6 +15,6 @@ export function mapInstance<T extends Infer<Entity>>(
       id: instance.id,
       cover: instance.cover,
       icon: instance.icon,
-    } as T
+    } as TInstance
   );
 }

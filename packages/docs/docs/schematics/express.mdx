@@ -2,7 +2,7 @@
 
 ## depends on
 
-1. entities
+1. caches
 
 ## output
 
@@ -15,7 +15,7 @@ import {
   HorsesIndex,
   HorsesWriteonly,
   HORSES,
-} from '@pferd/domain-pferd-entities';
+} from '@pferd/domain-pferd-caches';
 import express, { Request, Response } from 'express';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from './mn';
@@ -109,13 +109,13 @@ server.on('error', console.error);
 ### mn
 
 ```typescript title="mn.ts"
-import { configure } from '@mountnotion/sdk';
-import { client } from '@pferd/domain-pferd-drizzle';
-import { indicies } from '@pferd/domain-pferd-entities';
+import { configureNotion } from '@mountnotion/sdk';
+import { drizzleClient } from '@pferd/domain-pferd-drizzle';
+import { caches } from '@pferd/domain-pferd-caches';
 export const mn =
   process.env.NODE_ENV === 'production'
-    ? client
-    : configure({ integrationKey: process.env.INTEGRATION_KEY, indicies });
+    ? drizzleClient
+    : configureNotion({ integrationKey: process.env.INTEGRATION_KEY, caches });
 ```
 
 ## options

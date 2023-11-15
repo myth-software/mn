@@ -1,7 +1,7 @@
-import { Cache, QueryFilter } from '@mountnotion/types';
+import { FlatDatabase, QueryFilter } from '@mountnotion/types';
 
 export function expandQueryToFilters(
-  cache: Cache,
+  cache: FlatDatabase,
   query: any
 ): QueryFilter<any> {
   const filters: QueryFilter<any> = {

@@ -100,7 +100,7 @@ export default {
     if (command === 'generate') {
       try {
         const result = execSync(
-          `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../drizzle`
+          `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../migrations`
         ).toString('utf-8');
         console.info(result);
         log.success({

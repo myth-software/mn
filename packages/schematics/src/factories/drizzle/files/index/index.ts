@@ -1,31 +1,21 @@
-import postgres from 'postgres';
-import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-
 import { configureDrizzle } from '@mountnotion/sdk';
-<% for(const title of titles) { %>
-  export * from  './schema/<%= dasherize(title) %>.drizzle';
-<% } %>
-<% for(const title of titles) { %>
-  import { <%= camelize(title) %> } from  './schema/<%= dasherize(title) %>.drizzle';
-<% } %>
+import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from './drizzle.schema';
+export * as schema from './drizzle.schema';
 
-<% if(relations) { %>
-  import * as relations from  './schema/relations';
-<% } %>
+export const db: PostgresJsDatabase = drizzle(
+  postgres(process.env['CONNECTION_STRING']!, {
+    ssl:
+      process.env['NODE_ENV']! === 'production'
+        ? { rejectUnauthorized: false }
+        : process.env['NODE_ENV']! === 'staging'
+        ? true
+        : false,
+  })
+);
 
-export const schema = {
-  <% for(const title of titles) { %>
-    <%= camelize(title) %>,
-  <% } %>
-  <% if(relations) { %>
-    ...relations
-  <% } %>
-};
-
-export const db: PostgresJsDatabase = drizzle(postgres(process.env['CONNECTION_STRING']!, { ssl: process.env['NODE_ENV']! === 'production'
-      ? { rejectUnauthorized: false }
-      : false }));
-export const client = configureDrizzle({
+export const drizzleClient = configureDrizzle({
   db,
-  indicies: schema,
+  schema,
 });

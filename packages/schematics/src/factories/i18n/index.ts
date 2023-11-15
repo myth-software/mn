@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { Cache, I18nOptions, Options } from '@mountnotion/types';
+import { FlatDatabase, I18nOptions, Options } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';
@@ -10,7 +10,7 @@ import { validateInputs } from './validate-inputs';
 
 type FormattedTranslations = {
   [lng: string]: {
-    [entity: string]: {
+    [cache: string]: {
       options: Options | null | undefined;
       columns: Record<string, string> | undefined;
     };
@@ -22,7 +22,7 @@ export function i18n(options: I18nOptions): Rule {
   validateInputs(options);
   const { outDir } = options;
   const excludes = options.excludes ?? [];
-  let cachesRef: Cache[] = [];
+  let cachesRef: FlatDatabase[] = [];
   let titlesRef: string[] = [];
 
   return async () => {
@@ -43,12 +43,12 @@ export function i18n(options: I18nOptions): Rule {
         getTranslation(cache, lng)
       );
 
-      const entities = await Promise.all(translationPromises);
+      const caches = await Promise.all(translationPromises);
 
       const formatted = includedCaches.reduce((acc, curr, i) => {
         return {
           ...acc,
-          [curr.title]: entities[i],
+          [curr.title]: caches[i],
         };
       }, {} as FormattedTranslations[string]);
 
@@ -57,8 +57,8 @@ export function i18n(options: I18nOptions): Rule {
     const translations_1 = await translations;
     titlesRef = cachesRef.map((cache) => cache.title) as string[];
     const rules = Object.entries(translations_1).reduce(
-      (acc_1, [lng_1, entities_1]) => {
-        const translationsRules = Object.entries(entities_1).map(
+      (acc_1, [lng_1, caches_1]) => {
+        const translationsRules = Object.entries(caches_1).map(
           ([title, { options, columns }]) => {
             return applyWithOverwrite(url('./files/all-for-language'), [
               template({

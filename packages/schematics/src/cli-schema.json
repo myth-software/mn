@@ -32,9 +32,9 @@
       "type": "string",
       "description": "specify the output directory"
     },
-    "entities": {
+    "caches": {
       "type": "string",
-      "description": "entities"
+      "description": "caches"
     },
     "notionIntegrationKey": {
       "type": "string",

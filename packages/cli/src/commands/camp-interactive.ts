@@ -31,7 +31,7 @@ export default {
     console.log('2 - configure-lint-columns');
     console.log('3 - configure-lint-rows');
     console.log('4 - configure-schematics');
-    console.log('5 - inspect the entities');
+    console.log('5 - inspect the caches');
     console.log('6 - inspect the configuration file');
     console.log('7 - fetch and scheme');
     let choice: number;

@@ -17,11 +17,11 @@ export const logger = {
 };
 
 function formatPageTitle(str: string) {
-  return str.length >= 15 ? str.substring(0, 11) + '...' : str;
+  return str.length >= 30 ? str.substring(0, 26) + '...' : str;
 }
 
 function logSuccess({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${success(paddedAction)} ${page.emoji} ${formatPageTitle(
@@ -35,7 +35,7 @@ function logSuccess({ action, message, page }: LogInput) {
 }
 
 function logInfo({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${info(paddedAction)} ${page.emoji} ${formatPageTitle(
@@ -49,7 +49,7 @@ function logInfo({ action, message, page }: LogInput) {
 }
 
 function logWarn({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
@@ -63,7 +63,7 @@ function logWarn({ action, message, page }: LogInput) {
 }
 
 function logError({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
@@ -77,7 +77,7 @@ function logError({ action, message, page }: LogInput) {
 }
 
 function logFatal({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
@@ -89,7 +89,7 @@ function logFatal({ action, message, page }: LogInput) {
 }
 
 function logDebug({ action, message, page }: LogInput) {
-  const paddedAction = action.padEnd(10);
+  const paddedAction = action.padEnd(29);
   if (page) {
     console.log(
       `(mn) ${debug(paddedAction)} ${page.emoji} ${formatPageTitle(

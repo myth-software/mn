@@ -101,7 +101,7 @@ export default {
     const options = await optionsPrompt(args);
     log.info({
       action: 'informing',
-      message: 'entities schematic is required, schemed automatially',
+      message: 'caches schematic is required, schemed automatially',
     });
 
     const updatedConfig: MountNotionConfig = {

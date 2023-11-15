@@ -30,5 +30,7 @@ export const flattenDatabaseResponse = (
     options: createOptions(properties),
     relations: null,
     mappings: createMappings(properties, options),
+    rollups: null,
+    rollupsOptions: null,
   };
 };

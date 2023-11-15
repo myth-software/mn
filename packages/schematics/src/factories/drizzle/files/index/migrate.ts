@@ -9,6 +9,8 @@ const sql = postgres(connectionString, {
   ssl:
     process.env['NODE_ENV']! === 'production'
       ? { rejectUnauthorized: false }
+      : process.env['NODE_ENV']! === 'staging'
+      ? true
       : false,
 });
 const db = drizzle(sql);
@@ -16,7 +18,7 @@ const db = drizzle(sql);
 async function run() {
   const outDir = process.argv[2];
 
-  await migrate(db, { migrationsFolder: `${outDir}/../drizzle` });
+  await migrate(db, { migrationsFolder: `${outDir}/../migrations` });
   return 0;
 }
 

@@ -4,7 +4,7 @@ import type {
   MountNotionQueryParameters,
   ReadonlyColumnTypes,
 } from '@mountnotion/types';
-import { InferModel } from 'drizzle-orm';
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export declare type FilterArgs = {
@@ -15,7 +15,7 @@ export declare type FilterArgs = {
 
 export declare type MountNotionClientDrizzleConfig = {
   db: PostgresJsDatabase;
-  indicies: {
+  schema: {
     [key: string]: any;
   };
 };
@@ -23,31 +23,31 @@ export declare type MountNotionClientDrizzleConfig = {
 export declare type MountNotionDrizzleClient<
   T extends MountNotionClientDrizzleConfig
 > = {
-  [Property in keyof T['indicies']]: T['indicies'][Property] extends infer Database extends T['indicies'][Property]
+  [Property in keyof T['schema']]: T['schema'][Property] extends infer Database extends T['schema'][Property]
     ? {
         query: (
           query?: MountNotionQueryParameters<any>
-        ) => Promise<InferModel<Database>[]>;
+        ) => Promise<InferSelectModel<Database>[]>;
         retrieve: (
           body: Pick<AdditionalProperties, 'id'>
-        ) => Promise<InferModel<Database>>;
+        ) => Promise<InferSelectModel<Database>>;
         update: (
           body: {
             id: string;
           } & Omit<
-            InferModel<Database, 'insert'>,
+            InferInsertModel<Database>,
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
-        ) => Promise<InferModel<Database>>;
+        ) => Promise<InferSelectModel<Database>>;
         create: (
           body: Omit<
-            InferModel<Database, 'insert'>,
+            InferInsertModel<Database>,
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
-        ) => Promise<InferModel<Database>>;
+        ) => Promise<InferSelectModel<Database>>;
         delete: (
           body: Pick<AdditionalProperties, 'id'>
-        ) => Promise<InferModel<Database>>;
+        ) => Promise<InferSelectModel<Database>>;
       }
     : never;
 };

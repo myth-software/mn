@@ -10,24 +10,24 @@ import { queryAllResults } from './query-all-results';
 import { queryResponse } from './query-response';
 import { queryResults } from './query-results';
 
-export async function query<Entity>(
+export async function query<TCache>(
   query: QueryDatabaseParameters
 ): Promise<QueryDatabaseResponse>;
-export async function query<Entity>(
+export async function query<TCache>(
   query: QueryDatabaseParameters,
   config?: { all: true }
 ): Promise<QueryDatabaseResponse[]>;
-export async function query<Entity>(
+export async function query<TCache>(
   query: QueryDatabaseParameters,
   config: { resultsOnly: true } | { resultsOnly: true; all: true }
 ): Promise<PageObjectResponse[]>;
-export async function query<Entity>(
+export async function query<TCache>(
   query: QueryDatabaseParameters,
   config:
     | { resultsOnly: true; flattenResponse: true }
     | { resultsOnly: true; flattenResponse: true; all: true }
-): Promise<[Entity[], Columns]>;
-export async function query<Entity>(
+): Promise<[TCache[], Columns]>;
+export async function query<TCache>(
   query: QueryDatabaseParameters,
   config?:
     | { all: true }
@@ -62,8 +62,8 @@ export async function query<Entity>(
     descriptors.includes('flattenResponse')
   ) {
     const results = await queryResults(query);
-    const entities = flattenPageResponses<Entity>(results);
-    return entities;
+    const cachcs = flattenPageResponses<TCache>(results);
+    return cachcs;
   }
 
   if (
@@ -73,8 +73,8 @@ export async function query<Entity>(
     descriptors.includes('flattenResponse')
   ) {
     const results = await queryAllResults(query);
-    const entities = flattenPageResponses<Entity>(results);
-    return entities;
+    const cachcs = flattenPageResponses<TCache>(results);
+    return cachcs;
   }
 
   return await queryResponse(query);

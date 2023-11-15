@@ -1,5 +1,5 @@
+import { Mappings } from './caches';
 import { Columns } from './columns';
-import { Mappings } from './databases';
 
 export declare type ToolsConfiguration = {
   flattenResponse?: boolean;

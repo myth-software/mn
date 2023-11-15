@@ -4,7 +4,7 @@ import {
   MountNotionQueryParameters,
   ReadonlyColumnTypes,
 } from '@mountnotion/types';
-import { eq, InferModel } from 'drizzle-orm';
+import { eq, InferInsertModel } from 'drizzle-orm';
 import {
   MountNotionClientDrizzleConfig,
   MountNotionDrizzleClient,
@@ -17,7 +17,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
 ): MountNotionDrizzleClient<Config> {
   const db = config.db;
 
-  const databases = Object.entries(config.indicies).map(([title, database]) => {
+  const databases = Object.entries(config.schema).map(([title, database]) => {
     type Database = typeof database;
     return [
       title,
@@ -63,7 +63,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
           ...body
         }: Pick<AdditionalProperties, 'id'> &
           Omit<
-            InferModel<Database, 'insert'>,
+            InferInsertModel<Database>,
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >) => {
           const clean = removeFalsyValues(body);
@@ -77,7 +77,7 @@ export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
         },
         create: async (
           body: Omit<
-            InferModel<Database, 'insert'>,
+            InferInsertModel<Database>,
             ReadonlyColumnTypes & AdditionalPropertyTypes
           >
         ) => {

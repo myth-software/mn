@@ -1,4 +1,4 @@
-import { <%= classify(options.usersDatabase) %>, <%= classify(options.usersDatabase) %>Writeonly } from '<%= options.entities %>';
+import { <%= classify(options.usersDatabase) %>, <%= classify(options.usersDatabase) %>Writeonly } from '<%= options.caches %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 

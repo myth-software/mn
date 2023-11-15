@@ -1,13 +1,12 @@
 <% if (options.debug) { %>
-  <%= log.debug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
+  <% log.debug({ action: 'debugging', message: `index: titles ${titles ? 'are defined': 'are not defined'}` }) %>
 <% } %>
 
-import 'dotenv/config';
+  import 'dotenv/config';
 
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import helmet from 'helmet';
-import * as path from 'path';
 
 <% for(const title of titles) { %>
   import { <%= camelize(title) %>Router } from './routers/<%= dasherize(title) %>.router';

@@ -1,8 +1,8 @@
-import { Entity, Instance, Options } from '@mountnotion/types';
+import { Cache, Instance, Options } from '@mountnotion/types';
 import { ensure } from './ensure.util';
 import { Displayable, DisplayConfiguration, TypedValues } from './types';
 
-export function orderToDisplayValues<T extends Entity>({
+export function orderToDisplayValues<TCache extends Cache>({
   config,
   data,
   options,
@@ -12,7 +12,7 @@ export function orderToDisplayValues<T extends Entity>({
   options: Options;
 }) {
   return (
-    acc: TypedValues<T>,
+    acc: TypedValues<TCache>,
     { property: p, config: { defaultValue } = {} }: Displayable
   ) => {
     const property = ensure(p);
@@ -20,12 +20,12 @@ export function orderToDisplayValues<T extends Entity>({
 
     if (
       (existingValue || defaultValue) &&
-      config.entity.columns?.[property] === 'select'
+      config.cache.columns?.[property] === 'select'
     ) {
-      const entityOptions = ensure(config.entity.options)[property];
+      const cacheOptions = ensure(config.cache.options)[property];
       const displayOptions = options?.[property];
 
-      const optionIndex = entityOptions.findIndex(
+      const optionIndex = cacheOptions.findIndex(
         (option) => option === existingValue || option === defaultValue
       );
       const option = displayOptions[optionIndex];
@@ -36,7 +36,7 @@ export function orderToDisplayValues<T extends Entity>({
       };
     }
 
-    if (config.entity.columns?.[property] === 'checkbox') {
+    if (config.cache.columns?.[property] === 'checkbox') {
       const existingBoolean =
         typeof existingValue === 'boolean' ? existingValue : null;
       return {
@@ -45,7 +45,7 @@ export function orderToDisplayValues<T extends Entity>({
       };
     }
 
-    if (config.entity.columns?.[property] === 'date') {
+    if (config.cache.columns?.[property] === 'date') {
       const existingDate =
         typeof existingValue === 'string' ? existingValue : null;
       return {
@@ -54,7 +54,7 @@ export function orderToDisplayValues<T extends Entity>({
       };
     }
 
-    if (config.entity.columns?.[property] === 'files') {
+    if (config.cache.columns?.[property] === 'files') {
       const existingFiles = Array.isArray(existingValue) ? existingValue : null;
       return {
         ...acc,
@@ -62,14 +62,14 @@ export function orderToDisplayValues<T extends Entity>({
       };
     }
 
-    if (existingValue && config.entity.columns?.[property] === 'phone_number') {
+    if (existingValue && config.cache.columns?.[property] === 'phone_number') {
       return {
         ...acc,
         [property]: existingValue,
       };
     }
 
-    if (existingValue && config.entity.columns?.[property] === 'multi_select') {
+    if (existingValue && config.cache.columns?.[property] === 'multi_select') {
       return {
         ...acc,
         [property]: Array.isArray(existingValue)

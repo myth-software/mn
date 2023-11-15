@@ -1,4 +1,4 @@
-import { Cache } from '@mountnotion/types';
+import { FlatDatabase } from '@mountnotion/types';
 import { readFileSync } from 'fs';
 import { CACHE } from './constants.util';
 import { log } from './log.util';
@@ -12,7 +12,7 @@ export function getCache() {
   }
 
   if (cached) {
-    return JSON.parse(cached) as Cache[];
+    return JSON.parse(cached) as FlatDatabase[];
   }
   return;
 }

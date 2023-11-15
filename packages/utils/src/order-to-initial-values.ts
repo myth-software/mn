@@ -1,16 +1,16 @@
-import { Entity, Instance } from '@mountnotion/types';
+import { Cache, Instance } from '@mountnotion/types';
 import { ensure } from './ensure.util';
 import { Displayable, TypedDisplayConfiguration, TypedValues } from './types';
 
-export function orderToInitialValues<T extends Entity>({
+export function orderToInitialValues<TCache extends Cache>({
   config,
   data,
 }: {
-  config: TypedDisplayConfiguration<T>;
+  config: TypedDisplayConfiguration<TCache>;
   data?: Instance;
 }) {
   return (
-    acc: TypedValues<T>,
+    acc: TypedValues<TCache>,
     { property: p, config: { defaultValue } = {} }: Displayable
   ) => {
     const property = ensure(p);
@@ -18,15 +18,15 @@ export function orderToInitialValues<T extends Entity>({
 
     if (
       (existingValue || defaultValue) &&
-      config.entity.columns?.[property] === 'select'
+      config.cache.columns?.[property] === 'select'
     ) {
       const existingString =
         typeof existingValue === 'string' ? existingValue : null;
-      const entityOptions = ensure(config.entity.options)[property];
-      const optionIndex = entityOptions.findIndex(
+      const cacheOptions = ensure(config.cache.options)[property];
+      const optionIndex = cacheOptions.findIndex(
         (option) => option === existingValue || option === defaultValue
       );
-      const option = entityOptions[optionIndex];
+      const option = cacheOptions[optionIndex];
 
       return {
         ...acc,
@@ -34,7 +34,7 @@ export function orderToInitialValues<T extends Entity>({
       };
     }
 
-    if (config.entity.columns?.[property] === 'checkbox') {
+    if (config.cache.columns?.[property] === 'checkbox') {
       const existingBoolean =
         typeof existingValue === 'boolean' ? existingValue : null;
       return {
@@ -43,7 +43,7 @@ export function orderToInitialValues<T extends Entity>({
       };
     }
 
-    if (config.entity.columns?.[property] === 'date') {
+    if (config.cache.columns?.[property] === 'date') {
       const existingDate =
         typeof existingValue === 'string' ? existingValue : null;
       return {
@@ -56,11 +56,11 @@ export function orderToInitialValues<T extends Entity>({
      * files are excluded from initial values and are not
      * represented within the form as the other column types are
      */
-    if (config.entity.columns?.[property] === 'files') {
+    if (config.cache.columns?.[property] === 'files') {
       return acc;
     }
 
-    if (config.entity.columns?.[property] === 'relation') {
+    if (config.cache.columns?.[property] === 'relation') {
       const existingRelation =
         typeof existingValue?.[0] === 'string' ? existingValue[0] : null;
       return {

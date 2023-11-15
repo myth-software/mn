@@ -6,8 +6,8 @@ import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
 
 dotenv.config();
-export function entities(options: BasicOptions): Rule {
-  log.success({ action: 'running', message: 'entities schematic' });
+export function caches(options: BasicOptions): Rule {
+  log.success({ action: 'running', message: 'caches schematic' });
   log.success({ action: '-------', message: '------------------' });
   validateInputs(options);
   const { outDir } = options;
@@ -19,7 +19,7 @@ export function entities(options: BasicOptions): Rule {
       ({ title }) => title && !excludes.includes(title)
     );
     const titles = includedCaches.map((cache) => cache.title);
-    const entitiesRules = includedCaches.map((cache) => {
+    const cachesRules = includedCaches.map((cache) => {
       return applyWithOverwrite(url('./files/all'), [
         template({
           title: cache.title,
@@ -31,7 +31,7 @@ export function entities(options: BasicOptions): Rule {
         move(outDir),
       ]);
     });
-    const entitiesIndexRule = applyWithOverwrite(url('./files/index'), [
+    const cachesIndexRule = applyWithOverwrite(url('./files/index'), [
       template({
         titles,
         options,
@@ -40,6 +40,6 @@ export function entities(options: BasicOptions): Rule {
       }),
       move(outDir),
     ]);
-    return chain([...entitiesRules, entitiesIndexRule]);
+    return chain([...cachesRules, cachesIndexRule]);
   };
 }

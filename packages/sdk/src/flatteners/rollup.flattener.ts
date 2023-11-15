@@ -12,29 +12,29 @@ import {
 import { flattenDate } from './date.flattener';
 import { flattenNotionProperty } from './notion-property.flattener';
 
-export function flattenRollup(entity: unknown): any {
-  assertsIsRollup(entity);
+export function flattenRollup(notionProperty: unknown): any {
+  assertsIsRollup(notionProperty);
 
-  if (isRollupArrayGuard(entity)) {
-    assertsIsRollupArray(entity);
-    const array = entity.rollup.array;
+  if (isRollupArrayGuard(notionProperty)) {
+    assertsIsRollupArray(notionProperty);
+    const array = notionProperty.rollup.array;
 
     return array.length === 0 ? null : flattenNotionProperty(array[0]);
   }
 
-  if (isRollupNumberGuard(entity)) {
-    assertsIsRollupNumber(entity);
-    const number = entity.rollup.number;
+  if (isRollupNumberGuard(notionProperty)) {
+    assertsIsRollupNumber(notionProperty);
+    const number = notionProperty.rollup.number;
 
     return number;
   }
 
-  if (isRollupDateGuard(entity)) {
-    assertsIsRollupDate(entity);
-    const date = flattenDate(entity.rollup.date);
+  if (isRollupDateGuard(notionProperty)) {
+    assertsIsRollupDate(notionProperty);
+    const date = flattenDate(notionProperty.rollup.date);
 
     return date;
   }
 
-  return entity.rollup;
+  return notionProperty.rollup;
 }

@@ -1,19 +1,19 @@
 <% if (options.debug) { %>
-  <%= log.debug({ action: 'debugging', message: 'mn.ts' }) %>
+  <% log.debug({ action: 'debugging', message: 'mn.ts' }) %>
 <% } %>
 
-import { configure } from '@mountnotion/sdk';
-import { db, client } from '<%= options.drizzle %>';
-import { indicies } from '<%= options.entities %>';
+  import { caches } from '<%= options.caches %>';
+  import { db, drizzleClient } from '<%= options.drizzle %>';
+  import { configureNotion } from '@mountnotion/sdk';
 
-const notion = configure({ indicies });
+const notionClient = configureNotion({ caches });
 export const mn =
   process.env.NODE_ENV === 'production'
-    ? (client as unknown as typeof notion)
-    : notion;
+    ? (drizzleClient as unknown as typeof notion)
+    : notionClient;
 
-export { db, client, notion };
+export { db, drizzleClient, notionClient };
 
 <% if (options.debug) { %>
-  <%= log.debug({ action: 'debugging', message: 'end mn.ts' }) %>
+  <% log.debug({ action: 'debugging', message: 'end mn.ts' }) %>
 <% } %>

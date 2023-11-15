@@ -4,10 +4,10 @@
   "sourceRoot": "packages/docs",
   "projectType": "application",
   "targets": {
-    "build": {
+    "build-only": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm run build",
+        "command": "npm run build-only",
         "cwd": "packages/docs"
       },
       "outputs": ["packages/docs/build"]
@@ -18,7 +18,7 @@
         "command": "npm run serve",
         "cwd": "packages/docs"
       },
-      "dependsOn": ["build"]
+      "dependsOn": ["build-only"]
     }
   },
   "tags": []

@@ -16,19 +16,16 @@ export declare type FlatDatabase = {
   options: Options | null;
   relations: Relations | null;
   mappings: Mappings;
-};
-
-export declare type Cache = FlatDatabase & {
-  rollups: Columns;
+  rollups: Columns | null;
   rollupsOptions: Options | null;
 };
 
-export declare type Entity = DeepReadonly<Cache>;
+export declare type Cache = DeepReadonly<FlatDatabase>;
 
-export declare type InferReadonly<T extends Entity> = {
-  [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
+export declare type InferReadonly<TCache extends Cache> = {
+  [P in keyof TCache['mappings'] as TCache['columns'][TCache['mappings'][P]] extends ReadonlyColumnTypes
     ? P
-    : never]: T['columns'][T['mappings'][P]] extends infer ColumnType
+    : never]: TCache['columns'][TCache['mappings'][P]] extends infer ColumnType
     ? ColumnType extends 'created_by'
       ? string | null
       : ColumnType extends 'created_time'
@@ -38,19 +35,19 @@ export declare type InferReadonly<T extends Entity> = {
       : ColumnType extends 'last_edited_time'
       ? string | null
       : ColumnType extends 'rollup'
-      ? T['rollups'][T['mappings'][P]] extends 'relation'
+      ? TCache['rollups'][TCache['mappings'][P]] extends 'relation'
         ? Array<string> | null
-        : T['rollups'][T['mappings'][P]] extends
+        : TCache['rollups'][TCache['mappings'][P]] extends
             | 'rich_text'
             | 'title'
             | 'phone_number'
             | 'email'
         ? string | null
-        : T['rollups'][T['mappings'][P]] extends 'select' | 'status'
-        ? T['rollupsOptions'][T['mappings'][P]][number] | null
-        : T['rollups'][T['mappings'][P]] extends 'multi_select'
-        ? T['rollupsOptions'][T['mappings'][P]] | null
-        : T['rollups'][T['mappings'][P]] extends 'number'
+        : TCache['rollups'][TCache['mappings'][P]] extends 'select' | 'status'
+        ? TCache['rollupsOptions'][TCache['mappings'][P]][number] | null
+        : TCache['rollups'][TCache['mappings'][P]] extends 'multi_select'
+        ? TCache['rollupsOptions'][TCache['mappings'][P]] | null
+        : TCache['rollups'][TCache['mappings'][P]] extends 'number'
         ? number | null
         :
             | number
@@ -66,10 +63,10 @@ export declare type InferReadonly<T extends Entity> = {
     : never;
 } & AdditionalProperties;
 
-export declare type InferWriteonly<T extends Entity> = {
-  [P in keyof T['mappings'] as T['columns'][T['mappings'][P]] extends ReadonlyColumnTypes
+export declare type InferWriteonly<TCache extends Cache> = {
+  [P in keyof TCache['mappings'] as TCache['columns'][TCache['mappings'][P]] extends ReadonlyColumnTypes
     ? never
-    : P]: T['columns'][T['mappings'][P]] extends infer ColumnType
+    : P]: TCache['columns'][TCache['mappings'][P]] extends infer ColumnType
     ? ColumnType extends 'title'
       ? string | null
       : ColumnType extends 'rich_text'
@@ -83,13 +80,13 @@ export declare type InferWriteonly<T extends Entity> = {
       : ColumnType extends 'date'
       ? string | null
       : ColumnType extends 'status'
-      ? T['options'][T['mappings'][P]][number] | null
+      ? TCache['options'][TCache['mappings'][P]][number] | null
       : ColumnType extends 'select'
-      ? T['options'][T['mappings'][P]][number] | null
+      ? TCache['options'][TCache['mappings'][P]][number] | null
       : ColumnType extends 'email'
       ? string | null
       : ColumnType extends 'multi_select'
-      ? T['options'][T['mappings'][P]][number][] | null
+      ? TCache['options'][TCache['mappings'][P]][number][] | null
       : ColumnType extends 'relation'
       ? string[] | null
       : ColumnType extends 'files'
@@ -102,7 +99,8 @@ export declare type InferWriteonly<T extends Entity> = {
     : never;
 };
 
-export type Infer<T extends Entity> = InferWriteonly<T> & InferReadonly<T>;
+export type Infer<TCache extends Cache> = InferWriteonly<TCache> &
+  InferReadonly<TCache>;
 
 export type FullGetDatabaseResponse = GetDatabaseResponse & {
   icon: UpdatePageParameters['icon'];

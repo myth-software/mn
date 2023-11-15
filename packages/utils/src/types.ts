@@ -1,6 +1,6 @@
 import {
+  Cache,
   DeepReadonly,
-  Entity,
   Instance,
   Merge,
   MountNotionCrud,
@@ -24,7 +24,7 @@ export declare type DisplayAction = (typeof displayActions)[number];
 export type Values = Record<string, string | boolean | string[] | number>;
 
 export type TypedValues<
-  T extends Entity,
+  T extends Cache,
   K extends keyof T['columns'] = keyof T['columns']
 > = {
   [P in K]: T['columns'][P] extends infer ColumnType
@@ -96,7 +96,7 @@ export declare type Displayable = {
 };
 
 export declare type TypedSelectDisplayable<
-  TEntity extends Entity,
+  TEntity extends Cache,
   TColumn extends string,
   TOptions extends TEntity['options'] = TEntity['options']
 > = {
@@ -113,7 +113,7 @@ export declare type RelationDisplayable = {
   useGetQuery: () => any;
 };
 
-export declare type TypedRelationDisplayable<TCache extends Entity> =
+export declare type TypedRelationDisplayable<TCache extends Cache> =
   MountNotionCrud<TCache>;
 
 export declare type DateDisplayable = {
@@ -130,8 +130,8 @@ export declare type CheckboxDisplayable = {
 
 export declare type RichTextDisplayable = {
   /**
-   * isMultiline is settable for any entity properties that are rich_text columns
-   * in the database. the only settable value is true, which displays inputs
+   * isMultiline is settable for any cached column that is property type 'rich_text'
+   * in the notion database. the only settable value is true, which displays inputs
    * as multiple lines in forms.
    */
   isMultiline?: boolean;
@@ -143,7 +143,7 @@ export declare type FilesDisplayable = {
 };
 
 export declare type TypedDisplayable<
-  TEntity extends Entity,
+  TEntity extends Cache,
   TColumns extends keyof TEntity['columns'] = keyof TEntity['columns']
 > = {
   [P in TColumns]: Merge<
@@ -219,14 +219,14 @@ export declare type DisplayConfiguration = {
    */
   id: string;
   /**
-   * the entity being configured. it is all information including columns that
-   * map each entity property to a database column type. column types are used
+   * the cache being configured. it is all information including columns that
+   * map each cache property to a database column type. column types are used
    * here to determine what to display.
    */
-  entity: Entity;
+  cache: Cache;
   /**
-   * can delete controls whether the accident victim may delete the entity.
-   * by default the accident victim may delete the entity, the only settable
+   * can delete controls whether the accident victim may delete the cache.
+   * by default the accident victim may delete the cache, the only settable
    * value is false and the result is the removal of the delete button.
    */
   canDelete?: boolean;
@@ -247,7 +247,7 @@ export declare type DisplayConfiguration = {
    */
   limit?: DisplayLimit;
   /**
-   * order lists the properties of the entity to display in the order that
+   * order lists the properties of the cache to display in the order that
    * they are to be displayed in
    */
   order: Array<Displayable>;
@@ -257,11 +257,11 @@ export declare type DisplayConfiguration = {
  * @see DisplayConfiguration
  */
 export declare type TypedDisplayConfiguration<
-  T extends Entity,
-  L extends Array<TypedDisplayable<T>> = Array<TypedDisplayable<T>>
+  TCache extends Cache,
+  L extends Array<TypedDisplayable<TCache>> = Array<TypedDisplayable<TCache>>
 > = {
   id: string;
-  entity: T;
+  cache: TCache;
   limit?: DisplayLimit;
   canDelete?: false;
   addAction?: AddAction;
@@ -271,19 +271,19 @@ export declare type TypedDisplayConfiguration<
 };
 
 export declare type TypedDisplay<
-  T extends Entity,
+  TCache extends Cache,
   K extends DisplayLimit | undefined
-> = TypedDisplayConfiguration<T> & {
+> = TypedDisplayConfiguration<TCache> & {
   title: string;
   fields: Fields;
   action: DisplayAction;
   actions: Record<DisplayAction, string>;
-  initialValues: TypedValues<T>;
-  displayValues: TypedValues<T>;
+  initialValues: TypedValues<TCache>;
+  displayValues: TypedValues<TCache>;
   options?: Options;
   hasData: boolean;
   /**
-   * limit controls whether the display allows for multiple entities.
+   * limit controls whether the display allows for multiple caches.
    */
   limit: K;
   instances?: K extends 'none' | undefined ? Array<Instance> : never;

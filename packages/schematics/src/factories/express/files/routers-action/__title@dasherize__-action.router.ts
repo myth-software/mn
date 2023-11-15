@@ -1,9 +1,10 @@
 <% if (options.debug) { %>
-  <%= log.debug({ action: 'debugging', message: `controller: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+  <% log.debug({ action: 'debugging', message: `controller: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
-import express, { Request, Response } from 'express';
-import { insert<%= classify(title) %>Schema } from '<%= options.drizzle %>';
+  import express from 'express';
+  import { insert } from <>;
+%= classify(title) %>Schema } from '<%= options.drizzle %>';
 
 import <%= camelize(title) %>Controller from '../controllers/<%= dasherize(title) %>.controller';
 

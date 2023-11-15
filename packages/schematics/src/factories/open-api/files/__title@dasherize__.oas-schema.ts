@@ -1,5 +1,5 @@
-<% if (debug) { %>
-  <%= log.debug({ action: 'debugging', message: `schema: cache ${cache ? 'is defined': 'is not defined'}` }) %>
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: `schema: cache ${cache ? 'is defined': 'is not defined'}` }) %>
 <% } %>
 
 export const oasSchema = {  

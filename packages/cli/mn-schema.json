@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://docs.mountnotion.com/configuration",
-  "title": "json schema for mount notion configiguration",
+  "title": "json schema for mount notion configuration",
   "type": "object",
   "properties": {
     "workspace": {
@@ -12,14 +12,34 @@
           "items": {
             "type": "string"
           }
+        },
+        "lint": {
+          "type": "object",
+          "properties": {
+            "columns": {
+              "type": "object"
+            },
+            "rows": {
+              "type": "object"
+            }
+          }
         }
-      }
+      },
+      "required": ["selectedPages"]
     },
     "auth": {
       "type": "object",
       "properties": {
         "key": {
           "type": ["string", "null"]
+        },
+        "notionIntegrationKey": {
+          "type": "string",
+          "description": "notion api key to authorize client",
+          "$default": {
+            "$source": "argv",
+            "index": 1
+          }
         }
       }
     },
@@ -29,13 +49,10 @@
         "basic": {
           "type": "object",
           "properties": {
-            "pageId": {
-              "type": "string"
-            },
             "baseUrl": {
               "type": "string"
             },
-            "entities": {
+            "caches": {
               "type": "string"
             },
             "javascriptizeColumns": {
@@ -44,7 +61,8 @@
             "outDir": {
               "type": "string"
             }
-          }
+          },
+          "required": ["caches", "outDir"]
         },
         "auth": {
           "type": "object",
@@ -75,6 +93,11 @@
       }
     },
     "schematics": {
+      "$ref": "#/$defs/schematics"
+    }
+  },
+  "$defs": {
+    "schematics": {
       "type": "array",
       "items": {
         "type": "object",
@@ -91,11 +114,30 @@
               "basic": {
                 "type": "object",
                 "properties": {
+                  "debug": {
+                    "type": "bolean",
+                    "description": "enable debug logs",
+                    "$default": false
+                  },
                   "pageId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "page id to look for databases at",
+                    "$default": {
+                      "$source": "argv",
+                      "index": 0
+                    }
+                  },
+                  "caches": {
+                    "type": "string",
+                    "description": "caches"
                   },
                   "outDir": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "specify the output directory"
+                  },
+                  "baseUrl": {
+                    "type": "string",
+                    "description": "client baseUrl"
                   },
                   "locals": {
                     "type": "string"
@@ -117,6 +159,18 @@
                   },
                   "drizzle": {
                     "type": "string"
+                  },
+                  "org": {
+                    "type": "string",
+                    "description": "organization to import in loopback repository"
+                  },
+                  "rtk": {
+                    "type": "boolean",
+                    "description": "client with rk"
+                  },
+                  "auth": {
+                    "type": "boolean",
+                    "description": "generate controllers with auth"
                   }
                 }
               },

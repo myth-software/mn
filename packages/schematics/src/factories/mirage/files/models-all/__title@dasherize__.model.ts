@@ -1,4 +1,4 @@
-import { <%= classify(title) %> } from '<%= options.entities %>';
+import { <%= classify(title) %> } from '<%= options.caches %>';
 import { Model } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 

@@ -1,14 +1,14 @@
 <% if (options.debug) { %>
-  <%= log.debug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
+  <% log.debug({ action: 'debugging', message: `router: title ${title ? 'is ' + title : 'is not defined'}` }) %>
 <% } %>
 
-import { Request, Response } from 'express';
-import { 
-  <%= classify(title) %>,
+  import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
+  import { Request, Response } from 'express';
+  import { mn } from '../mn';
+  import { } from <>;
+%= classify(title) %>,
   <%= classify(title) %>Index
-} from '<%= options.entities %>';
-import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
-import { mn } from '../mn';
+} from '<%= options.caches %>';
 
 async function query(req: Request, res: Response) {
     const where = req.query

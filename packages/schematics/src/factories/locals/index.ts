@@ -1,9 +1,9 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { Cache, Entity, LocalsOptions } from '@mountnotion/types';
+import { Cache, LocalsOptions } from '@mountnotion/types';
 import {
   ensure,
   getCache,
-  getTitleColumnFromEntity,
+  getTitleColumnFromCache,
   log,
   strings,
 } from '@mountnotion/utils';
@@ -19,13 +19,13 @@ import { getlocals } from '../../utils';
 export function locals(options: LocalsOptions): Rule {
   log.success({ action: 'running', message: 'locals schematic' });
   log.success({ action: '-------', message: '----------------' });
-  const { outDir, entities } = options;
+
   const excludes = options.excludes ?? [];
   let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];
 
   return async () => {
-    await rimraf(outDir);
+    await rimraf(options.outDir);
     const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
@@ -39,26 +39,25 @@ export function locals(options: LocalsOptions): Rule {
       .map(({ title, locals }) => {
         titlesRef = cachesRef.map((cache) => cache.title) as string[];
         const cache = cachesRef.find((cache) => cache.title === title);
-        const TITLE = getTitleColumnFromEntity(cache as Entity);
+        const TITLE = getTitleColumnFromCache(cache as Cache);
         const localsRules = locals.map((local) => {
           const { [TITLE]: localTitle } = local;
           const formattedTitle = strings.titlize(localTitle);
-          return applyWithOverwrite(url('./files/all-for-entity'), [
+          return applyWithOverwrite(url('./files/all-for-cache'), [
             template({
               title: formattedTitle,
               options,
               local,
-              entities,
               databaseName: title,
               log,
               ...strings,
             }),
-            move(`${outDir}/${strings.dasherize(title)}`),
+            move(`${options.outDir}/${strings.dasherize(title)}`),
           ]);
         });
 
         const localsIndexRule = applyWithOverwrite(
-          url('./files/index-for-entity'),
+          url('./files/index-for-cache'),
           [
             template({
               options,
@@ -67,12 +66,11 @@ export function locals(options: LocalsOptions): Rule {
                 title: strings.titlize(local[TITLE]),
               })),
               titles: titlesRef,
-              entities,
               log,
               databaseName: title,
               ...strings,
             }),
-            move(`${outDir}/${strings.dasherize(title)}`),
+            move(`${options.outDir}/${strings.dasherize(title)}`),
           ]
         );
 
@@ -83,11 +81,10 @@ export function locals(options: LocalsOptions): Rule {
       template({
         titles: titlesRef,
         options,
-        entities,
         log,
         ...strings,
       }),
-      move(outDir),
+      move(options.outDir),
     ]);
     return chain([...rules, localsRootIndexRule]);
   };

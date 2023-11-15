@@ -3,18 +3,18 @@ import {
   SearchBodyParameters,
   SearchResponse,
 } from './api-endpoints';
+import { Cache, Infer, InferWriteonly } from './caches';
 import { MountNotionQueryParameters } from './client';
 import { AdditionalProperties } from './columns';
-import { Entity, Infer, InferWriteonly } from './databases';
 
 export declare type MountNotionClientConfig = {
   integrationKey?: string;
-  indicies: {
-    [title: string]: Entity;
+  caches: {
+    [title: string]: Cache;
   };
 };
 
-export declare type MountNotionCrud<TCache extends Entity> = {
+export declare type MountNotionCrud<TCache extends Cache> = {
   query: (
     query?: MountNotionQueryParameters<TCache>
   ) => Promise<Infer<TCache>[]>;
@@ -29,7 +29,7 @@ export declare type MountNotionCrud<TCache extends Entity> = {
 };
 
 export declare type MountNotionClient<T extends MountNotionClientConfig> = {
-  [Property in keyof T['indicies']]: T['indicies'][Property] extends infer Database extends T['indicies'][Property]
+  [Property in keyof T['caches']]: T['caches'][Property] extends infer Database extends T['caches'][Property]
     ? MountNotionCrud<Database>
     : never;
 } & {

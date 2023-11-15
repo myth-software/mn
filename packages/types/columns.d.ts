@@ -40,7 +40,7 @@ export declare type ColumnTypes =
 export declare type AdditionalPropertyTypes = 'cover' | 'id' | 'icon';
 
 /**
- * the notion database properties of an entity
+ * columns are the types of notion database properties for a cache
  */
 export declare type Columns = Record<string, ColumnTypes>;
 

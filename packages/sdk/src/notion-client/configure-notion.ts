@@ -16,12 +16,12 @@ import client from '../infrastructure/client';
 import { mapInstance } from './instance.mapper';
 import { mapQuery } from './query.mapper';
 
-export function configure<Config extends MountNotionClientConfig>(
+export function configureNotion<Config extends MountNotionClientConfig>(
   config: Config
 ): MountNotionClient<Config> {
   const notion = client(config.integrationKey);
 
-  const databases = Object.entries(config.indicies).map(([title, cache]) => {
+  const databases = Object.entries(config.caches).map(([title, cache]) => {
     type Cache = typeof cache;
     return [
       title,

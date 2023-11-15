@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { InfrastructureOptions } from './infrastructure-options.interface';
-import { <%= classify(title) %> } from '<%= options.entities %>';
+import { <%= classify(title) %> } from '<%= options.caches %>';
 
 export const <%= camelize(title) %>Request = {
   getById: async ({ id }: InfrastructureOptions<<%= classify(title) %>>) => {

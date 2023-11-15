@@ -7,14 +7,14 @@ import {
 import { flattenPageResponse } from '../../flatteners';
 import client from '../client';
 
-export async function retrieve<Entity>(
+export async function retrieve<TCache>(
   query: GetPageParameters
 ): Promise<PageObjectResponse>;
-export async function retrieve<Entity>(
+export async function retrieve<TCache>(
   query: GetPageParameters,
   config: ToolsConfiguration
-): Promise<[Entity, Columns]>;
-export async function retrieve<Entity>(
+): Promise<[TCache, Columns]>;
+export async function retrieve<TCache>(
   query: GetPageParameters,
   config?: ToolsConfiguration
 ) {
@@ -27,9 +27,9 @@ export async function retrieve<Entity>(
       return response;
     }
 
-    const entity = flattenPageResponse<Entity>(response);
+    const cache = flattenPageResponse<TCache>(response);
 
-    return entity;
+    return cache;
   } catch (e) {
     console.error(e);
     throw e;

@@ -12,7 +12,7 @@ export declare type BasicOptions = {
   excludes: Array<string>;
   outDir: string;
   baseUrl: string;
-  entities: string;
+  caches: string;
   javascriptizeColumns: boolean;
   debug: boolean;
 };
@@ -47,9 +47,7 @@ export declare type I18nOptions = BasicOptions & {
   languages: ('en' | 'es')[];
 };
 
-export declare type DrizzleOptions = BasicOptions & {
-  experimentalRelations: boolean;
-};
+export declare type DrizzleOptions = BasicOptions;
 
 export declare type Schematics = {
   name: string;

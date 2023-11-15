@@ -1,5 +1,5 @@
 import {
-  Entity,
+  Cache,
   ExpandColumnsConfiguration,
   ExpandedColumns,
   InferWriteonly,
@@ -12,8 +12,10 @@ import { expandSelect } from './select.expander';
 import { expandStatus } from './status.expander';
 import { expandTitle } from './title.expander';
 
-export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
-  instance: T,
+export function expandProperties<
+  TInstance extends Partial<InferWriteonly<Cache>>
+>(
+  instance: TInstance,
   { mappings, columns }: ExpandColumnsConfiguration
 ): ExpandedColumns {
   if (instance === undefined) {
@@ -115,6 +117,6 @@ export function expandProperties<T extends Partial<InferWriteonly<Entity>>>(
           return acc;
         }
       }
-    }, {} as T);
+    }, {} as TInstance);
   return notionColumns as unknown as ExpandedColumns;
 }

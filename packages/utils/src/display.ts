@@ -1,4 +1,4 @@
-import { Entity, Instance, Options } from '@mountnotion/types';
+import { Cache, Instance, Options } from '@mountnotion/types';
 import { ensure } from './ensure.util';
 import { orderToDisplayValues } from './order-to-display-values';
 import { orderToFields } from './order-to-fields';
@@ -24,45 +24,47 @@ const i18n = {
  * a display than can be relied on in all scenarios from lists to forms.
  *
  * display accepts a partially configured display that describes the
- * entity and properties to display as well as any overrides to the default
+ * cache and properties to display as well as any overrides to the default
  * display configuration.
- * @param entity {@link Entity}
+ * @param cache {@link Cache}
  * @param columns {@link Columns}
  * @returns display configuration {@link DisplayConfiguration}
  */
-export function display<T extends Entity>(
-  c: TypedDisplayConfiguration<T>
-): (data?: Array<Instance> | Instance) => TypedDisplay<T, (typeof c)['limit']> {
+export function display<TCache extends Cache>(
+  c: TypedDisplayConfiguration<TCache>
+): (
+  data?: Array<Instance> | Instance
+) => TypedDisplay<TCache, (typeof c)['limit']> {
   return (data) => {
     const limit = c.limit === 'one' ? 'one' : 'none';
     const config = c as DisplayConfiguration;
     const title = i18n.t(`displays.${config.id}`);
 
     const options = config?.order.reduce(
-      orderToOptions<(typeof c)['entity']>({ config: c }),
+      orderToOptions<(typeof c)['cache']>({ config: c }),
       {} as Options
     );
 
     const fields = config?.order.reduce(
-      orderToFields<(typeof c)['entity']>({ config: c }),
+      orderToFields<(typeof c)['cache']>({ config: c }),
       {} as Fields
     );
 
     if (!Array.isArray(data)) {
       const initialValues = config?.order.reduce(
-        orderToInitialValues<(typeof c)['entity']>({ config: c, data }),
-        {} as TypedValues<T>
+        orderToInitialValues<(typeof c)['cache']>({ config: c, data }),
+        {} as TypedValues<TCache>
       );
 
       const displayValues = config?.order
         .filter(({ isHidden }) => !isHidden)
         .reduce(
-          orderToDisplayValues<(typeof c)['entity']>({
+          orderToDisplayValues<(typeof c)['cache']>({
             config: c,
             data,
             options,
           }),
-          {} as TypedValues<T>
+          {} as TypedValues<TCache>
         );
 
       const hasData = config.order.some(({ property: p }) => {
@@ -106,20 +108,20 @@ export function display<T extends Entity>(
     }
 
     const initialValues = config?.order.reduce(
-      orderToInitialValues<(typeof c)['entity']>({ config: c }),
-      {} as TypedValues<T>
+      orderToInitialValues<(typeof c)['cache']>({ config: c }),
+      {} as TypedValues<TCache>
     );
 
     const displayValues = data?.map((d) =>
       config?.order
         .filter(({ isHidden }) => !isHidden)
         .reduce(
-          orderToDisplayValues<(typeof c)['entity']>({
+          orderToDisplayValues<(typeof c)['cache']>({
             config: c,
             data: d,
             options,
           }),
-          {} as TypedValues<T>
+          {} as TypedValues<TCache>
         )
     )[0];
 

@@ -4,9 +4,9 @@
       "factory": "./src/factories/drizzle/index#drizzle",
       "description": "generate drizzle"
     },
-    "entities": {
-      "factory": "./src/factories/entities/index#entities",
-      "description": "generate entities"
+    "caches": {
+      "factory": "./src/factories/caches/index#caches",
+      "description": "generate caches"
     },
     "express": {
       "factory": "./src/factories/express/index#express",
@@ -28,8 +28,8 @@
       "factory": "./src/factories/mirage/index#mirage",
       "description": "generate mirage"
     },
-    "openApi": {
-      "factory": "./src/factories/open-api/index#openApi",
+    "oas": {
+      "factory": "./src/factories/oas/index#oas",
       "description": "generate oas json"
     },
     "react-query": {

@@ -4,7 +4,7 @@ import { validateBasicInputs } from '../../utils';
 export function validateInputs(options: BasicOptions): void {
   validateBasicInputs(options);
 
-  if (!options.entities) {
-    throw Error('missing entities');
+  if (!options.caches) {
+    throw Error('missing caches');
   }
 }
