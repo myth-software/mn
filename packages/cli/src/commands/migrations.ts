@@ -71,7 +71,7 @@ export default {
         await runInteractiveCommand(`npx`, [
           'drizzle-kit',
           'check:pg',
-          '--config=${outDir}/drizzle.config.ts',
+          `--config=${outDir}/drizzle.config.ts`,
         ]);
 
         log.success({
@@ -106,8 +106,7 @@ export default {
         await runInteractiveCommand(`npx`, [
           'drizzle-kit',
           'generate:pg',
-          `--schema=${outDir}/drizzle.schema.ts`,
-          `--out=${outDir}/../migrations`,
+          `--config=${outDir}/drizzle.config.ts`,
         ]);
 
         log.success({
