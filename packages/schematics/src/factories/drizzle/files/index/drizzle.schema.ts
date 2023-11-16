@@ -22,7 +22,7 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
     <% } %>  
   <% } %>
 
-  export const <%= camelize(cache.title) %> = pgTable('<%= dasherize(cache.title) %>', {
+  export const <%= camelize(cache.title) %> = pgTable('<%= decamelize(camelize(cache.title)) %>', {
     id: uuid('id').defaultRandom().primaryKey(),
     icon: text('icon'),
     cover: text('cover'),

@@ -3,11 +3,7 @@ import {
   flattenDatabaseResponse,
   notion,
 } from '@mountnotion/sdk';
-import {
-  Cache,
-  FullGetDatabaseResponse,
-  MountnCommand,
-} from '@mountnotion/types';
+import { Cache, MountnCommand } from '@mountnotion/types';
 import { getTitleColumnFromCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
@@ -68,14 +64,14 @@ export default {
       },
       { all: true, resultsOnly: true, flattenResponse: true }
     );
-    const cache = {
+    const partialCache = {
       columns,
     } as Cache;
-    const TITLE = getTitleColumnFromCache(cache);
-    const database = (await notion.databases.retrieve({
+    const TITLE = getTitleColumnFromCache(partialCache);
+    const database = await notion.databases.retrieve({
       database_id,
-    })) as FullGetDatabaseResponse;
-    const flat = flattenDatabaseResponse(database);
+    });
+    const cache = flattenDatabaseResponse(database);
 
     while (instances.length) {
       const instance = instances.shift();
@@ -103,8 +99,8 @@ export default {
         log.success({
           action: 'fixing',
           page: {
-            emoji: flat.icon,
-            title: flat.title,
+            emoji: cache.icon,
+            title: cache.title,
           },
           message: `id '${instance.id}' title property '${TITLE}' from '${
             instance[TITLE]
@@ -134,8 +130,8 @@ export default {
         log.success({
           action: 'fixing',
           page: {
-            emoji: flat.icon,
-            title: flat.title,
+            emoji: cache.icon,
+            title: cache.title,
           },
           message: `id '${instance.id}' title property '${TITLE}' to ${title}`,
         });
@@ -144,16 +140,22 @@ export default {
       if (!instance.icon) {
         await notion.pages.update({
           page_id: instance.id,
-          icon: database.icon,
+          icon:
+            database.icon?.type === 'emoji' && database.icon.emoji
+              ? {
+                  type: 'emoji',
+                  emoji: database.icon.emoji,
+                }
+              : null,
         });
 
         log.success({
           action: 'fixing',
           page: {
-            emoji: flat.icon,
-            title: flat.title,
+            emoji: cache.icon,
+            title: cache.title,
           },
-          message: `id '${instance.id}' icon to ${flat.icon}`,
+          message: `id '${instance.id}' icon to ${cache.icon}`,
         });
       }
     }

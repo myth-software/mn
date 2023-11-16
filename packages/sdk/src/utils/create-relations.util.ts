@@ -1,23 +1,23 @@
 import {
+  Cache,
   DatabasePropertyConfigResponse,
-  FlatDatabase,
   Relations,
 } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
 
 export function createRelations(
   properties: Record<string, DatabasePropertyConfigResponse>,
-  flatDatabases: FlatDatabase[]
+  caches: Cache[]
 ) {
   const relations = Object.entries(properties).reduce(
     (acc, [property, value]) => {
       if (value.type === 'relation') {
-        const flat = ensure(
-          flatDatabases.find((f) => f.id === value.relation.database_id)
+        const cache = ensure(
+          caches.find((f) => f.id === value.relation.database_id)
         );
         return {
           ...acc,
-          [property]: flat.title,
+          [property]: cache.title,
         };
       }
 

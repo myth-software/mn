@@ -1,9 +1,4 @@
-import {
-  BasicOptions,
-  BlockObjectResponse,
-  Cache,
-  FlatDatabase,
-} from '@mountnotion/types';
+import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
 import { CACHE, log } from '@mountnotion/utils';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
@@ -15,7 +10,7 @@ import { createRollups } from './create-rollups.util';
 export const createDatabaseCaches = async (
   pageIds: Array<string>,
   options: BasicOptions
-): Promise<Array<FlatDatabase>> => {
+): Promise<Array<Cache>> => {
   if (!existsSync('./.mountnotion')) {
     mkdirSync('./.mountnotion');
   }
@@ -25,7 +20,7 @@ export const createDatabaseCaches = async (
   const pageResponse = await infrastructure.pages.retrieve({
     page_id: pageIds[0],
   });
-  const [cache] = flattenPageResponse<Cache>(pageResponse);
+  const [page] = flattenPageResponse<Cache>(pageResponse);
   const promises = pageIds.map((page_id) =>
     infrastructure.blocks.children.listAll({
       block_id: page_id,
@@ -33,9 +28,9 @@ export const createDatabaseCaches = async (
     })
   );
   log.info({
-    action: 'listing',
-    message: 'page children',
-    page: { emoji: cache.icon, title: cache.title },
+    action: 'caching',
+    message: 'started',
+    page: { emoji: page.icon, title: page.title },
   });
   const allResponses = (await Promise.all(promises)).flat();
 
@@ -57,7 +52,7 @@ export const createDatabaseCaches = async (
   log.info({
     action: 'retrieving',
     message: 'primary databases',
-    page: { emoji: cache.icon, title: cache.title },
+    page: { emoji: page.icon, title: page.title },
   });
   const primaryDatabases = await infrastructure.databases.retrieveAll(
     primaryIds
@@ -76,7 +71,7 @@ export const createDatabaseCaches = async (
   log.info({
     action: 'retrieving',
     message: 'related databases',
-    page: { emoji: cache.icon, title: cache.title },
+    page: { emoji: page.icon, title: page.title },
   });
   const relatedDatabases = await infrastructure.databases.retrieveAll(
     relatedIds
@@ -85,7 +80,7 @@ export const createDatabaseCaches = async (
     .concat(relatedDatabases)
     .filter((database) => !database.archived);
   allUsableDatabases.forEach((database) => {
-    log.info({
+    log.success({
       action: 'informing',
       message: 'found',
       page: {
@@ -104,7 +99,7 @@ export const createDatabaseCaches = async (
   log.info({
     action: 'querying',
     message: 'primary and related databases',
-    page: { emoji: cache.icon, title: cache.title },
+    page: { emoji: page.icon, title: page.title },
   });
   const nestedPages = await Promise.all(pagePromises);
   const pages = nestedPages.map(([nestedPage]) => nestedPage).flat();
@@ -120,35 +115,32 @@ export const createDatabaseCaches = async (
   log.info({
     action: 'querying',
     message: 'property types',
-    page: { emoji: cache.icon, title: cache.title },
+    page: { emoji: page.icon, title: page.title },
   });
   const allRollups = await Promise.all(allRollupsPromises);
 
-  const caches: FlatDatabase[] = allUsableDatabases
+  const caches: Cache[] = allUsableDatabases
     .map((database) => {
       return flattenDatabaseResponse(database, options);
     })
-    .map((flatDatabase, i, flatDatabases) => {
+    .map((cache, i, caches) => {
       const rollups = allRollups[i];
       return {
-        ...flatDatabase,
+        ...cache,
         rollups,
         rollupsOptions: createRollupsOptions(
           rollups,
           allUsableDatabases[i].properties,
-          flatDatabases
+          caches
         ),
-        relations: createRelations(
-          allUsableDatabases[i].properties,
-          flatDatabases
-        ),
+        relations: createRelations(allUsableDatabases[i].properties, caches),
       };
     });
 
-  log.info({
+  log.success({
     action: 'caching',
-    message: '',
-    page: { emoji: cache.icon, title: cache.title },
+    message: 'completed',
+    page: { emoji: page.icon, title: page.title },
   });
   writeFileSync(CACHE, JSON.stringify(caches));
 

@@ -15,7 +15,7 @@ export const flattenPageResponse = <TCache>({
   icon,
   cover,
 }: PageObjectResponse): [TCache, Columns] => {
-  const flat: {
+  const cache: {
     [key: string]: unknown;
   } = {
     id,
@@ -25,9 +25,9 @@ export const flattenPageResponse = <TCache>({
   for (const property in properties) {
     const instance = properties[property];
 
-    flat[property] = flattenNotionProperty(instance);
+    cache[property] = flattenNotionProperty(instance);
   }
   const columns = createColumns(properties);
-  const values = flat as unknown as TCache;
+  const values = cache as unknown as TCache;
   return [values, columns];
 };

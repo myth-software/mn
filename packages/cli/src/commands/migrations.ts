@@ -1,7 +1,7 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
-import { execSync } from 'child_process';
 import { prompt } from 'enquirer';
+import runInteractiveCommand from '../utils/run-interactive-command.util';
 
 type MigrationsOptions = {
   command: 'check' | 'drop' | 'generate' | 'up' | 'migrate';
@@ -63,14 +63,17 @@ export default {
       (schematic) => schematic.name === 'drizzle'
     );
     const outDir = drizzleSchematic?.options.basic.outDir;
+
     const command = (await optionsPrompt(args)).command;
 
     if (command === 'check') {
       try {
-        const result = execSync(
-          `npx drizzle-kit check:pg --config=${outDir}/drizzle.config.ts`
-        ).toString('utf-8');
-        console.info(result);
+        await runInteractiveCommand(`npx`, [
+          'drizzle-kit',
+          'check:pg',
+          '--config=${outDir}/drizzle.config.ts',
+        ]);
+
         log.success({
           action: 'checking',
           message: 'successful',
@@ -83,10 +86,11 @@ export default {
 
     if (command === 'drop') {
       try {
-        const result = execSync(
-          `npx drizzle-kit drop --config=${outDir}/drizzle.config.ts`
-        ).toString('utf-8');
-        console.info(result);
+        await runInteractiveCommand(`npx`, [
+          'drizzle-kit',
+          'drop',
+          `--config=${outDir}/drizzle.config.ts`,
+        ]);
         log.success({
           action: 'dropping',
           message: 'successful',
@@ -99,10 +103,13 @@ export default {
 
     if (command === 'generate') {
       try {
-        const result = execSync(
-          `npx drizzle-kit generate:pg --schema=${outDir}/schema/*.ts --out=${outDir}/../migrations`
-        ).toString('utf-8');
-        console.info(result);
+        await runInteractiveCommand(`npx`, [
+          'drizzle-kit',
+          'generate:pg',
+          `--schema=${outDir}/drizzle.schema.ts`,
+          `--out=${outDir}/../migrations`,
+        ]);
+
         log.success({
           action: 'generating',
           message: 'successful',
@@ -110,14 +117,15 @@ export default {
       } catch (e) {
         console.error(e);
       }
-      return;
     }
 
     if (command === 'migrate') {
-      const result = execSync(
-        `npx ts-node ${outDir}/migrate.ts ${outDir}`
-      ).toString('utf-8');
-      console.info(result);
+      await runInteractiveCommand('npx', [
+        'ts-node',
+        `${outDir}/migrate.ts`,
+        `${outDir}`,
+      ]);
+
       log.success({
         action: 'migrating',
         message: 'successful',
@@ -128,10 +136,11 @@ export default {
 
     if (command === 'up') {
       try {
-        const result = execSync(
-          `npx drizzle-kit up:pg --config=${outDir}/drizzle.config.ts`
-        ).toString('utf-8');
-        console.info(result);
+        await runInteractiveCommand('npx', [
+          'drizzle-kit',
+          'up:pg',
+          `--config=${outDir}/drizzle.config.ts`,
+        ]);
 
         log.success({
           action: 'upping',
@@ -142,6 +151,5 @@ export default {
       }
       return;
     }
-    return;
   },
 } satisfies MountnCommand;

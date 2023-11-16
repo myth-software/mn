@@ -195,12 +195,12 @@ export function levenshtein(a: string, b: string): number {
 }
 
 /**
- Returns the camelized, depunctuated, alphabetized version of a string
+ Returns the camelized, depunctuated, alphanumerized version of a string
 
  ```javascript
  variablize('🙂 users')         // 'users'
  variablize('🔢 pain values')       // 'painValues'
- variablize()disabled? (boolean)')    // 'disabledBoolean'
+ variablize('disabled? (boolean)')    // 'disabledBoolean'
  ```
 
  @method variablize

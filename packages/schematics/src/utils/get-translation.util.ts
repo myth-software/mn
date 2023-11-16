@@ -1,5 +1,5 @@
 import { TranslationServiceClient } from '@google-cloud/translate';
-import { FlatDatabase } from '@mountnotion/types';
+import { Cache } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
 import { Configuration, OpenAIApi } from 'openai';
 import { recursiveMap } from './recursive-map';
@@ -13,7 +13,7 @@ const location = 'global';
 const text = 'Hello, world!';
 
 export async function getTranslation(
-  { columns, options }: FlatDatabase,
+  { columns, options }: Cache,
   lng: 'en' | 'es' | 'pt' | 'th'
 ) {
   // Construct request

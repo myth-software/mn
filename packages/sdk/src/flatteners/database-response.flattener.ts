@@ -1,10 +1,11 @@
 import {
   BasicOptions,
+  Cache,
   DatabaseObjectResponse,
-  FlatDatabase,
 } from '@mountnotion/types';
 import { ensure } from '@mountnotion/utils';
 import { createColumns, createMappings, createOptions } from '../utils';
+import { createSyncedColumns } from '../utils/create-synced-property.util';
 import { flattenCover } from './cover.flattener';
 import { flattenDescription } from './description.flattener';
 import { flattenIcon } from './icon.flattener';
@@ -14,12 +15,12 @@ import { flattenRichText } from './rich-text.flattener';
  *  flattens a notion database response
  * @param database {@link DatabaseObjectResponse}
  * @param options {@link BasicOptions}
- * @returns flat database {@link FlatDatabase}
+ * @returns flat database {@link Cache}
  */
 export const flattenDatabaseResponse = (
   { id, icon, cover, description, properties, title }: DatabaseObjectResponse,
   options?: BasicOptions
-): FlatDatabase => {
+): Cache => {
   return {
     id,
     icon: flattenIcon(icon),
@@ -28,8 +29,9 @@ export const flattenDatabaseResponse = (
     title: ensure(flattenRichText(title)),
     columns: createColumns(properties),
     options: createOptions(properties),
-    relations: null,
     mappings: createMappings(properties, options),
+    syncedColumns: createSyncedColumns(properties),
+    relations: null,
     rollups: null,
     rollupsOptions: null,
   };

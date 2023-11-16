@@ -35,6 +35,15 @@ export const <%= underscore(cache.title).toUpperCase() %> = {
   <% } else { %>
     relations: null,
   <% }  %>
+  <% if(cache.syncedColumns) { %>
+    syncedColumns: {
+      <% for(const [property, syncedColumn] of Object.entries(cache.syncedColumns)) { %>
+        '<%= property %>': '<%= syncedColumn %>',
+      <% } %>
+    },
+  <% } else { %>
+    syncedColumns: null,
+  <% }  %>
   <% if(cache.mappings) { %>
     mappings: {
       <% for(const [property, mapping] of Object.entries(cache.mappings)) { %>

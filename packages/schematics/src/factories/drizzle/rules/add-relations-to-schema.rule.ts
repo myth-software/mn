@@ -1,11 +1,11 @@
 import { Rule, Tree } from '@angular-devkit/schematics';
-import { DrizzleOptions, FlatDatabase } from '@mountnotion/types';
+import { Cache, DrizzleOptions } from '@mountnotion/types';
 import { ensure, log, prettify } from '@mountnotion/utils';
 import createRelationsChange from '../utils/create-relations.change';
 
 export default function addRelationsToSchemaRule(
   options: DrizzleOptions,
-  caches: FlatDatabase[]
+  caches: Cache[]
 ): Rule {
   return (tree: Tree) => {
     if (options.debug) {

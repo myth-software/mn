@@ -13,17 +13,19 @@ export declare type FilterArgs = {
   property: string;
 };
 
-export declare type MountNotionClientDrizzleConfig = {
-  db: PostgresJsDatabase;
+export declare type MountNotionClientDrizzleConfig<
+  TSchema extends Record<string, unknown>
+> = {
+  db: PostgresJsDatabase<TSchema>;
   schema: {
     [key: string]: any;
   };
 };
 
 export declare type MountNotionDrizzleClient<
-  T extends MountNotionClientDrizzleConfig
+  TConfig extends MountNotionClientDrizzleConfig<TConfig['schema']>
 > = {
-  [Property in keyof T['schema']]: T['schema'][Property] extends infer Database extends T['schema'][Property]
+  [Property in keyof TConfig['schema']]: TConfig['schema'][Property] extends infer Database extends TConfig['schema'][Property]
     ? {
         query: (
           query?: MountNotionQueryParameters<any>

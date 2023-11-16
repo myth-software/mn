@@ -10,6 +10,7 @@ export * from './log.util';
 export * from './normalize-array.util';
 export * from './prettify.util';
 export * from './sort-object-by-keys';
+export * from './sort-title-and-relation.util';
 export * from './strings.util';
 export * from './types';
 export * from './write-file-with-pretty-json.util';

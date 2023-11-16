@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { FlatDatabase, I18nOptions, Options } from '@mountnotion/types';
+import { Cache, I18nOptions, Options } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';
@@ -22,7 +22,7 @@ export function i18n(options: I18nOptions): Rule {
   validateInputs(options);
   const { outDir } = options;
   const excludes = options.excludes ?? [];
-  let cachesRef: FlatDatabase[] = [];
+  let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];
 
   return async () => {

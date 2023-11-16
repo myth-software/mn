@@ -79,12 +79,12 @@ export default {
           },
         });
 
-        const flat = flattenDatabaseResponse(database);
+        const cache = flattenDatabaseResponse(database);
         log.success({
           action: 'renaming',
           page: {
-            emoji: flat.icon,
-            title: flat.title,
+            emoji: cache.icon,
+            title: cache.title,
           },
           message: `from ${fromColumnName} to ${toColumnName}`,
         });

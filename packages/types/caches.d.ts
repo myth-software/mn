@@ -3,10 +3,11 @@ import { DeepReadonly } from './helpers';
 
 export declare type Mappings = Record<string, string>;
 export declare type Relations = Record<string, string>;
+export declare type SyncedColumns = Record<string, string>;
 export declare type Options = Record<string, string[]>;
 export type Instance = Record<string, any> & AdditionalProperties;
 
-export declare type FlatDatabase = {
+export declare type Cache = DeepReadonly<{
   id: string;
   title: string;
   icon: string;
@@ -15,12 +16,11 @@ export declare type FlatDatabase = {
   columns: Columns;
   options: Options | null;
   relations: Relations | null;
+  syncedColumns: SyncedColumns | null;
   mappings: Mappings;
   rollups: Columns | null;
   rollupsOptions: Options | null;
-};
-
-export declare type Cache = DeepReadonly<FlatDatabase>;
+}>;
 
 export declare type InferReadonly<TCache extends Cache> = {
   [P in keyof TCache['mappings'] as TCache['columns'][TCache['mappings'][P]] extends ReadonlyColumnTypes
@@ -101,7 +101,3 @@ export declare type InferWriteonly<TCache extends Cache> = {
 
 export type Infer<TCache extends Cache> = InferWriteonly<TCache> &
   InferReadonly<TCache>;
-
-export type FullGetDatabaseResponse = GetDatabaseResponse & {
-  icon: UpdatePageParameters['icon'];
-};

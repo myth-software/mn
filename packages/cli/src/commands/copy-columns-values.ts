@@ -3,11 +3,7 @@ import {
   flattenDatabaseResponse,
   notion,
 } from '@mountnotion/sdk';
-import {
-  FullGetDatabaseResponse,
-  MountnCommand,
-  MountNotionConfig,
-} from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { workspaceHasPages } from '../dependencies';
@@ -88,9 +84,9 @@ export default {
       { all: true, resultsOnly: true, flattenResponse: true }
     );
 
-    const database = (await notion.databases.retrieve({
+    const database = await notion.databases.retrieve({
       database_id,
-    })) as FullGetDatabaseResponse;
+    });
 
     while (instances.length) {
       const instance = instances.shift();
@@ -111,12 +107,12 @@ export default {
           }
         ),
       });
-      const flat = flattenDatabaseResponse(database);
+      const cache = flattenDatabaseResponse(database);
       log.success({
         action: 'copying',
         page: {
-          emoji: flat.icon,
-          title: flat.title,
+          emoji: cache.icon,
+          title: cache.title,
         },
         message: `value ${instance[from]} from ${from} to ${to}`,
       });

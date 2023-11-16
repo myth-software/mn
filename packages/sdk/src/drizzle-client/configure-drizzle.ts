@@ -12,9 +12,9 @@ import {
 import { mapNotionToDrizzleWhere } from './notion-to-drizzle-where.mapper';
 import removeFalsyValues from './remove-falsy-values';
 
-export function configureDrizzle<Config extends MountNotionClientDrizzleConfig>(
-  config: Config
-): MountNotionDrizzleClient<Config> {
+export function configureDrizzle<
+  TConfig extends MountNotionClientDrizzleConfig<TConfig['schema']>
+>(config: TConfig): MountNotionDrizzleClient<TConfig> {
   const db = config.db;
 
   const databases = Object.entries(config.schema).map(([title, database]) => {

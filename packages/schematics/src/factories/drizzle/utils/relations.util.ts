@@ -1,5 +1,12 @@
-import { DrizzleOptions, FlatDatabase } from '@mountnotion/types';
-import { camelize, classify, normalizeArray } from '@mountnotion/utils';
+import { Cache, DrizzleOptions } from '@mountnotion/types';
+import {
+  camelize,
+  classify,
+  decamelize,
+  normalizeArray,
+  sortTitleAndRelation,
+  variablize,
+} from '@mountnotion/utils';
 
 type RelationMapping = {
   constName: string;
@@ -11,7 +18,7 @@ type RelationMapping = {
 };
 
 export function getRelations(
-  caches: FlatDatabase[],
+  caches: Cache[],
   options: DrizzleOptions
 ): {
   byId: { [id: string]: RelationMapping };
@@ -23,20 +30,31 @@ export function getRelations(
       if (!cache.relations) {
         throw new Error();
       }
-      const baseTitle = cache.title;
-      return Object.values(cache.relations)
-        .filter((relation) => !options.excludes.includes(relation))
-        .map((relation) => {
-          const first =
-            baseTitle.localeCompare(relation) < 0 ? baseTitle : relation;
-          const second = first === baseTitle ? relation : baseTitle;
+      const baseTable = cache.title;
+
+      return Object.entries(cache.relations)
+        .filter(([, relatedTable]) => !options.excludes.includes(relatedTable))
+        .map(([relatedColumn, relatedTable]) => {
+          const syncedColumn = cache.syncedColumns?.[relatedColumn];
+          const [first, second] = syncedColumn
+            ? sortTitleAndRelation([
+                variablize(relatedColumn),
+                variablize(syncedColumn),
+              ])
+            : sortTitleAndRelation([baseTable, relatedColumn]);
+          const constName = camelize(first) + classify(second);
+          const tableName = [first, second].join('_');
+          const firstName =
+            first === variablize(relatedColumn) ? relatedTable : baseTable;
+          const secondName = firstName === baseTable ? relatedTable : baseTable;
+
           return {
-            constName: camelize(first) + classify(second),
-            tableName: [first, second].join(' '),
-            firstId: camelize(first + 'Id'),
-            secondId: camelize(second + 'Id'),
-            firstName: camelize(first),
-            secondName: camelize(second),
+            constName: variablize(constName),
+            tableName: decamelize(tableName),
+            firstId: variablize(first + 'Id'),
+            secondId: variablize(second + 'Id'),
+            firstName: variablize(firstName),
+            secondName: variablize(secondName),
           };
         });
     })

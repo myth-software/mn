@@ -16,8 +16,8 @@ export const getlocals = async (
   const database = await notion.databases.retrieve({
     database_id: options.pageId,
   });
-  const flatDatabase = flattenDatabaseResponse(database, options);
-  const useAll = options.all?.includes(flatDatabase.title);
+  const cache = flattenDatabaseResponse(database, options);
+  const useAll = options.all?.includes(cache.title);
   const query = useAll
     ? notion.databases.query<any>(
         {
@@ -35,7 +35,7 @@ export const getlocals = async (
   log.info({
     action: 'querying',
     message: useAll ? 'all locals' : 'one locals',
-    page: { emoji: flatDatabase.icon, title: flatDatabase.title },
+    page: { emoji: cache.icon, title: cache.title },
   });
   const [locals] = await query;
 
@@ -48,10 +48,10 @@ export const getlocals = async (
      */
     const localOnlyWithFoundColumns = Object.entries(local).reduce(
       (acc, [column, value]) => {
-        const hasColumn = flatDatabase.columns[column] ? true : false;
+        const hasColumn = cache.columns[column] ? true : false;
 
         if (hasColumn) {
-          const mapping = flip(flatDatabase.mappings);
+          const mapping = flip(cache.mappings);
           const mappedColumn = mapping[column];
           return {
             ...acc,
@@ -72,7 +72,7 @@ export const getlocals = async (
   });
 
   const response = {
-    title: flatDatabase.title,
+    title: cache.title,
     locals: santitizedLocals,
   };
 

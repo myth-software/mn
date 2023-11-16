@@ -1,5 +1,5 @@
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
-import { DrizzleOptions, FlatDatabase } from '@mountnotion/types';
+import { Cache, DrizzleOptions } from '@mountnotion/types';
 import { decamelize, log } from '@mountnotion/utils';
 import * as ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { InsertChange } from 'schematics-utilities';
@@ -7,7 +7,7 @@ import { getRelations } from './relations.util';
 export default function createRelationsChange(
   path: string,
   options: DrizzleOptions,
-  caches: FlatDatabase[],
+  caches: Cache[],
   tree: Tree
 ): InsertChange {
   if (options.debug) {
