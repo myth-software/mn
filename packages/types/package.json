@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/types",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "license": "BSL-1.1",
   "types": "index.d.ts"
 }
