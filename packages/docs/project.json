@@ -10,7 +10,7 @@
         "command": "npm run build-only",
         "cwd": "packages/docs"
       },
-      "outputs": ["packages/docs/build"]
+      "outputs": ["{projectRoot}/build"]
     },
     "serve": {
       "executor": "nx:run-commands",

@@ -4,15 +4,14 @@
   "implicitDependencies": ["website"],
   "targets": {
     "e2e": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "packages/website-e2e/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "packages/website-e2e/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/website-e2e/**/*.{js,ts}"]
