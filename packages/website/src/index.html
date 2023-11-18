@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mount notion</title>
+    <link rel="stylesheet" href="main.css" />
+    <style>
+      :root {
+        --nav-width: 22%;
+        --primary-color-dark: rgb(50 150 150);
+        --primary-color: #00ffff;
+        --primary-color-light: #8efbf7;
+        --secondary-color: #ff00ff;
+        --darkest-gray: #191919;
+        --dark-gray: #202020;
+        --gray: #bababa;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: DM Sans, sans-serif;
+        background-color: var(--darkest-gray);
+        color: white;
+        font-size: 16px;
+        font-weight: 100;
+        margin: 0px;
+      }
+
+      #producting {
+        background: linear-gradient(90deg, var(--gray) 50%, transparent 50%) -50px;
+        background-size: calc(100% / 8) 100px;
+      }
+
+      a {
+        all: unset;
+      }
+      a {
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-color: var(--secondary-color);
+        color: var(--secondary-color);
+      }
+      a:visited {
+        color: white;
+      }
+
+      pre {
+        font-family: Larabiefont-Regular, monospace;
+        font-weight: 200;
+        margin: 8px 0;
+      }
+
+      h1 {
+        all: unset;
+        font-size: 48px;
+        display: inline-block;
+      }
+
+      h2 {
+        all: unset;
+        color: var(--gray);
+        font-size: 48px;
+        display: inline-block;
+        margin-bottom: 16px;
+      }
+
+      article {
+        display: flex;
+        padding-left: 16px;
+      }
+
+      .demo-container {
+        display: flex;
+        background-color: #403e3e;
+        border: 1px solid #00ffff;
+        border-right: 0;
+        flex: 2;
+        margin-left: 8px;
+      }
+
+      .preview-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .preview {
+        flex: 1;
+        background-color: var(--darkest-gray);
+        border-radius: 8px;
+        border: 1px solid #00ffff;
+        filter: drop-shadow(rgba(255, 0, 255, 0.3) -2px 2px 2px);
+        margin: 4px 8px;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .preview:last-child {
+        flex: 2;
+      }
+
+      .demo-container {
+        display: flex;
+        background-color: #403e3e;
+        flex: 2;
+        margin: 8px;
+        margin-right: 0;
+        border: 1px solid transparent;
+        border-image: linear-gradient(to left, var(--primary-color), #ff00ff) 1;
+        border-image-slice: 1;
+        border-right: 0;
+      }
+
+      h3 {
+        all: unset;
+        display: inline-block;
+        font-size: 24px;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+      }
+
+      header,
+      .page-footer {
+        height: 100vh;
+      }
+
+      article {
+        height: 60vh;
+        padding: 20vh 0;
+      }
+
+      nav {
+        z-index: 100;
+        padding: 16px 8px 0;
+        box-sizing: border-box;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: var(--nav-width);
+        height: 100%;
+        background-color: var(--dark-gray);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .nav-list {
+        padding-top: 16px;
+        padding-left: 16px;
+      }
+
+      .page-container {
+        position: relative;
+        top: 0;
+        left: var(--nav-width);
+        width: calc(100% - var(--nav-width));
+        height: 100%;
+      }
+
+      ul,
+      li {
+        all: unset;
+      }
+      ul {
+        display: flex;
+        flex-direction: column;
+      }
+
+      footer {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: end;
+        padding-top: 32px;
+      }
+      video {
+        height: 100%;
+        width: 100%;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 64px;
+      }
+
+      footer > * {
+        font-size: 16px;
+      }
+
+      .footer-column li {
+        display: inline-block;
+        margin: 6px 0;
+      }
+      .footer-column h3:not(:first-child) {
+        margin-top: 24px;
+      }
+      iframe {
+        width: 100%;
+        border: 0;
+      }
+
+      summary {
+        all: unset;
+      }
+      details {
+        all: unset;
+        background-color: var(--darkest-gray);
+        border-radius: 7px 7px 0 0;
+      }
+      .preview > * {
+        border-radius: 7px;
+      }
+      .preview summary {
+        box-sizing: border-box;
+        padding: 4px 4px 4px 8px;
+        height: fit-content;
+        border-radius: 7px 7px 0 0;
+        background-color: var(--dark-gray);
+        width: 100%;
+      }
+      summary pre {
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .preview main {
+        box-sizing: border-box;
+        padding: 4px;
+        background-color: var(--darkest-gray);
+        display: flex;
+        flex: 1;
+        border-radius: 0 0 7px 7px;
+      }
+      .preview pre {
+        font-size: 16px;
+      }
+      .pi {
+        font-family: Arial, sans-serif;
+        color: var(--primary-color);
+      }
+      footer a {
+        text-decoration: none;
+        color: white;
+      }
+      footer a:hover {
+        color: var(--primary-color);
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      nav footer {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+      }
+
+      .get-started {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .get-started div {
+        box-sizing: border-box;
+        transition: all 0.3s ease 0s;
+        background-color: var(--primary-color-dark);
+        border: 2px solid var(--primary-color);
+        border-radius: 8px;
+        width: 100%;
+        text-align: center;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      .get-started:hover div {
+        background-color: var(--primary-color-dark);
+        color: white;
+        border-radius: 0px;
+        width: 50%;
+      }
+      .help-desk div,
+      .help-desk:hover div {
+        background-color: rgb(0, 0, 0, 0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <main>
+        <h1>mount notion</h1>
+        <h2>this changes everywhere</h2>
+
+        <ul class="nav-list">
+          <li><a href="#engineering">engineering</a></li>
+          <li><a href="#marketing">marketing</a></li>
+          <li><a href="#producting">producting</a></li>
+        </ul>
+      </main>
+      <footer>
+        <a class="get-started" href="#"><div>get started</div></a>
+        <a class="get-started help-desk" href="#"><div>help desk</div></a>
+      </footer>
+    </nav>
+    <main class="page-container">
+      <header>
+        <video autoplay muted playsinline>
+          <source
+            autoplay
+            muted
+            playsinline
+            src="https://res.cloudinary.com/dpoq2hmqq/video/upload/v1700252164/npxmn_4sec_qk4j7d.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </header>
+      <article id="engineering">
+        <div class="preview-container">
+          <div class="preview">
+            <details open>
+              <summary>
+                <pre>@mountnotion/cli</pre>
+              </summary>
+              <main>
+                <pre><span class="pi">π</span> npx mn setup</pre>
+              </main>
+            </details>
+          </div>
+          <div class="preview">
+            <details open>
+              <summary>
+                <pre>@mountnotion/schematics</pre>
+              </summary>
+              <main>
+                <pre><span class="pi">π</span> npx mn schematics express</pre>
+              </main>
+            </details>
+          </div>
+          <div class="preview">
+            <details open>
+              <summary>
+                <pre>@mountnotion/sdk</pre>
+              </summary>
+              <main>
+                <pre>
+mn.customers.query({
+  filter: {
+    property: 'category',
+    select: {
+      contains: 'business'
+    }
+  }
+})</pre
+                >
+              </main>
+            </details>
+          </div>
+        </div>
+        <div class="demo-container">
+          <iframe
+            src="https://stackblitz.com/edit/stackblitz-starters-vxm3zg?embed=0&ctl=1&terminalHeight=100&hidedevtools=1&hideNavigation=1 "
+          ></iframe>
+        </div>
+      </article>
+      <article id="marketing"></article>
+      <article id="producting"></article>
+      <footer class="page-footer">
+        <div class="footer-grid">
+          <div class="footer-column">
+            <h3>cli</h3>
+            <ul>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/auth-integration-key"
+                  >auth-integration-key</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/auth-oauth"
+                  >auth-oauth</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/configure-lint-columns"
+                  >configure-lint-columns</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/configure-lint-rows"
+                  >configure-lint-rows</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/configure-schematics"
+                  >configure-schematics</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/configure-workspace"
+                  >configure-workspace</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/delete-recursive"
+                  >delete-recursive</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/fetch"
+                  >fetch</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/fix-columns"
+                  >fix-columns</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/fix-rows"
+                  >fix-rows</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/lint-columns"
+                  >lint-columns</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/lint-rows"
+                  >lint-rows</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/migrations"
+                  >migrations</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/rename-columns"
+                  >rename-columns</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/cli/commands/schematics"
+                  >schematics</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/select-pages-integration-key"
+                  >select-pages-integration-key</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://docs.mountnotion.com/cli/commands/select-pages-oauth"
+                  >select-pages-oauth</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>schematics</h3>
+            <ul>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/drizzle"
+                  >drizzle</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/caches"
+                  >caches</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/express"
+                  >express</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/i18n">i18n</a>
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/interfaces"
+                  >interfaces</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/locals"
+                  >locals</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/mirage"
+                  >mirage</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/react-query"
+                  >react-query</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/rtk-query"
+                  >rtk-query</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/schematics/zod">zod</a>
+              </li>
+            </ul>
+            <h3>sdk</h3>
+
+            <ul>
+              <li>
+                <a href="https://docs.mountnotion.com/sdk/notionClient"
+                  >notionClient</a
+                >
+              </li>
+              <li>
+                <a href="https://docs.mountnotion.com/sdk/drizzleClient"
+                  >drizzleClient</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3>about</h3>
+            <ul>
+              <li>
+                <a href="https://docs.mountnotion.com">terms of service</a>
+              </li>
+              <li><a href="https://docs.mountnotion.com">privacy policy</a></li>
+              <li><a href="https://docs.mountnotion.com">cookie policy</a></li>
+            </ul>
+            <h3>documentation</h3>
+            <ul>
+              <li><a href="https://docs.mountnotion.com">source code</a></li>
+              <li><a href="https://docs.mountnotion.com">videos</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      const body = document.querySelector('video');
+
+      function playVideo() {
+        video.play();
+      }
+
+      function pauseVideo() {
+        video.pause();
+      }
+
+      function stopVideo() {
+        video.pause();
+        video.currentTime = 0;
+      }
+
+      playVideo();
+    </script>
+  </body>
+</html>
