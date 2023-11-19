@@ -2,16 +2,7 @@
   "name": "@mountnotion/sdk",
   "version": "1.6.4",
   "description": "tools for mounting notion",
-  "main": "src/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mountnotion/sdk.git"
-  },
-  "author": "Peter B Smith",
+  "author": "myth software, llc",
   "license": "BSL-1.1",
-  "bugs": {
-    "url": "https://github.com/mountnotion/sdk/issues"
-  },
-  "homepage": "https://github.com/mountnotion/sdk#readme",
   "type": "commonjs"
 }
