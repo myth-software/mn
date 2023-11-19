@@ -9,7 +9,10 @@ orm
 ## output
 
 ```typescript title="horses.drizzle.ts"
-import { ReadonlyColumnTypes } from '@mountnotion/types';
+import {
+  ReadonlyColumnTypes,
+  AdditionalPropertyTypes,
+} from '@mountnotion/types';
 import { InferModel } from 'drizzle-orm';
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 export const horses = pgTable('horses', {
@@ -21,7 +24,10 @@ export const horses = pgTable('horses', {
   age: text('age'),
   name: text('name'),
 });
-export declare type Horses = InferModel<typeof horses>;
-export declare type HorsesWriteOnly = Omit<Horses, ReadonlyColumnTypes>;
-export declare type NewHorses = InferModel<typeof horses, 'insert'>;
+export declare type Horses = typeof horses.$inferSelect;
+export declare type HorsesWriteonly = Omit<
+  Horses,
+  ReadonlyColumnTypes | AdditionalPropertyTypes
+>;
+export declare type NewHorses = typeof horses.$inferInsert;
 ```

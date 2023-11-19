@@ -2,7 +2,7 @@
   <% log.debug({ action: 'debugging', message: `schema: drizzle.schema.ts` }) %>
 <% } %>
 
-import { ReadonlyColumnTypes } from '@mountnotion/types';
+import { ReadonlyColumnTypes, AdditionalPropertyTypes } from '@mountnotion/types';
 import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, timestamp, primaryKey } from "drizzle-orm/pg-core";
 <% for (let cache of caches) { %>
 
@@ -70,7 +70,7 @@ import { pgTable, pgEnum, boolean, numeric, serial, text, varchar, uuid, json, t
   /** <%= cache.description %> */
   <% } %>
   export declare type <%= classify(cache.title) %> = typeof <%= camelize(cache.title) %>.$inferSelect;
-  export declare type <%= classify(cache.title) %>WriteOnly = Omit<<%= classify(cache.title) %>, ReadonlyColumnTypes>;
+  export declare type <%= classify(cache.title) %>Writeonly = Omit<<%= classify(cache.title) %>, ReadonlyColumnTypes | AdditionalPropertyTypes>;
   export declare type New<%= classify(cache.title) %> = typeof <%= camelize(cache.title) %>.$inferInsert;
 
 <% } %>
