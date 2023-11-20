@@ -8,6 +8,8 @@ type RelationMapping = {
   secondId: string;
   firstName: string;
   secondName: string;
+  firstValue?: string | string[];
+  secondValue?: string | string[];
 };
 
 export function getRelations(

@@ -9,7 +9,11 @@ function sortTitleAndRelation(
 
 export function getJoinTable(
   relatedColumn: string,
-  { title: baseTable, relations, syncedColumns }: Cache
+  { title: baseTable, relations, syncedColumns }: Cache,
+  values?: {
+    primaryId: string;
+    relatedIds: string[];
+  }
 ) {
   if (!relations) {
     throw new Error('unexpected missing relations');
@@ -24,15 +28,27 @@ export function getJoinTable(
     : sortTitleAndRelation([baseTable, relatedColumn]);
   const constName = camelize(first) + classify(second);
   const tableName = [first, second].join('_');
-  const firstName =
-    first === variablize(relatedColumn) ? relatedTable : baseTable;
-  const secondName = firstName === baseTable ? relatedTable : baseTable;
+  const isRelatedTableFirst = first === variablize(relatedColumn);
+  const firstName = isRelatedTableFirst ? relatedTable : baseTable;
+  const secondName = isRelatedTableFirst ? baseTable : relatedTable;
+  const firstValue = isRelatedTableFirst
+    ? values?.relatedIds
+    : values?.primaryId;
+  const secondValue = isRelatedTableFirst
+    ? values?.primaryId
+    : values?.relatedIds;
   return {
     constName: variablize(constName),
     tableName: decamelize(tableName),
+    first,
+    second,
     firstId: variablize(first + 'Id'),
     secondId: variablize(second + 'Id'),
     firstName: variablize(firstName),
     secondName: variablize(secondName),
+    relatedColumn,
+    baseTable,
+    firstValue,
+    secondValue,
   };
 }

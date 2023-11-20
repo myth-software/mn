@@ -1,3 +1,9 @@
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'drizzle/index.ts' }) %>
+<% } %>
+
+
+import { caches } from '<%= options.caches %>';
 import { configureDrizzle } from '@mountnotion/sdk';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
@@ -14,4 +20,8 @@ export const db = drizzle(
   }),
   { schema }
 );
-export const drizzleClient = configureDrizzle({ db, schema });
+export const drizzleClient = configureDrizzle({ db, schema, caches });
+
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'end drizzle/index.ts' }) %>
+<% } %>

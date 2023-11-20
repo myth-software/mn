@@ -11,8 +11,7 @@
         "outputPath": "dist/packages/schematics",
         "main": "packages/schematics/src/index.ts",
         "tsConfig": "packages/schematics/tsconfig.lib.json",
-        "assets": ["packages/schematics/*.md"],
-        "rootDir": "packages/schematics"
+        "assets": ["packages/schematics/*.md"]
       }
     },
     "version": {

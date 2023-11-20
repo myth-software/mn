@@ -6,10 +6,6 @@ import {
   <%= classify(title) %>,
   <%= classify(title) %>Cache
 } from '<%= options.caches %>';
-import {
-  CuddyInvoices,
-  CuddyInvoicesIndex,
-} from '@myth-software/domain-cuddy/caches';
 import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
 import { Request, Response } from 'express';
 import { mn } from '../mn';

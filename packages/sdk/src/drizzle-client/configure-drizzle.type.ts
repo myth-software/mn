@@ -20,6 +20,9 @@ export declare type MountNotionClientDrizzleConfig<
   schema: {
     [key: string]: any;
   };
+  caches: {
+    [key: string]: any;
+  };
 };
 
 export declare type MountNotionDrizzleClient<

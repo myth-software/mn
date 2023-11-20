@@ -2,9 +2,9 @@
   <% log.debug({ action: 'debugging', message: 'mn.ts' }) %>
 <% } %>
 
-  import { caches } from '<%= options.caches %>';
-  import { db, drizzleClient } from '<%= options.drizzle %>';
-  import { configureNotion } from '@mountnotion/sdk';
+import { caches } from '<%= options.caches %>';
+import { db, drizzleClient } from '<%= options.drizzle %>';
+import { configureNotion } from '@mountnotion/sdk';
 
 const notionClient = configureNotion({ caches });
 export const mn =
