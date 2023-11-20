@@ -2,7 +2,7 @@ import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
 import { CACHE, log } from '@mountnotion/utils';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
-import infrastructure from '../infrastructure';
+import * as infrastructure from '../infrastructure';
 import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';

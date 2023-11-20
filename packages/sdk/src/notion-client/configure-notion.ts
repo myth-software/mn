@@ -12,15 +12,13 @@ import {
 } from '@mountnotion/types';
 import { expandProperties } from '../expanders/properties.expander';
 import { flattenPageResponse, flattenPageResponses } from '../flatteners';
-import client from '../infrastructure';
+import * as notion from '../infrastructure';
 import { mapInstance } from './instance.mapper';
 import { mapQuery } from './query.mapper';
 
 export function configureNotion<Config extends MountNotionClientConfig>(
   config: Config
 ): MountNotionClient<Config> {
-  const notion = client;
-
   const databases = Object.entries(config.caches).map(([title, cache]) => {
     type Cache = typeof cache;
     return [

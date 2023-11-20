@@ -1,5 +1,4 @@
 import { notion } from '@mountnotion/sdk';
-
 export async function getDatabaseIdsInWorkspace(pageId: string) {
   const allResponses = await notion.blocks.children.listAll({
     block_id: pageId,

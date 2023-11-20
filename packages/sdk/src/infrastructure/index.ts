@@ -3,9 +3,4 @@ import * as databases from './databases';
 import * as pages from './pages';
 import search from './search';
 
-export default {
-  blocks,
-  databases,
-  pages,
-  search,
-};
+export { blocks, databases, pages, search };
