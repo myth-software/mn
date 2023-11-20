@@ -2,7 +2,7 @@ import * as children from './children';
 import { del } from './delete';
 import { deleteAll } from './delete-all';
 
-export const blocks = {
+export default {
   delete: del,
   deleteAll,
   children,

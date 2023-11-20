@@ -12,14 +12,14 @@ import {
 } from '@mountnotion/types';
 import { expandProperties } from '../expanders/properties.expander';
 import { flattenPageResponse, flattenPageResponses } from '../flatteners';
-import client from '../infrastructure/client';
+import client from '../infrastructure';
 import { mapInstance } from './instance.mapper';
 import { mapQuery } from './query.mapper';
 
 export function configureNotion<Config extends MountNotionClientConfig>(
   config: Config
 ): MountNotionClient<Config> {
-  const notion = client(config.integrationKey);
+  const notion = client;
 
   const databases = Object.entries(config.caches).map(([title, cache]) => {
     type Cache = typeof cache;
@@ -28,7 +28,7 @@ export function configureNotion<Config extends MountNotionClientConfig>(
       {
         query: async (args: MountNotionQueryParameters<Cache>) => {
           const query = args ? mapQuery(args, cache.mappings) : {};
-          const response = await notion.databases.query({
+          const response = await notion.databases.query<Cache>({
             database_id: cache.id,
             ...(query as QueryDatabaseBodyParameters),
           });

@@ -5,7 +5,6 @@ import {
   ToolsConfiguration,
 } from '@mountnotion/types';
 import { flattenPageResponse } from '../../flatteners';
-import client from '../client';
 
 export async function create<TCache>(
   query: CreatePageParameters
@@ -18,18 +17,29 @@ export async function create<TCache>(
   body: CreatePageParameters,
   config?: ToolsConfiguration
 ) {
-  try {
-    const response = (await client().pages.create(body)) as PageObjectResponse;
+  const response = await fetch('https://api.notion.com/v1/pages', {
+    method: 'POST',
+    headers: {
+      Authorization: process.env['NOTION_INTEGRATION_KEY']
+        ? process.env['NOTION_INTEGRATION_KEY']
+        : '',
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28',
+    },
+    body: JSON.stringify(body),
+  });
 
-    if (!config) {
-      return response;
-    }
-
-    const cache = flattenPageResponse<TCache>(response);
-
-    return cache;
-  } catch (e) {
-    console.error(e);
-    throw e;
+  if (!response.ok) {
+    throw new Error('Failed to create page');
   }
+
+  const data = await response.json();
+
+  if (!config) {
+    return data as PageObjectResponse;
+  }
+
+  const cache = flattenPageResponse<TCache>(data);
+
+  return cache;
 }

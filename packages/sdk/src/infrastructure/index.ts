@@ -1,5 +1,11 @@
-export * from './blocks';
-export * from './client';
-export * as databases from './databases';
-export * as pages from './pages';
-export * from './search';
+import blocks from './blocks';
+import * as databases from './databases';
+import * as pages from './pages';
+import search from './search';
+
+export default {
+  blocks,
+  databases,
+  pages,
+  search,
+};
