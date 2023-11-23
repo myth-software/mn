@@ -1,18 +1,16 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { BasicOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
-import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateBasicInputs } from '../../utils';
-
-dotenv.config();
+import path = require('path');
 
 export function reactQuery(options: BasicOptions): Rule {
   log.success({ action: 'running', message: 'react query schematic' });
   log.success({ action: '-------', message: '---------------------' });
   validateBasicInputs(options);
 
-  const { outDir } = options;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async () => {
     const caches = ensure(getCache());

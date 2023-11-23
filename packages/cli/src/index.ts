@@ -4,24 +4,19 @@
  * imports
  */
 import { MountNotionConfig } from '@mountnotion/types';
-import { log } from '@mountnotion/utils';
 import { Command } from 'commander';
-import * as fs from 'fs/promises';
+import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { description, version } from '../package.json';
 import { commands } from './commands';
 import { CONFIG_FILE } from './utils';
+import ensureMnJson from './utils/ensure-mn-json';
+import findUp from './utils/find-up';
+dotenv.config({ path: findUp('.env', process.cwd()) ?? './.env' });
 
 export async function cli(): Promise<0> {
   process.chdir(path.dirname(CONFIG_FILE));
-  let unparsedConfig = '';
-  try {
-    unparsedConfig = await fs.readFile(CONFIG_FILE, { encoding: 'utf8' });
-  } catch (error) {
-    log.fatal({ action: 'failing', message: `missing ${CONFIG_FILE}` });
-  }
-
-  const config = JSON.parse(unparsedConfig) as MountNotionConfig;
+  const config = ensureMnJson(CONFIG_FILE) as MountNotionConfig;
   /**
    * third thing in "" should be surrounded by <> for a required argument to
    * that flag, or [] for optional argument to that flag. for requiring the
@@ -51,3 +46,8 @@ cli()
   .catch((e) => {
     throw e;
   });
+
+process.on('SIGINT', () => {
+  console.log('Exiting gracefully...');
+  process.exit(0);
+});

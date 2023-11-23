@@ -13,11 +13,11 @@ export declare type CliInput = {
   args: Array<string>;
 };
 
-export declare type MountnCommand = {
+export declare type MountnCommand<T = void> = {
   name: string;
   description: string;
   options?: Array<{ name: string; description: string }>;
   actionFactory: (
     config: MountNotionConfig
-  ) => (...args: Array<unknown>) => void | Promise<void>;
+  ) => (...args: Array<unknown>) => T | Promise<T>;
 };

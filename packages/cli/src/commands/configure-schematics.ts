@@ -3,7 +3,12 @@ import {
   MountNotionConfig,
   Schematics,
 } from '@mountnotion/types';
-import { log, writeFileWithPrettyJson } from '@mountnotion/utils';
+import {
+  ensure,
+  getCache,
+  log,
+  writeFileWithPrettyJson,
+} from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { workspaceHasPages } from '../dependencies';
 import { CONFIG_FILE } from '../utils';
@@ -53,20 +58,15 @@ export const optionsPrompt = async (options: ConfigureSchematicsOptions) => {
   }
 
   if (!options.exclude) {
+    const cached = await getCache();
     prompts.push({
       type: 'multiselect',
       message: 'databases to exclude from all schematics',
       name: 'exclude',
-      choices: [
-        {
-          name: '🔵 overlays',
-          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        },
-        {
-          name: '🔢 sets',
-          value: 'xxxxssss-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
-        },
-      ],
+      choices: ensure(cached).map((cache) => ({
+        name: `${cache.icon} ${cache.title}`,
+        value: cache.id,
+      })),
     });
   }
 
@@ -106,7 +106,13 @@ export default {
 
     const updatedConfig: MountNotionConfig = {
       ...config,
-      schematics: [...config.schematics, ...options.schematics],
+      schematicDefaults: {
+        ...config.schematicDefaults,
+        excludes: options.exclude,
+      },
+      schematics: config.schematics
+        ? [...config.schematics, ...options.schematics]
+        : options.schematics,
     };
 
     writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);

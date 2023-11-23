@@ -20,7 +20,8 @@ export const append = async (query: AppendBlockChildrenParameters) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to append block children');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   return response.json() as Promise<AppendBlockChildrenResponse>;

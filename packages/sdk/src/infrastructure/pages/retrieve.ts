@@ -4,6 +4,7 @@ import {
   PageObjectResponse,
   ToolsConfiguration,
 } from '@mountnotion/types';
+import { ensure } from '@mountnotion/utils';
 import { flattenPageResponse } from '../../flatteners';
 
 export async function retrieve<TCache>(
@@ -21,9 +22,7 @@ export async function retrieve<TCache>(
     `https://api.notion.com/v1/pages/${query.page_id}`,
     {
       headers: {
-        Authorization: process.env['NOTION_INTEGRATION_KEY']
-          ? process.env['NOTION_INTEGRATION_KEY']
-          : '',
+        Authorization: ensure(process.env['NOTION_INTEGRATION_KEY']),
         'Content-Type': 'application/json',
         'Notion-Version': '2022-06-28',
       },
@@ -31,7 +30,8 @@ export async function retrieve<TCache>(
   );
 
   if (!response.ok) {
-    throw new Error('Failed to retrieve page');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   const responseData = await response.json();

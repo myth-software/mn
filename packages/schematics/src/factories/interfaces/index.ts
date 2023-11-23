@@ -1,16 +1,15 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { BasicOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
-import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateBasicInputs } from '../../utils';
+import path = require('path');
 
-dotenv.config();
 export function interfaces(options: BasicOptions): Rule {
   log.success({ action: 'running', message: 'interfaces schematic' });
   log.success({ action: '-------', message: '--------------------' });
   validateBasicInputs(options);
-
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async () => {
     const caches = ensure(getCache());
@@ -27,7 +26,7 @@ export function interfaces(options: BasicOptions): Rule {
           log,
           ...strings,
         }),
-        move(options.outDir ?? 'out/interfaces'),
+        move(outDir),
       ]);
     });
     const interfacesIndexRule = applyWithOverwrite(url('./files/index'), [
@@ -36,7 +35,7 @@ export function interfaces(options: BasicOptions): Rule {
         log,
         ...strings,
       }),
-      move(options.outDir ?? 'out/interfaces'),
+      move(outDir),
     ]);
     return chain([...interfacesRules, interfacesIndexRule]);
   };

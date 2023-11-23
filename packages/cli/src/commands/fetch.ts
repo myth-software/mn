@@ -1,5 +1,5 @@
 import { createDatabaseCaches } from '@mountnotion/sdk';
-import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { Cache, MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { workspaceHasPages } from '../dependencies';
 
 function dependencies(config: MountNotionConfig) {
@@ -12,6 +12,6 @@ export default {
   actionFactory: (config) => async () => {
     dependencies(config);
 
-    await createDatabaseCaches(config);
+    return await createDatabaseCaches(config);
   },
-} satisfies MountnCommand;
+} satisfies MountnCommand<Cache[]>;

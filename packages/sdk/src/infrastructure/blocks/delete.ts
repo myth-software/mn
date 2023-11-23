@@ -16,7 +16,8 @@ export const del = async (input: DeleteBlockParameters) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to delete block');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   return response;

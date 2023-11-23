@@ -3,7 +3,7 @@ import {
   DatabasePropertyConfigResponse,
   Relations,
 } from '@mountnotion/types';
-import { ensure } from '@mountnotion/utils';
+import { log } from '@mountnotion/utils';
 
 export function createRelations(
   properties: Record<string, DatabasePropertyConfigResponse>,
@@ -12,9 +12,15 @@ export function createRelations(
   const relations = Object.entries(properties).reduce(
     (acc, [property, value]) => {
       if (value.type === 'relation') {
-        const cache = ensure(
-          caches.find((f) => f.id === value.relation.database_id)
-        );
+        const cache = caches.find((f) => f.id === value.relation.database_id);
+
+        if (!cache) {
+          log.warn({
+            action: 'warning',
+            message: `${value.name} relates to a database that could not be found.`,
+          });
+          return acc;
+        }
         return {
           ...acc,
           [property]: cache.title,

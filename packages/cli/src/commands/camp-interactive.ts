@@ -6,13 +6,13 @@ import configureLintRows from './configure-lint-rows';
 import configureSchematics from './configure-schematics';
 import configureWorkspace from './configure-workspace';
 import fetch from './fetch';
-import schematics from './schematics';
+import schematics from './scheme';
 
 export async function optionsPrompt() {
   const results = await prompt<{
     choice: number;
   }>({
-    type: 'input',
+    type: 'numeral',
     message: 'choice',
     name: 'choice',
   });
@@ -24,21 +24,44 @@ export default {
   name: 'camp-interactive',
   description: 'interactive version of camp',
   actionFactory: (config) => async () => {
-    console.log('camping...');
-    console.log('choose');
-    console.log('');
-    console.log('1 - configure-workspace');
-    console.log('2 - configure-lint-columns');
-    console.log('3 - configure-lint-rows');
-    console.log('4 - configure-schematics');
-    console.log('5 - inspect the caches');
-    console.log('6 - inspect the configuration file');
-    console.log('7 - fetch and scheme');
-    let choice: number;
-    const result = await optionsPrompt();
-    choice = result.choice;
+    let choice: number = 1;
 
     while (choice >= 1 && choice <= 7) {
+      log.info({
+        action: 'camping',
+        message: 'chooose',
+      });
+      log.info({
+        action: '',
+        message: '1 - configure-workspace',
+      });
+      log.info({
+        action: '',
+        message: '2 - configure-lint-columns',
+      });
+      log.info({
+        action: '',
+        message: '3 - configure-lint-rows',
+      });
+      log.info({
+        action: '',
+        message: '4 - configure-schematics',
+      });
+      log.info({
+        action: '',
+        message: '5 - inspect the caches',
+      });
+      log.info({
+        action: '',
+        message: '6 - inspect the configuration file',
+      });
+      log.info({
+        action: '',
+        message: '7 - fetch and scheme',
+      });
+
+      const result = await optionsPrompt();
+      choice = result.choice;
       if (choice === 1) {
         await configureWorkspace.actionFactory(config)({});
       }
@@ -67,9 +90,6 @@ export default {
         await fetch.actionFactory(config)();
         await schematics.actionFactory(config)({});
       }
-
-      const result = await optionsPrompt();
-      choice = result.choice;
     }
 
     return;

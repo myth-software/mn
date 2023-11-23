@@ -1,5 +1,7 @@
 import { MountnCommand } from '@mountnotion/types';
+import { getCache, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
+import fetch from './fetch';
 
 type CampOptions = {
   fetch: boolean;
@@ -20,22 +22,22 @@ export const optionsPrompt = async (options: CampOptions) => {
   const prompts = [];
   if (!options.clearCache) {
     prompts.push({
-      type: 'input',
-      message: 'remove the existing cached workspace',
+      type: 'confirm',
+      message: 'remove the existing cached workspace?',
       name: 'clearCache',
     });
   }
   if (!options.fetch) {
     prompts.push({
-      type: 'input',
-      message: 'run the fetch command',
+      type: 'confirm',
+      message: 'run the fetch command?',
       name: 'fetch',
     });
   }
   if (!options.skipLint) {
     prompts.push({
-      type: 'input',
-      message: 'skip lint rules',
+      type: 'confirm',
+      message: 'skip lint rules?',
       name: 'skipLint',
     });
   }
@@ -59,10 +61,21 @@ export default {
     { name: '-f, --fetch', description: 'run the fetch command' },
     { name: '-s, --skip-lint', description: 'skip lint rules' },
   ],
-  actionFactory: () => async (args) => {
+  actionFactory: (config) => async (args) => {
     assert(args);
+    const oldCache = getCache();
     const options = await optionsPrompt(args);
     console.log(options);
+    const oldString = JSON.stringify(oldCache);
+    const newCache = await fetch.actionFactory(config)();
+    const newString = JSON.stringify(newCache);
+    if (oldString !== newString) {
+      log.success({
+        action: 'finding',
+        message: 'new cache',
+      });
+    }
+
     return;
   },
 } satisfies MountnCommand;

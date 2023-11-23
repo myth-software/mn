@@ -1,7 +1,4 @@
 import { AuthOptions } from '@mountnotion/types';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export function validateAuthInputs(options: AuthOptions): void {
   if (!options.strategies) {

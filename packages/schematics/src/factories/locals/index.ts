@@ -10,6 +10,7 @@ import {
 import { rimraf } from 'rimraf';
 import { applyWithOverwrite } from '../../rules';
 import { getlocals } from '../../utils';
+import path = require('path');
 
 /**
  *
@@ -19,13 +20,13 @@ import { getlocals } from '../../utils';
 export function locals(options: LocalsOptions): Rule {
   log.success({ action: 'running', message: 'locals schematic' });
   log.success({ action: '-------', message: '----------------' });
-
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];
 
   return async () => {
-    await rimraf(options.outDir);
+    await rimraf(outDir);
     const caches = ensure(getCache());
     const includedCaches = caches.filter(
       ({ title }) => title && !excludes.includes(title)
@@ -52,7 +53,7 @@ export function locals(options: LocalsOptions): Rule {
               log,
               ...strings,
             }),
-            move(`${options.outDir}/${strings.dasherize(title)}`),
+            move(`${outDir}/${strings.dasherize(title)}`),
           ]);
         });
 
@@ -70,7 +71,7 @@ export function locals(options: LocalsOptions): Rule {
               databaseName: title,
               ...strings,
             }),
-            move(`${options.outDir}/${strings.dasherize(title)}`),
+            move(`${outDir}/${strings.dasherize(title)}`),
           ]
         );
 
@@ -84,7 +85,7 @@ export function locals(options: LocalsOptions): Rule {
         log,
         ...strings,
       }),
-      move(options.outDir),
+      move(outDir),
     ]);
     return chain([...rules, localsRootIndexRule]);
   };

@@ -18,7 +18,8 @@ export const list = async (query: ListBlockChildrenParameters) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to fetch block children');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   const data = (await response.json()) as ListBlockChildrenResponse;

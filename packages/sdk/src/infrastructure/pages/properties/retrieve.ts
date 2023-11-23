@@ -15,7 +15,8 @@ export const retrieve = async (query: GetPagePropertyParameters) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to retrieve page properties');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   return await response.json();

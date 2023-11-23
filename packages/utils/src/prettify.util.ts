@@ -39,7 +39,6 @@ export function prettify(filePath: string | null, content: string): string {
   }
   const value = prettier.format(content, {
     parser,
-    pluginSearchDirs: ['./node_modules/prettier-plugin-organize-imports'],
     plugins: ['prettier-plugin-organize-imports'],
     ...config,
   });

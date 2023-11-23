@@ -18,12 +18,12 @@ import lintColumns from './lint-columns';
 import lintRows from './lint-rows';
 import migrations from './migrations';
 import renameColumns from './rename-columns';
-import schematics from './schematics';
+import schematics from './scheme';
 import selectPagesIntegrationKey from './select-pages-integration-key';
 import selectPagesOauth from './select-pages-oauth';
 import setup from './setup';
 
-export const commands: Array<MountnCommand> = [
+export const commands: Array<MountnCommand<any>> = [
   authIntegrationKey,
   authOauth,
   campInteractive,

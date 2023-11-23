@@ -1,12 +1,10 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { Cache, I18nOptions, Options } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';
 import { validateInputs } from './validate-inputs';
+import path = require('path');
 
 type FormattedTranslations = {
   [lng: string]: {
@@ -20,7 +18,7 @@ export function i18n(options: I18nOptions): Rule {
   log.success({ action: 'running', message: 'i18n schematic' });
   log.success({ action: '-------', message: '--------------' });
   validateInputs(options);
-  const { outDir } = options;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   let cachesRef: Cache[] = [];
   let titlesRef: string[] = [];

@@ -14,7 +14,8 @@ export default async function async(query: SearchBodyParameters) {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to search');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   return (await response.json()) as SearchResponse;

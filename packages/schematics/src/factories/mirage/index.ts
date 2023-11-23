@@ -1,17 +1,16 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { MirageOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
-import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
-dotenv.config();
+import path = require('path');
 
 export function mirage(options: MirageOptions): Rule {
   log.success({ action: 'running', message: 'mirage schematic' });
   log.success({ action: '-------', message: '----------------' });
   validateInputs(options);
 
-  const { outDir } = options;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async () => {
     const caches = ensure(getCache());

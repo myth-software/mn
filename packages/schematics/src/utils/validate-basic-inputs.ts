@@ -1,7 +1,4 @@
 import { BasicOptions } from '@mountnotion/types';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 export function validateBasicInputs(options: BasicOptions): void {
   if (!options.outDir) {

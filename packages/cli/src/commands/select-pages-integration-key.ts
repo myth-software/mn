@@ -1,7 +1,8 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
-import { log, writeFileWithPrettyJson } from '@mountnotion/utils';
+import { ensure, log, writeFileWithPrettyJson } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { CONFIG_FILE } from '../utils';
+import parseUuidFromUrl from '../utils/parse-uuid-from-url';
 
 type SelectPagesIntegrationKeyOptions = {
   pageId: string[];
@@ -54,15 +55,22 @@ export default {
   description:
     'select pages manually, where there is no known list of available options',
   options: [
-    { name: '-p, --page-id <id>', description: 'id of page with databases' },
+    {
+      name: '-p, --page-id <id>',
+      description: 'id of page or notion url of page  with databases',
+    },
   ],
   actionFactory: (config) => async (args) => {
     assert(args);
     const options = await optionsPrompt(args);
 
+    const selectedPages = options.pageId.map((id) =>
+      parseUuidFromUrl(id) ? ensure(parseUuidFromUrl(id)) : id
+    );
+
     const updatedConfig: MountNotionConfig = {
       ...config,
-      selectedPages: options.pageId,
+      selectedPages,
     };
 
     writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);

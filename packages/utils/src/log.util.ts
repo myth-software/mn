@@ -24,9 +24,9 @@ function logSuccess({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${success(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${success(paddedAction)} ${
+        page.emoji.length === 2 ? page.emoji + ' ' : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
     return;
   }
@@ -38,9 +38,13 @@ function logInfo({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${info(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${info(paddedAction)} ${
+        page.emoji.length === 2
+          ? page.emoji + '  '
+          : page.emoji.length === 3
+          ? page.emoji + '   '
+          : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
     return;
   }
@@ -52,9 +56,9 @@ function logWarn({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${warn(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${warn(paddedAction)} ${
+        page.emoji.length === 2 ? page.emoji + ' ' : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
     return;
   }
@@ -66,9 +70,9 @@ function logError({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${error(paddedAction)} ${
+        page.emoji.length === 2 ? page.emoji + ' ' : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
     return;
   }
@@ -80,9 +84,9 @@ function logFatal({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${error(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${error(paddedAction)} ${
+        page.emoji.length === 2 ? page.emoji + ' ' : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
   }
   throw new Error(`(mn) ${error(paddedAction)} ${message}`);
@@ -92,9 +96,9 @@ function logDebug({ action, message, page }: LogInput) {
   const paddedAction = action.padEnd(10);
   if (page) {
     console.log(
-      `(mn) ${debug(paddedAction)} ${page.emoji} ${formatPageTitle(
-        page.title
-      )} ${message}`
+      `(mn) ${debug(paddedAction)} ${
+        page.emoji.length === 2 ? page.emoji + ' ' : page.emoji
+      } ${formatPageTitle(page.title)} ${message}`
     );
     return;
   }

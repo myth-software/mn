@@ -18,7 +18,8 @@ export const retrieveResponse = async (query: GetDatabaseParameters) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to retrieve database');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   const data = await response.json();

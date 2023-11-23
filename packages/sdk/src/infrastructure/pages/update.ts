@@ -31,7 +31,8 @@ export async function update<TCache>(
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update page');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   const responseData = await response.json();

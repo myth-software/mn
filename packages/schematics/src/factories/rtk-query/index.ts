@@ -1,17 +1,15 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { RtkQueryOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
+import path = require('path');
 
 export function rtkQuery(options: RtkQueryOptions): Rule {
   log.success({ action: 'running', message: 'rtk query schematic' });
   log.success({ action: '-------', message: '-------------------' });
   validateInputs(options);
-  const { outDir } = options;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async () => {
     const caches = ensure(getCache());

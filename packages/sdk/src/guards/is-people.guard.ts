@@ -7,7 +7,7 @@ export function isPeopleGuard(value: any) {
     return true;
   }
 
-  if (!value.people?.[0]?.name) {
+  if (!value.people?.[0]?.id) {
     return false;
   }
 

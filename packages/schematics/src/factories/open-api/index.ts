@@ -3,6 +3,7 @@ import { AuthOptions, BasicOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
+import path = require('path');
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
   log.success({ action: 'running', message: 'open api schematic' });
@@ -10,7 +11,7 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
   validateBasicInputs(options);
   validateAuthInputs(options);
 
-  const outDir = options.outDir;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async () => {
     const caches = ensure(getCache());

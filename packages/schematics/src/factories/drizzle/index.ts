@@ -1,8 +1,6 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { createDatabaseCaches } from '@mountnotion/sdk';
 import { DrizzleOptions } from '@mountnotion/types';
 import { ensure, getCache, log, strings } from '@mountnotion/utils';
-import * as dotenv from 'dotenv';
 import { applyWithOverwrite } from '../../rules';
 import {
   addDevPackageToPackageJson,
@@ -10,14 +8,14 @@ import {
 } from '../../utils';
 import addRelationsToSchemaRule from './rules/add-relations-to-schema.rule';
 import { validateInputs } from './validate-inputs';
+import path = require('path');
 
-createDatabaseCaches;
-dotenv.config();
 export function drizzle(options: DrizzleOptions): Rule {
   log.success({ action: 'running', message: 'drizzle schematic' });
   log.success({ action: '-------', message: '-----------------' });
   validateInputs(options);
   const excludes = options.excludes ?? [];
+  const outDir = path.resolve(process.cwd(), options.outDir);
 
   return async (tree) => {
     addPackageToPackageJson(tree, 'drizzle-orm', '0.29.0');
@@ -34,7 +32,7 @@ export function drizzle(options: DrizzleOptions): Rule {
         caches: includedCaches,
         ...strings,
       }),
-      move(options.outDir),
+      move(outDir),
     ]);
 
     return chain([

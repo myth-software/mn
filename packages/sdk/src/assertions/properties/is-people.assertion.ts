@@ -2,7 +2,8 @@ import { isPeopleGuard } from '../../guards';
 
 export function assertsIsPeople(value: unknown): asserts value is {
   people: {
-    name: string;
+    id: string;
+    name?: string;
   }[];
 } {
   if (!isPeopleGuard(value)) {

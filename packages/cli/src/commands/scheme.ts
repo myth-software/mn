@@ -5,11 +5,9 @@ import { UnsuccessfulWorkflowExecution } from '@angular-devkit/schematics';
 import { NodeWorkflow } from '@angular-devkit/schematics/tools';
 import { LogInput, MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
-import * as dotenv from 'dotenv';
-import { existsSync } from 'fs';
 import * as path from 'path';
 import { rimraf } from 'rimraf';
-dotenv.config();
+import findUp from '../utils/find-up';
 
 type SchematicsOptions = {
   clearCache: boolean;
@@ -35,7 +33,7 @@ function dependencies(config: MountNotionConfig) {
 }
 
 export default {
-  name: 'schematics',
+  name: 'scheme',
   description: 'applies schematics',
   options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
   actionFactory: (config) => async (options) => {
@@ -45,28 +43,6 @@ export default {
     if (options.clearCache) {
       await rimraf(`${process.cwd()}/.mountnotion`);
     }
-
-    function findUp(names: string | string[], from: string) {
-      if (!Array.isArray(names)) {
-        names = [names];
-      }
-      const root = path.parse(from).root;
-
-      let currentDir = from;
-      while (currentDir && currentDir !== root) {
-        for (const name of names) {
-          const p = path.join(currentDir, name);
-          if (existsSync(p)) {
-            return p;
-          }
-        }
-
-        currentDir = path.dirname(currentDir);
-      }
-
-      return null;
-    }
-
     /**
      * return package manager' name by lock file
      */
@@ -114,9 +90,6 @@ export default {
     workflow.reporter.subscribe((event) => {
       nothingDone = false;
       // Strip leading slash to prevent confusion.
-      const eventPath = event.path.startsWith('/')
-        ? event.path.slice(1)
-        : event.path;
 
       const desc =
         (event as { description: string }).description == 'alreadyExist'
@@ -126,25 +99,25 @@ export default {
       switch (event.kind) {
         case 'error':
           error = true;
-          log.error({ action: 'erroring', message: `${eventPath} ${desc}` });
+          log.error({ action: 'erroring', message: `${event.path} ${desc}` });
           break;
         case 'update':
           loggingQueue.push({
             action: 'updating',
-            message: `${eventPath} (${event.content.length} bytes)`,
+            message: `${event.path} (${event.content.length} bytes)`,
           });
           break;
         case 'create':
           loggingQueue.push({
             action: 'creating',
-            message: `${eventPath} (${event.content.length} bytes)`,
+            message: `${event.path} (${event.content.length} bytes)`,
           });
 
           break;
         case 'delete':
           loggingQueue.push({
             action: 'deleting',
-            message: `${eventPath}`,
+            message: `${event.path}`,
           });
           break;
       }

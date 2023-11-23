@@ -12,7 +12,6 @@ export declare type BasicOptions = {
   outDir: string;
   baseUrl: string;
   caches: string;
-  javascriptizeColumns: boolean;
   debug: boolean;
 };
 

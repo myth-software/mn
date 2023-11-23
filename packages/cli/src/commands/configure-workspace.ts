@@ -140,11 +140,11 @@ export default {
       ...config,
       schematicDefaults: {
         ...config.schematicDefaults,
-        caches: options.caches ?? config.schematicDefaults.caches,
-        baseUrl: options.baseUrl ?? config.schematicDefaults.baseUrl,
+        caches: options.caches ?? config.schematicDefaults?.caches,
+        baseUrl: options.baseUrl ?? config.schematicDefaults?.baseUrl,
         strategies:
-          options.authStrategies ?? config.schematicDefaults.strategies,
-        userColumn: options.userColumn ?? config.schematicDefaults.userColumn,
+          options.authStrategies ?? config.schematicDefaults?.strategies,
+        userColumn: options.userColumn ?? config.schematicDefaults?.userColumn,
       },
     };
 

@@ -4,13 +4,14 @@ import { ensure, getCache, log, strings } from '@mountnotion/utils';
 import { applyWithoutOverwrite, applyWithOverwrite } from '../../rules';
 import { addPackageToPackageJson } from '../../utils';
 import { validateInputs } from './validate-inputs';
+import path = require('path');
 
 export function express(options: ExpressOptions): Rule {
   log.success({ action: 'running', message: 'express schematic' });
   log.success({ action: '-------', message: '-----------------' });
   validateInputs(options);
 
-  const outDir = options.outDir;
+  const outDir = path.resolve(process.cwd(), options.outDir);
   const excludes = options.excludes ?? [];
   return async (tree) => {
     addPackageToPackageJson(tree, 'helmet', '7.0.0');

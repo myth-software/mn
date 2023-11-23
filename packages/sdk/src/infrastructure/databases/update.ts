@@ -23,7 +23,8 @@ export const update = async ({
   );
 
   if (!response.ok) {
-    throw new Error('Failed to update database');
+    const json = await response.json();
+    throw { status: response.status, message: json.message };
   }
 
   const data = await response.json();
