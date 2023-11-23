@@ -51,7 +51,7 @@ export default {
     const { flow } = await authPrompt();
 
     if (flow === 'integration key') {
-      await authIntegrationKey.actionFactory(config)({});
+      await authIntegrationKey.actionFactory(config)();
       await selectPagesIntegrationKey.actionFactory(config)({});
     }
 

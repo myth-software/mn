@@ -16,7 +16,7 @@ export const getlocals = async (
   const database = await notion.databases.retrieve({
     database_id: options.pageId,
   });
-  const cache = flattenDatabaseResponse(database, options);
+  const cache = flattenDatabaseResponse(database);
   const useAll = options.all?.includes(cache.title);
   const query = useAll
     ? notion.databases.query<any>(

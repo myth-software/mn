@@ -1,4 +1,8 @@
-import { BasicOptions, BlockObjectResponse, Cache } from '@mountnotion/types';
+import {
+  BlockObjectResponse,
+  Cache,
+  MountNotionConfig,
+} from '@mountnotion/types';
 import { CACHE, log } from '@mountnotion/utils';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { flattenDatabaseResponse, flattenPageResponse } from '../flatteners';
@@ -7,10 +11,9 @@ import { createRelations } from './create-relations.util';
 import { createRollupsOptions } from './create-rollups-options.util';
 import { createRollups } from './create-rollups.util';
 
-export const createDatabaseCaches = async (
-  pageIds: Array<string>,
-  options: BasicOptions
-): Promise<Array<Cache>> => {
+export const createDatabaseCaches = async ({
+  selectedPages,
+}: MountNotionConfig): Promise<Array<Cache>> => {
   if (!existsSync('./.mountnotion')) {
     mkdirSync('./.mountnotion');
   }
@@ -18,10 +21,10 @@ export const createDatabaseCaches = async (
   log.info({ action: 'loading', message: 'data from notion workspace' });
 
   const pageResponse = await infrastructure.pages.retrieve({
-    page_id: pageIds[0],
+    page_id: selectedPages[0],
   });
   const [page] = flattenPageResponse<Cache>(pageResponse);
-  const promises = pageIds.map((page_id) =>
+  const promises = selectedPages.map((page_id) =>
     infrastructure.blocks.children.listAll({
       block_id: page_id,
       page_size: 100,
@@ -121,7 +124,7 @@ export const createDatabaseCaches = async (
 
   const caches: Cache[] = allUsableDatabases
     .map((database) => {
-      return flattenDatabaseResponse(database, options);
+      return flattenDatabaseResponse(database);
     })
     .map((cache, i, caches) => {
       const rollups = allRollups[i];

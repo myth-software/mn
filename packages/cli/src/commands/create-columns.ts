@@ -1,8 +1,8 @@
 import { flattenDatabaseResponse, notion } from '@mountnotion/sdk';
 import {
   ColumnTypes,
-  MountnCommand,
   MountNotionConfig,
+  MountnCommand,
 } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
@@ -65,7 +65,7 @@ export default {
     assert(args);
     dependencies(config);
     const options = await optionsPrompt(args);
-    const pageId = config.workspace.selectedPages[0];
+    const pageId = config.selectedPages[0];
     const name = options.name;
     const type = options.type;
     const ids = await getDatabaseIdsInWorkspace(pageId);

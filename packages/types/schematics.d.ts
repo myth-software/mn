@@ -1,4 +1,3 @@
-import { EmojiRequest } from './api-endpoints';
 import { ColumnsLintRules, RowsLintRules } from './lint-rules';
 
 export declare type AuthOptions = {
@@ -49,34 +48,33 @@ export declare type I18nOptions = BasicOptions & {
 
 export declare type DrizzleOptions = BasicOptions;
 
-export declare type Schematics = {
-  name: string;
-  disable?: boolean;
-  options: { auth: AuthOptions; basic: BasicOptions };
-};
+export declare type Schematics =
+  | {
+      name: string;
+      disable?: boolean;
+    } & DrizzleOptions &
+      I18nOptions &
+      LocalsOptions &
+      ExpressOptions &
+      ControllersOptions &
+      RtkQueryOptions &
+      MirageOptions &
+      BasicOptions &
+      AuthOptions;
 
 export type MountNotionConfig = {
-  auth:
-    | {
-        strategy: 'integration-key';
-        key: string;
-      }
-    | {
-        strategy: 'oauth';
-        key: string;
-        availablePages: {
-          page_id: string;
-          title: string;
-          icon: EmojiRequest;
-        }[];
-      };
-  workspace: {
-    selectedPages: string[];
-    lint: {
-      columns: Partial<ColumnsLintRules>;
-      rows: Partial<RowsLintRules>;
-    };
+  extends?: string;
+  selectedPages: string[];
+  lint: {
+    [P in keyof ColumnsLintRules | RowsLintRules]?: 'error' | 'warn';
   };
-  options: { auth: AuthOptions; basic: BasicOptions };
+  auth: 'key' | 'oauth';
+  schematicDefaults: {
+    baseUrl?: string;
+    caches?: string;
+    strategies?: string[];
+    userColumn?: string;
+    excludes?: string[];
+  };
   schematics: Schematics[];
 };

@@ -41,5 +41,5 @@ Thumbs.db
 
 .env
 .mountnotion*
-.mountnotion.config.json
+mn.json
 .nx/cache

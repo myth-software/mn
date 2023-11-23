@@ -1,8 +1,4 @@
-import {
-  MountnCommand,
-  MountNotionConfig,
-  RowsLintRules,
-} from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { writeFileWithPrettyJson } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { CONFIG_FILE, ROWS_LINT_RULES } from '../utils';
@@ -29,8 +25,7 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
       name: 'use',
       choices: ROWS_LINT_RULES.map((rule) => {
         return {
-          name: rule.name,
-          value: rule.id,
+          name: rule.id,
           hint: rule.description ?? '',
         };
       }),
@@ -46,7 +41,7 @@ export const optionsPrompt = async (options: ConfigureLintRowsOptions) => {
 };
 
 function dependencies(config: MountNotionConfig) {
-  const hasPages = config.workspace.selectedPages.length > 0;
+  const hasPages = config.selectedPages.length > 0;
 
   if (!hasPages) {
     throw new Error('no pages selected');
@@ -70,17 +65,14 @@ export default {
 
     const updatedConfig: MountNotionConfig = {
       ...config,
-      workspace: {
-        ...config.workspace,
-        lint: {
-          ...config.workspace.lint,
-          rows: options.use?.reduce((acc, row) => {
-            return {
-              ...acc,
-              [row]: row,
-            };
-          }, {} as Partial<RowsLintRules>),
-        },
+      lint: {
+        ...config.lint,
+        ...options.use?.reduce((acc, row) => {
+          return {
+            ...acc,
+            [row]: 'warn',
+          };
+        }, {}),
       },
     };
 

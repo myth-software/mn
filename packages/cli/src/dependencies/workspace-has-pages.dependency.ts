@@ -5,7 +5,7 @@ import { workspaceDefined } from './workspace-defined.dependency';
 export function workspaceHasPages(config: MountNotionConfig) {
   workspaceDefined(config);
 
-  const hasPages = config.workspace.selectedPages?.length > 0;
+  const hasPages = config.selectedPages?.length > 0;
 
   if (!hasPages) {
     log.fatal({

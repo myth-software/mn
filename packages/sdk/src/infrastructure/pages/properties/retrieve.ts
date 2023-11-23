@@ -11,7 +11,6 @@ export const retrieve = async (query: GetPagePropertyParameters) => {
         'Content-Type': 'application/json',
         'Notion-Version': '2022-06-28',
       },
-      body: JSON.stringify(query),
     }
   );
 

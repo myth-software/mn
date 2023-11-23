@@ -174,17 +174,12 @@ export default {
      *  when everything is done.
      */
     try {
-      if (config.auth?.key) {
-        process.env['NOTION_INTEGRATION_KEY'] = config.auth.key;
-      }
-
-      if (!process.env['NOTION_INTEGRATION_KEY']) {
-        log.error({
+      if (config.auth === 'key' && !process.env['NOTION_INTEGRATION_KEY']) {
+        log.fatal({
           action: 'erroring',
           message:
-            'missing notion integration key. use configure auth.key or set NOTION_INTEGRATION_KEY environment variable',
+            'missing notion integration key. set NOTION_INTEGRATION_KEY environment variable',
         });
-        throw new Error('bailing out');
       }
 
       for (const schematic of config.schematics) {
@@ -194,12 +189,8 @@ export default {
               collection: '@mountnotion/schematics',
               schematic: schematic.name,
               options: {
-                ...config.options,
-                ...config.options?.auth,
-                ...config.options?.basic,
-                ...schematic.options,
-                ...schematic.options?.auth,
-                ...schematic.options?.basic,
+                ...config.schematicDefaults,
+                ...schematic,
               },
             })
             .toPromise();

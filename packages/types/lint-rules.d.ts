@@ -1,21 +1,19 @@
-export declare type ColumnsLintRules = {
-  consistentTitlesAsName: "consistent titles as 'name'";
-  automaticCreatedBy: 'automatic created_by';
-  automaticCreatedTime: 'automatic created_time';
-  automaticLastEditedBy: 'automatic last_edited_by';
-  automaticLastEditedTime: 'automatic last_edited_time';
-  consistentCreatedBy: 'consistent created_by';
-  consistentCreatedTime: 'consistent created_time';
-  consistentLastEditedBy: 'consistent last_edited_by';
-  consistentLastEditedTime: 'consistent last_edited_time';
-  consistentSelectColorsUsingFirstColor: 'consistent select colors using first color';
-  consistentMultiSelectColorsUsingFirstColor: 'consistent multi_select colors using first color';
-  lowercaseColumnNames: 'lowercase column names';
-  relationsWithLeadingEmoji: 'relations with leading emoji';
-};
+export declare type ColumnsLintRules =
+  | 'column-automatic-created-by'
+  | 'column-automatic-created-time'
+  | 'column-automatic-last-edited-by'
+  | 'column-automatic-last-edited-time'
+  | 'column-consistent-created-by'
+  | 'column-consistent-created-time'
+  | 'column-consistent-last-edited-by'
+  | 'column-consistent-last-edited-time'
+  | 'column-consistent-select-colors-using-first-color'
+  | 'column-consistent-multi-select-colors-using-first-color'
+  | 'column-consistent-titles-as-name'
+  | 'column-lowercase-names'
+  | 'column-relations-with-leading-emoji';
 
-export declare type RowsLintRules = {
-  lowercasePageTitles: 'lowercase page titles';
-  untitledPagesDefaultToAnimalColorNames: 'untitled pages default to animal color names';
-  pagesWithoutIconsDefaultToDatabaseIcon: 'pages without icons default to database icon';
-};
+export declare type RowsLintRules =
+  | 'row-lowercase-titles'
+  | 'row-no-untitled'
+  | 'row-all-icons';

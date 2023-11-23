@@ -1,96 +1,53 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://docs.mountnotion.com/configuration",
   "title": "json schema for mount notion configuration",
   "type": "object",
   "properties": {
-    "workspace": {
+    "selectedPages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lint": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["warn", "error"]
+      }
+    },
+    "auth": {
+      "type": "string",
+      "enum": ["key", "oauth"]
+    },
+    "schematicDefaults": {
       "type": "object",
       "properties": {
-        "selectedPages": {
+        "baseUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "caches": {
+          "type": "string"
+        },
+        "stratgies": {
           "type": "array",
           "items": {
             "type": "string"
           }
         },
-        "lint": {
-          "type": "object",
-          "properties": {
-            "columns": {
-              "type": "object"
-            },
-            "rows": {
-              "type": "object"
-            }
+        "userColumn": {
+          "type": "string"
+        },
+        "excludes": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       },
-      "required": ["selectedPages"]
-    },
-    "auth": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": ["string", "null"]
-        },
-        "notionIntegrationKey": {
-          "type": "string",
-          "description": "notion api key to authorize client",
-          "$default": {
-            "$source": "argv",
-            "index": 1
-          }
-        }
-      }
-    },
-    "options": {
-      "type": "object",
-      "properties": {
-        "basic": {
-          "type": "object",
-          "properties": {
-            "baseUrl": {
-              "type": "string"
-            },
-            "caches": {
-              "type": "string"
-            },
-            "javascriptizeColumns": {
-              "type": "boolean"
-            },
-            "outDir": {
-              "type": "string"
-            }
-          },
-          "required": ["caches", "outDir"]
-        },
-        "auth": {
-          "type": "object",
-          "properties": {
-            "strategies": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "usersDatabase": {
-              "type": "string"
-            },
-            "userColumn": {
-              "type": "string"
-            },
-            "accessorProperty": {
-              "type": "string"
-            },
-            "public": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
+      "additionalProperties": false
     },
     "schematics": {
       "$ref": "#/$defs/schematics"
@@ -108,87 +65,64 @@
           "disable": {
             "type": "boolean"
           },
-          "options": {
-            "type": "object",
-            "properties": {
-              "basic": {
-                "type": "object",
-                "properties": {
-                  "debug": {
-                    "type": "bolean",
-                    "description": "enable debug logs",
-                    "$default": false
-                  },
-                  "pageId": {
-                    "type": "string",
-                    "description": "page id to look for databases at",
-                    "$default": {
-                      "$source": "argv",
-                      "index": 0
-                    }
-                  },
-                  "caches": {
-                    "type": "string",
-                    "description": "caches"
-                  },
-                  "outDir": {
-                    "type": "string",
-                    "description": "specify the output directory"
-                  },
-                  "baseUrl": {
-                    "type": "string",
-                    "description": "client baseUrl"
-                  },
-                  "locals": {
-                    "type": "string"
-                  },
-                  "all": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "eject": {
-                    "type": "boolean"
-                  },
-                  "excludes": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "drizzle": {
-                    "type": "string"
-                  },
-                  "org": {
-                    "type": "string",
-                    "description": "organization to import in loopback repository"
-                  },
-                  "rtk": {
-                    "type": "boolean",
-                    "description": "client with rk"
-                  },
-                  "auth": {
-                    "type": "boolean",
-                    "description": "generate controllers with auth"
-                  }
-                }
-              },
-              "auth": {
-                "type": "object",
-                "properties": {
-                  "userColumn": {
-                    "type": "string"
-                  },
-                  "accessorProperty": {
-                    "type": "string"
-                  }
-                }
-              }
+          "debug": {
+            "type": "boolean",
+            "description": "enable debug logs",
+            "$default": false
+          },
+          "caches": {
+            "type": "string",
+            "description": "the local package or path to caches"
+          },
+          "outDir": {
+            "type": "string",
+            "description": "specify the output directory"
+          },
+          "baseUrl": {
+            "type": "string",
+            "description": "base url for the api with no trailing slash"
+          },
+          "locals": {
+            "type": "string",
+            "description": "the local package or path to locals"
+          },
+          "all": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "the databases to generate locals for every time"
+          },
+          "eject": {
+            "type": "boolean"
+          },
+          "excludes": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
+          },
+          "drizzle": {
+            "type": "string",
+            "description": "the local package or path to drizzle"
+          },
+          "rtk": {
+            "type": "boolean",
+            "description": "client with rk"
+          },
+          "auth": {
+            "type": "boolean",
+            "description": "generate controllers with auth"
+          },
+          "userColumn": {
+            "type": "string"
+          },
+          "accessorProperty": {
+            "type": "string"
           }
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

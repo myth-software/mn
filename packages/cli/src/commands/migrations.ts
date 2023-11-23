@@ -62,7 +62,7 @@ export default {
     const drizzleSchematic = config.schematics.find(
       (schematic) => schematic.name === 'drizzle'
     );
-    const outDir = drizzleSchematic?.options.basic.outDir;
+    const outDir = drizzleSchematic?.outDir;
 
     const command = (await optionsPrompt(args)).command;
 

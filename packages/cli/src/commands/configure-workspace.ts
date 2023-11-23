@@ -138,20 +138,13 @@ export default {
     const options = await optionsPrompt(args);
     const updatedConfig: MountNotionConfig = {
       ...config,
-      options: {
-        ...config.options,
-        basic: {
-          ...config.options.basic,
-          caches: options.caches ?? config.options.basic.caches,
-          baseUrl: options.baseUrl ?? config.options.basic.baseUrl,
-        },
-        auth: {
-          ...config.options.auth,
-          strategies: options.authStrategies ?? config.options.auth.strategies,
-          userColumn: options.userColumn ?? config.options.auth.userColumn,
-          usersDatabase:
-            options.usersDatabase ?? config.options.auth.usersDatabase,
-        },
+      schematicDefaults: {
+        ...config.schematicDefaults,
+        caches: options.caches ?? config.schematicDefaults.caches,
+        baseUrl: options.baseUrl ?? config.schematicDefaults.baseUrl,
+        strategies:
+          options.authStrategies ?? config.schematicDefaults.strategies,
+        userColumn: options.userColumn ?? config.schematicDefaults.userColumn,
       },
     };
 

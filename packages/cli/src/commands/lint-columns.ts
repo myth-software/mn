@@ -31,9 +31,7 @@ function assert(
 }
 
 function dependencies(config: MountNotionConfig) {
-  const hasRules =
-    config.workspace?.lint?.columns &&
-    Object.keys(config.workspace.lint.columns).length > 0;
+  const hasRules = config.lint && Object.keys(config.lint).includes('column-');
 
   if (!hasRules) {
     throw new Error('no rules configured');
@@ -50,7 +48,7 @@ export default {
   actionFactory: (config) => async (options) => {
     assert(options);
     dependencies(config);
-    const selectedPages = config.workspace.selectedPages;
+    const selectedPages = config.selectedPages;
     const pageId = options.pageId ?? selectedPages[0];
     const ids = await getDatabaseIdsInWorkspace(pageId);
 

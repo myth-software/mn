@@ -1,101 +1,90 @@
 import { ColumnsLintRules, RowsLintRules } from '@mountnotion/types';
 
-type ColunnsLintRulesArray<
-  T extends keyof ColumnsLintRules = keyof ColumnsLintRules
-> = {
-  [P in keyof ColumnsLintRules]: {
+type ColunnsLintRulesArray<T extends ColumnsLintRules = ColumnsLintRules> = {
+  [P in ColumnsLintRules]: {
     id: P;
-    name: ColumnsLintRules[P];
     description?: string;
   };
 }[T][];
 
-type RowsLintRulesArray<T extends keyof RowsLintRules = keyof RowsLintRules> = {
-  [P in keyof RowsLintRules]: {
+type RowsLintRulesArray<T extends RowsLintRules = RowsLintRules> = {
+  [P in RowsLintRules]: {
     id: P;
-    name: RowsLintRules[P];
     description?: string;
   };
 }[T][];
 
 export const COLUMNS_LINT_RULES: ColunnsLintRulesArray = [
   {
-    id: 'consistentTitlesAsName',
-    name: "consistent titles as 'name'",
+    id: 'column-consistent-titles-as-name',
     description: 'all of the title columns of workspace are called "name"',
   },
   {
-    id: 'automaticCreatedBy',
-    name: 'automatic created_by',
+    id: 'column-automatic-created-by',
     description: 'all of the databases have created_by column',
   },
   {
-    id: 'automaticCreatedTime',
-    name: 'automatic created_time',
+    id: 'column-automatic-created-time',
     description: 'all of the databases have created_time column',
   },
   {
-    id: 'automaticLastEditedBy',
-    name: 'automatic last_edited_by',
+    id: 'column-automatic-last-edited-by',
     description: 'all of the databases have last_edited_by column',
   },
   {
-    id: 'automaticLastEditedTime',
-    name: 'automatic last_edited_time',
+    id: 'column-consistent-last-edited-time',
     description: 'all of the databases have last_edited_time column',
   },
   {
-    id: 'consistentCreatedBy',
-    name: 'consistent created_by',
+    id: 'column-consistent-created-by',
     description: 'all of the databases have consistent created_by column names',
   },
   {
-    id: 'consistentCreatedTime',
-    name: 'consistent created_time',
+    id: 'column-consistent-created-time',
     description:
       'all of the databases have consistent created_time column names',
   },
   {
-    id: 'consistentLastEditedBy',
-    name: 'consistent last_edited_by',
+    id: 'column-automatic-last-edited-by',
     description:
       'all of the databases have consistent last_edited_by column names',
   },
   {
-    id: 'consistentLastEditedTime',
-    name: 'consistent last_edited_time',
+    id: 'column-automatic-last-edited-time',
     description:
       'all of the databases have consistent last_edited_time column names',
   },
   {
-    id: 'consistentSelectColorsUsingFirstColor',
-    name: 'consistent select colors using first color',
+    id: 'column-consistent-select-colors-using-first-color',
+    description:
+      'all of the select options match the color of the first option in the select',
   },
   {
-    id: 'consistentMultiSelectColorsUsingFirstColor',
-    name: 'consistent multi_select colors using first color',
+    id: 'column-consistent-multi-select-colors-using-first-color',
+    description:
+      'all of the multi-select options match the color of the first option in the multi-select',
   },
   {
-    id: 'lowercaseColumnNames',
-    name: 'lowercase column names',
+    id: 'column-lowercase-names',
+    description: 'all of the columns have lower cased names',
   },
   {
-    id: 'relationsWithLeadingEmoji',
-    name: 'relations with leading emoji',
+    id: 'column-relations-with-leading-emoji',
+    description: 'for relation columns the first character is an emoji',
   },
 ];
 
 export const ROWS_LINT_RULES: RowsLintRulesArray = [
   {
-    id: 'lowercasePageTitles',
-    name: 'lowercase page titles',
+    id: 'row-lowercase-titles',
+    description: 'each row has lowercase titles',
   },
   {
-    id: 'untitledPagesDefaultToAnimalColorNames',
-    name: 'untitled pages default to animal color names',
+    id: 'row-no-untitled',
+    description: 'no row has an untitled title property',
   },
   {
-    id: 'pagesWithoutIconsDefaultToDatabaseIcon',
-    name: 'pages without icons default to database icon',
+    id: 'row-all-icons',
+    description: 'all rows have icons',
   },
 ];

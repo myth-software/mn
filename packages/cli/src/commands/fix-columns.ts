@@ -57,52 +57,52 @@ export default {
     while (fixes.length > 0) {
       const fix = ensure(fixes.shift());
 
-      if (fix.id === 'automaticLastEditedTime') {
+      if (fix.id === 'column-automatic-last-edited-time') {
         const result = await fixColumnsAutomaticLastEditedTime(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'automaticCreatedBy') {
+      if (fix.id === 'column-automatic-created-by') {
         const result = await fixColumnsAutomaticCreatedBy(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'automaticCreatedTime') {
+      if (fix.id === 'column-automatic-created-time') {
         const result = await fixColumnsAutomaticCreatedTime(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'automaticLastEditedBy') {
+      if (fix.id === 'column-automatic-last-edited-by') {
         const result = await fixColumnsAutomaticLastEditedBy(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'consistentCreatedBy') {
+      if (fix.id === 'column-consistent-created-by') {
         const result = await fixColumnsConsistentCreatedBy(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'consistentCreatedTime') {
+      if (fix.id === 'column-consistent-created-time') {
         const result = await fixColumnsConsistentCreatedTime(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'consistentLastEditedBy') {
+      if (fix.id === 'column-consistent-last-edited-by') {
         const result = await fixColumnsConsistentLastEditedBy(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'consistentLastEditedTime') {
+      if (fix.id === 'column-consistent-last-edited-time') {
         const result = await fixColumnsConsistentLastEditedTime(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'consistentTitlesAsName') {
+      if (fix.id === 'column-consistent-titles-as-name') {
         const result = await fixColumnsConsistentTitle(fix);
         logs.push(result);
       }
 
-      if (fix.id === 'relationsWithLeadingEmoji') {
+      if (fix.id === 'column-relations-with-leading-emoji') {
         const result = await fixRelationsWithLeadingEmoji(fix);
         logs.push(result);
       }

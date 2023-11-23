@@ -14,7 +14,7 @@ export default {
 
   actionFactory: (config) => async () => {
     dependencies(config);
-    const pageId = config.workspace.selectedPages[0];
+    const pageId = config.selectedPages[0];
     /**
      * collect all databases
      */

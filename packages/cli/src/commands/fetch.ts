@@ -12,9 +12,6 @@ export default {
   actionFactory: (config) => async () => {
     dependencies(config);
 
-    await createDatabaseCaches(
-      config.workspace.selectedPages,
-      config.options.basic
-    );
+    await createDatabaseCaches(config);
   },
 } satisfies MountnCommand;

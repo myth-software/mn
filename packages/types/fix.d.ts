@@ -1,8 +1,8 @@
 import { LogInput } from './cli';
-import { ColumnsLintRules } from './lint-rules';
+import { ColumnsLintRules, RowsLintRules } from './lint-rules';
 
 export declare type Fix = {
-  id: keyof ColumnsLintRules;
+  id: ColumnsLintRules | RowsLintRules;
   page: LogInput['page'];
   title: string;
   column: string;

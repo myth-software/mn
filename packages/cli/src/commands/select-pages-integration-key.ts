@@ -62,10 +62,7 @@ export default {
 
     const updatedConfig: MountNotionConfig = {
       ...config,
-      workspace: {
-        ...config.workspace,
-        selectedPages: options.pageId,
-      },
+      selectedPages: options.pageId,
     };
 
     writeFileWithPrettyJson(CONFIG_FILE, updatedConfig);

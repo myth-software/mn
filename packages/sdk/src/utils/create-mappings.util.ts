@@ -1,4 +1,4 @@
-import { BasicOptions, ColumnTypes, Mappings } from '@mountnotion/types';
+import { ColumnTypes, Mappings } from '@mountnotion/types';
 import { variablize } from '@mountnotion/utils';
 
 /**
@@ -13,20 +13,12 @@ export const createMappings = (
       id: string;
       type: ColumnTypes;
     }
-  >,
-  options?: BasicOptions
+  >
 ): Mappings => {
   return Object.entries(properties).reduce((acc, [property]) => {
-    if (options?.javascriptizeColumns) {
-      return {
-        ...acc,
-        [variablize(property)]: property,
-      };
-    }
-
     return {
       ...acc,
-      [property]: property,
+      [variablize(property)]: property,
     };
   }, {} as Mappings);
 };

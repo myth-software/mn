@@ -1,8 +1,4 @@
-import {
-  ColumnsLintRules,
-  MountnCommand,
-  MountNotionConfig,
-} from '@mountnotion/types';
+import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import { writeFileWithPrettyJson } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { COLUMNS_LINT_RULES, CONFIG_FILE } from '../utils';
@@ -29,8 +25,7 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
       name: 'use',
       choices: COLUMNS_LINT_RULES.map((rule) => {
         return {
-          name: rule.name,
-          value: rule.id,
+          name: rule.id,
           hint: rule.description ?? '',
         };
       }),
@@ -47,7 +42,7 @@ export const optionsPrompt = async (options: ConfigureLintColumnsOptions) => {
 };
 
 function dependencies(config: MountNotionConfig) {
-  const hasPages = config.workspace.selectedPages.length > 0;
+  const hasPages = config.selectedPages.length > 0;
 
   if (!hasPages) {
     throw new Error('no pages selected');
@@ -71,17 +66,14 @@ export default {
 
     const updatedConfig: MountNotionConfig = {
       ...config,
-      workspace: {
-        ...config.workspace,
-        lint: {
-          ...config.workspace.lint,
-          columns: options.use?.reduce((acc, column) => {
-            return {
-              ...acc,
-              [column]: column,
-            };
-          }, {} as Partial<ColumnsLintRules>),
-        },
+      lint: {
+        ...config.lint,
+        ...options.use?.reduce((acc, column) => {
+          return {
+            ...acc,
+            [column]: 'warn',
+          };
+        }, {}),
       },
     };
 
