@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/utils",
-  "version": "1.6.10",
+  "version": "1.6.11",
   "type": "commonjs",
   "dependencies": {
     "chalk": "4.0.0",
