@@ -96,7 +96,7 @@
 <% } %>
 
 
-export const SCHEME = {
+export const SCHEMA = {
   <% for(const {title} of schema) { %>
     <%= camelize(title) %>:  <%= underscore(title).toUpperCase() %>,
   <% } %>

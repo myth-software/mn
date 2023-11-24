@@ -21,7 +21,7 @@ export const db = drizzle(
   { schema }
 );
 
-export const drizzleClient = configureDrizzle({ db, schema, schema: SCHEMA });
+export const drizzleClient = configureDrizzle({ db, schema, notionSchema: SCHEMA });
 export const notionClient = configureNotion({
   integrationKey: process.env['INTEGRATION_KEY']!,
   schema: SCHEMA
