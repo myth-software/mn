@@ -1,6 +1,6 @@
 {
   "name": "@mountnotion/sdk",
-  "version": "1.6.11",
+  "version": "1.6.12",
   "description": "tools for mounting notion",
   "author": "myth software, llc",
   "license": "BSL-1.1",
