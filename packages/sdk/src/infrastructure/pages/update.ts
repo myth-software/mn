@@ -6,15 +6,15 @@ import {
 } from '@mountnotion/types';
 import { flattenPageResponse } from '../../flatteners';
 
-export async function update<TCache>({
+export async function update<TSchema>({
   page_id,
   ...body
 }: UpdatePageParameters): Promise<PageObjectResponse>;
-export async function update<TCache>(
+export async function update<TSchema>(
   { page_id, ...body }: UpdatePageParameters,
   config?: ToolsConfiguration
-): Promise<[TCache, Columns]>;
-export async function update<TCache>(
+): Promise<[TSchema, Columns]>;
+export async function update<TSchema>(
   { page_id, ...body }: UpdatePageParameters,
   config?: ToolsConfiguration
 ) {
@@ -43,7 +43,7 @@ export async function update<TCache>(
     return pageResponse;
   }
 
-  const cache = flattenPageResponse<TCache>(pageResponse);
+  const schema = flattenPageResponse<TSchema>(pageResponse);
 
-  return cache;
+  return schema;
 }

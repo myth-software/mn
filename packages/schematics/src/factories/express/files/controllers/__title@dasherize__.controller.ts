@@ -4,18 +4,18 @@
 
 import {
   <%= classify(title) %>,
-  <%= classify(title) %>Cache
-} from '<%= options.caches %>';
+  <%= classify(title) %>Schema
+} from '<%= options.schema %>';
 import { MountNotionQueryParameters, QueryFilter } from '@mountnotion/types';
 import { Request, Response } from 'express';
 import { mn } from '../mn';
 
 async function query(req: Request, res: Response) {
     const where = req.query
-      .where as MountNotionQueryParameters<<%= classify(title) %>Cache>;
+      .where as MountNotionQueryParameters<<%= classify(title) %>Schema>;
     <% if (options.accessorProperty && options.userColumn) { %>
       const principal = res.locals.principal;
-      const principalFilter: QueryFilter<<%= classify(title) %>Cache> =
+      const principalFilter: QueryFilter<<%= classify(title) %>Schema> =
         principal.role === 'client'
           ? { property: '<%= options.userColumn %>', relation: { contains: principal.id } }
           : {
@@ -24,16 +24,16 @@ async function query(req: Request, res: Response) {
             };
     <% } else if (options.userColumn) { %>
       const principal = res.locals.principal;
-      const principalFilter: QueryFilter<<%= classify(title) %>Cache> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
+      const principalFilter: QueryFilter<<%= classify(title) %>Schema> = { property: '<%= options.userColumn %>', relation: { contains: principal.id } };
     <% } %>
     <% if (options.userColumn) { %>
       const filter = where?.filter
         ? ({
             and: [where.filter, principalFilter],
-          } as QueryFilter<<%= classify(title) %>Cache>)
+          } as QueryFilter<<%= classify(title) %>Schema>)
         : principalFilter;
     <% } else { %>
-      const filter = where?.filter as QueryFilter<<%= classify(title) %>Cache>;
+      const filter = where?.filter as QueryFilter<<%= classify(title) %>Schema>;
     <% } %>
 
     try {

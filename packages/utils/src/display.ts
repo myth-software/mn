@@ -1,4 +1,4 @@
-import { Cache, Instance, Options } from '@mountnotion/types';
+import { Instance, Options, Schema } from '@mountnotion/types';
 import { ensure } from './ensure.util';
 import { orderToDisplayValues } from './order-to-display-values';
 import { orderToFields } from './order-to-fields';
@@ -6,12 +6,12 @@ import { orderToInitialValues } from './order-to-initial-values';
 import { orderToOptions } from './order-to-options';
 import {
   DisplayAction,
-  displayActions,
   DisplayConfiguration,
   Fields,
   TypedDisplay,
   TypedDisplayConfiguration,
   TypedValues,
+  displayActions,
 } from './types';
 
 const i18n = {
@@ -24,47 +24,47 @@ const i18n = {
  * a display than can be relied on in all scenarios from lists to forms.
  *
  * display accepts a partially configured display that describes the
- * cache and properties to display as well as any overrides to the default
+ * schema and properties to display as well as any overrides to the default
  * display configuration.
- * @param cache {@link Cache}
+ * @param schema {@link Schema}
  * @param columns {@link Columns}
  * @returns display configuration {@link DisplayConfiguration}
  */
-export function display<TCache extends Cache>(
-  c: TypedDisplayConfiguration<TCache>
+export function display<TSchema extends Schema>(
+  c: TypedDisplayConfiguration<TSchema>
 ): (
   data?: Array<Instance> | Instance
-) => TypedDisplay<TCache, (typeof c)['limit']> {
+) => TypedDisplay<TSchema, (typeof c)['limit']> {
   return (data) => {
     const limit = c.limit === 'one' ? 'one' : 'none';
     const config = c as DisplayConfiguration;
     const title = i18n.t(`displays.${config.id}`);
 
     const options = config?.order.reduce(
-      orderToOptions<(typeof c)['cache']>({ config: c }),
+      orderToOptions<(typeof c)['schema']>({ config: c }),
       {} as Options
     );
 
     const fields = config?.order.reduce(
-      orderToFields<(typeof c)['cache']>({ config: c }),
+      orderToFields<(typeof c)['schema']>({ config: c }),
       {} as Fields
     );
 
     if (!Array.isArray(data)) {
       const initialValues = config?.order.reduce(
-        orderToInitialValues<(typeof c)['cache']>({ config: c, data }),
-        {} as TypedValues<TCache>
+        orderToInitialValues<(typeof c)['schema']>({ config: c, data }),
+        {} as TypedValues<TSchema>
       );
 
       const displayValues = config?.order
         .filter(({ isHidden }) => !isHidden)
         .reduce(
-          orderToDisplayValues<(typeof c)['cache']>({
+          orderToDisplayValues<(typeof c)['schema']>({
             config: c,
             data,
             options,
           }),
-          {} as TypedValues<TCache>
+          {} as TypedValues<TSchema>
         );
 
       const hasData = config.order.some(({ property: p }) => {
@@ -108,20 +108,20 @@ export function display<TCache extends Cache>(
     }
 
     const initialValues = config?.order.reduce(
-      orderToInitialValues<(typeof c)['cache']>({ config: c }),
-      {} as TypedValues<TCache>
+      orderToInitialValues<(typeof c)['schema']>({ config: c }),
+      {} as TypedValues<TSchema>
     );
 
     const displayValues = data?.map((d) =>
       config?.order
         .filter(({ isHidden }) => !isHidden)
         .reduce(
-          orderToDisplayValues<(typeof c)['cache']>({
+          orderToDisplayValues<(typeof c)['schema']>({
             config: c,
             data: d,
             options,
           }),
-          {} as TypedValues<TCache>
+          {} as TypedValues<TSchema>
         )
     )[0];
 

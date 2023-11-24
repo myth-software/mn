@@ -1,29 +1,28 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { BasicOptions } from '@mountnotion/types';
-import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { ensure, getSchema, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateBasicInputs } from '../../utils';
-import path = require('path');
 
 export function reactQuery(options: BasicOptions): Rule {
   log.success({ action: 'running', message: 'react query schematic' });
   log.success({ action: '-------', message: '---------------------' });
   validateBasicInputs(options);
 
-  const outDir = path.resolve(process.cwd(), options.outDir);
+  const outDir = options.outDir;
   const excludes = options.excludes ?? [];
   return async () => {
-    const caches = ensure(getCache());
-    const includedCaches = caches.filter(
-      (cache) => cache.title && !excludes.includes(cache.title)
+    const schema = ensure(getSchema());
+    const includedSchema = schema.filter(
+      (schema) => schema.title && !excludes.includes(schema.title)
     );
-    const titles = includedCaches.map((cache_1) => cache_1.title);
+    const titles = includedSchema.map((schema_1) => schema_1.title);
     const files = './files';
-    const infrastructuresRules = includedCaches.map((cache) => {
+    const infrastructuresRules = includedSchema.map((schema) => {
       return applyWithOverwrite(url(`${files}/infrastructure-all`), [
         template({
-          title: cache.title,
-          cache,
+          title: schema.title,
+          schema,
           options,
           log,
           ...strings,
@@ -46,11 +45,11 @@ export function reactQuery(options: BasicOptions): Rule {
       url(`${files}/infrastructure-interface`),
       [move(`${outDir}/infrastructure`)]
     );
-    const statesRules = includedCaches.map((cache) => {
+    const statesRules = includedSchema.map((schema) => {
       return applyWithOverwrite(url(`${files}/+state-all`), [
         template({
-          title: cache.title,
-          cache,
+          title: schema.title,
+          schema,
           options,
           log,
           ...strings,

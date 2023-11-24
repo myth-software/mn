@@ -23,8 +23,7 @@ sidebar_position: 2
     "basic": {
       "pageId": "508626ce-f127-44f2-af41-7e8d526e745b",
       "baseUrl": "https://api.pferd.ai",
-      "caches": "@pferd/domain-pferd-caches",
-      "javascriptizeColumns": false
+      "schema": "@pferd/domain-pferd-schema"
     },
     "auth": {
       "strategies": ["sms", "email"],
@@ -35,42 +34,24 @@ sidebar_position: 2
   },
   "schematics": [
     {
-      "name": "caches",
+      "name": "schema",
       "disable": true,
-      "options": {
-        "basic": {
-          "pageId": "508626ce-f127-44f2-af41-7e8d526e745b",
-          "outDir": "libs/domain-pferd-caches/src"
-        }
-      }
+      "outDir": "libs/domain-pferd-schema/src"
     },
     {
       "name": "rtk-query",
       "disable": true,
-      "options": {
-        "basic": {
-          "outDir": "libs/domain-pferd-state/src"
-        }
-      }
+      "outDir": "libs/domain-pferd-state/src"
     },
     {
       "name": "mirage",
       "disable": false,
-      "options": {
-        "basic": {
-          "locals": "@pferd/domain-pferd-locals",
-          "outDir": "libs/domain-pferd-mirage/src"
-        }
-      }
+      "fixtures": "@pferd/domain-pferd-mirage"
     },
     {
-      "name": "locals",
+      "name": "fixtures",
       "disable": true,
-      "options": {
-        "basic": {
-          "outDir": "libs/domain-pferd-locals/src"
-        }
-      }
+      "outDir": "libs/domain-pferd-fixtures/src"
     }
   ]
 }

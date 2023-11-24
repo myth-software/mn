@@ -5,7 +5,7 @@ import {
 } from '@mountnotion/types';
 import {
   ensure,
-  getCache,
+  getSchema,
   log,
   writeFileWithPrettyJson,
 } from '@mountnotion/utils';
@@ -51,21 +51,21 @@ export const optionsPrompt = async (options: ConfigureSchematicsOptions) => {
           name: 'rtk-query',
         },
         {
-          name: 'locals',
+          name: 'fixtures',
         },
       ],
     });
   }
 
   if (!options.exclude) {
-    const cached = await getCache();
+    const schemad = getSchema();
     prompts.push({
       type: 'multiselect',
       message: 'databases to exclude from all schematics',
       name: 'exclude',
-      choices: ensure(cached).map((cache) => ({
-        name: `${cache.icon} ${cache.title}`,
-        value: cache.id,
+      choices: ensure(schemad).map((schema) => ({
+        name: `${schema.icon} ${schema.title}`,
+        value: schema.id,
       })),
     });
   }
@@ -101,7 +101,7 @@ export default {
     const options = await optionsPrompt(args);
     log.info({
       action: 'informing',
-      message: 'caches schematic is required, schemed automatially',
+      message: 'schema schematic is required, schemed automatially',
     });
 
     const updatedConfig: MountNotionConfig = {

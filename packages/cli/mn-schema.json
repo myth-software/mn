@@ -4,6 +4,10 @@
   "title": "json schema for mount notion configuration",
   "type": "object",
   "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
     "selectedPages": {
       "type": "array",
       "items": {
@@ -28,7 +32,7 @@
           "type": "string",
           "format": "uri"
         },
-        "caches": {
+        "schema": {
           "type": "string"
         },
         "stratgies": {
@@ -70,9 +74,9 @@
             "description": "enable debug logs",
             "$default": false
           },
-          "caches": {
+          "schema": {
             "type": "string",
-            "description": "the local package or path to caches"
+            "description": "the local package or path to schema"
           },
           "outDir": {
             "type": "string",
@@ -82,16 +86,16 @@
             "type": "string",
             "description": "base url for the api with no trailing slash"
           },
-          "locals": {
+          "fixtures": {
             "type": "string",
-            "description": "the local package or path to locals"
+            "description": "the local package or path to fixtures"
           },
           "all": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "the databases to generate locals for every time"
+            "description": "the databases to generate fixtures for with all rows included"
           },
           "eject": {
             "type": "boolean"

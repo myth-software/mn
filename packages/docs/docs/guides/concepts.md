@@ -6,13 +6,9 @@ schematics generate code. the code is placed into a source directory. currently 
 {
   "schematics": [
     {
-      "name": "caches",
-      "options": {
-        "basic": {
-          "pageId": "b58cb937-0b25-4bea-802e-c89d40f5c7c9",
-          "outDir": "packages/domain-injury-caches/src"
-        }
-      }
+      "name": "schema",
+
+      "outDir": "packages/domain-injury-schema/src"
     }
   ]
 }

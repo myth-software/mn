@@ -1,6 +1,6 @@
-import { Cache, Infer, Mappings } from '@mountnotion/types';
+import { Infer, Mappings, Schema } from '@mountnotion/types';
 
-export function mapInstance<TInstance extends Infer<Cache>>(
+export function mapInstance<TInstance extends Infer<Schema>>(
   instance: TInstance,
   mappings: Mappings
 ): TInstance {

@@ -1,5 +1,5 @@
-import { createDatabaseCaches } from '@mountnotion/sdk';
-import { Cache, MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { createDatabaseSchema } from '@mountnotion/sdk';
+import { MountNotionConfig, MountnCommand, Schema } from '@mountnotion/types';
 import { workspaceHasPages } from '../dependencies';
 
 function dependencies(config: MountNotionConfig) {
@@ -8,10 +8,10 @@ function dependencies(config: MountNotionConfig) {
 
 export default {
   name: 'fetch',
-  description: 'fetches databases and builds cache',
+  description: 'fetches databases and builds schema',
   actionFactory: (config) => async () => {
     dependencies(config);
 
-    return await createDatabaseCaches(config);
+    return await createDatabaseSchema(config);
   },
-} satisfies MountnCommand<Cache[]>;
+} satisfies MountnCommand<Schema[]>;

@@ -1,9 +1,8 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { AuthOptions, BasicOptions } from '@mountnotion/types';
-import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { ensure, getSchema, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateAuthInputs, validateBasicInputs } from '../../utils';
-import path = require('path');
 
 export function openApi(options: BasicOptions & AuthOptions): Rule {
   log.success({ action: 'running', message: 'open api schematic' });
@@ -11,21 +10,21 @@ export function openApi(options: BasicOptions & AuthOptions): Rule {
   validateBasicInputs(options);
   validateAuthInputs(options);
 
-  const outDir = path.resolve(process.cwd(), options.outDir);
+  const outDir = options.outDir;
   const excludes = options.excludes ?? [];
   return async () => {
-    const caches = ensure(getCache());
-    const includedCaches = caches.filter(
+    const schema = ensure(getSchema());
+    const includedSchema = schema.filter(
       ({ title }) => title && !excludes.includes(title)
     );
-    const titles = includedCaches.map((cache) => cache.title);
-    const controllersRules = includedCaches.map((cache) => {
+    const titles = includedSchema.map((schema) => schema.title);
+    const controllersRules = includedSchema.map((schema) => {
       return applyWithOverwrite(url('./files/all'), [
         template({
-          title: cache.title,
-          cache,
+          title: schema.title,
+          schema,
           options,
-          caches: options.caches,
+          notionScheme: options.schema,
           strategies: options.strategies,
           userColumn: options.userColumn,
           usersDatabase: options.usersDatabase,

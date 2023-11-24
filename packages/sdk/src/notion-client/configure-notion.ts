@@ -19,43 +19,43 @@ import { mapQuery } from './query.mapper';
 export function configureNotion<Config extends MountNotionClientConfig>(
   config: Config
 ): MountNotionClient<Config> {
-  const databases = Object.entries(config.caches).map(([title, cache]) => {
-    type Cache = typeof cache;
+  const databases = Object.entries(config.schema).map(([title, schema]) => {
+    type Schema = typeof schema;
     return [
       title,
       {
-        query: async (args: MountNotionQueryParameters<Cache>) => {
-          const query = args ? mapQuery(args, cache.mappings) : {};
-          const response = await notion.databases.query<Cache>({
-            database_id: cache.id,
+        query: async (args: MountNotionQueryParameters<Schema>) => {
+          const query = args ? mapQuery(args, schema.mappings) : {};
+          const response = await notion.databases.query<Schema>({
+            database_id: schema.id,
             ...(query as QueryDatabaseBodyParameters),
           });
 
           const results = response.results as PageObjectResponse[];
-          const [instances] = flattenPageResponses<Infer<Cache>>(results);
+          const [instances] = flattenPageResponses<Infer<Schema>>(results);
 
           return instances.map((instance) =>
-            mapInstance(instance, cache.mappings)
+            mapInstance(instance, schema.mappings)
           );
         },
         retrieve: async ({ id }: Pick<AdditionalProperties, 'id'>) => {
           const response = (await notion.pages.retrieve({
             page_id: id,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<Infer<Cache>>(response);
+          const [instance] = flattenPageResponse<Infer<Schema>>(response);
 
-          return mapInstance(instance, cache.mappings);
+          return mapInstance(instance, schema.mappings);
         },
         update: async ({
           id,
           ...body
         }: Pick<AdditionalProperties, 'id'> &
-          Partial<InferWriteonly<Cache>>) => {
-          const properties = expandProperties<Partial<InferWriteonly<Cache>>>(
+          Partial<InferWriteonly<Schema>>) => {
+          const properties = expandProperties<Partial<InferWriteonly<Schema>>>(
             body,
             {
-              columns: cache.columns,
-              mappings: cache.mappings,
+              columns: schema.columns,
+              mappings: schema.mappings,
             }
           );
 
@@ -63,32 +63,32 @@ export function configureNotion<Config extends MountNotionClientConfig>(
             page_id: id,
             properties,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<Infer<Cache>>(response);
+          const [instance] = flattenPageResponse<Infer<Schema>>(response);
 
-          return mapInstance(instance, cache.mappings);
+          return mapInstance(instance, schema.mappings);
         },
-        create: async (body: Partial<InferWriteonly<Cache>>) => {
-          const properties = expandProperties<Partial<InferWriteonly<Cache>>>(
+        create: async (body: Partial<InferWriteonly<Schema>>) => {
+          const properties = expandProperties<Partial<InferWriteonly<Schema>>>(
             body,
             {
-              columns: cache.columns,
-              mappings: cache.mappings,
+              columns: schema.columns,
+              mappings: schema.mappings,
             }
           );
 
           const response = (await notion.pages.create({
             parent: {
-              database_id: cache.id,
+              database_id: schema.id,
             },
             icon: {
               type: 'emoji',
-              emoji: cache.icon as EmojiRequest,
+              emoji: schema.icon as EmojiRequest,
             },
             properties,
           })) as PageObjectResponse;
-          const [instance] = flattenPageResponse<Infer<Cache>>(response);
+          const [instance] = flattenPageResponse<Infer<Schema>>(response);
 
-          return mapInstance(instance, cache.mappings);
+          return mapInstance(instance, schema.mappings);
         },
         delete: async ({ id }: Pick<AdditionalProperties, 'id'>) =>
           notion.blocks.delete({

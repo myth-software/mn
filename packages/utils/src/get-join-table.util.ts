@@ -1,4 +1,4 @@
-import { Cache } from '@mountnotion/types';
+import { Schema } from '@mountnotion/types';
 import { camelize, classify, decamelize, variablize } from './strings.util';
 
 function sortTitleAndRelation(
@@ -9,7 +9,7 @@ function sortTitleAndRelation(
 
 export function getJoinTable(
   relatedColumn: string,
-  { title: baseTable, relations, syncedColumns }: Cache,
+  { title: baseTable, relations, syncedColumns }: Schema,
   values?: {
     primaryId: string;
     relatedIds: string[];

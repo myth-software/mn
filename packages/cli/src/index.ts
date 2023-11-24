@@ -46,8 +46,3 @@ cli()
   .catch((e) => {
     throw e;
   });
-
-process.on('SIGINT', () => {
-  console.log('Exiting gracefully...');
-  process.exit(0);
-});

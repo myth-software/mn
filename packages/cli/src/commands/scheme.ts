@@ -10,7 +10,7 @@ import { rimraf } from 'rimraf';
 import findUp from '../utils/find-up';
 
 type SchematicsOptions = {
-  clearCache: boolean;
+  clearSchema: boolean;
 };
 
 function assert(
@@ -35,12 +35,12 @@ function dependencies(config: MountNotionConfig) {
 export default {
   name: 'scheme',
   description: 'applies schematics',
-  options: [{ name: '-c, --clear-cache', description: 'clear the cache' }],
+  options: [{ name: '-c, --clear-schema', description: 'clear the schema' }],
   actionFactory: (config) => async (options) => {
     assert(options);
     dependencies(config);
 
-    if (options.clearCache) {
+    if (options.clearSchema) {
       await rimraf(`${process.cwd()}/.mountnotion`);
     }
     /**
@@ -61,8 +61,11 @@ export default {
       return 'npm';
     }
 
+    const tsconfigRoot = path.dirname(
+      findUp('tsconfig.base.json', process.cwd())!
+    );
     /** Create the workflow scoped to the working directory that will be executed with this run. */
-    const workflow = new NodeWorkflow(process.cwd(), {
+    const workflow = new NodeWorkflow(tsconfigRoot, {
       resolvePaths: [process.cwd(), __dirname],
       schemaValidation: true,
       packageManager: getPackageManagerName(),

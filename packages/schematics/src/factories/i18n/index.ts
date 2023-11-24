@@ -1,14 +1,13 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
-import { Cache, I18nOptions, Options } from '@mountnotion/types';
-import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { I18nOptions, Options, Schema } from '@mountnotion/types';
+import { ensure, getSchema, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { getTranslation } from '../../utils/get-translation.util';
 import { validateInputs } from './validate-inputs';
-import path = require('path');
 
 type FormattedTranslations = {
   [lng: string]: {
-    [cache: string]: {
+    [schema: string]: {
       options: Options | null | undefined;
       columns: Record<string, string> | undefined;
     };
@@ -18,15 +17,15 @@ export function i18n(options: I18nOptions): Rule {
   log.success({ action: 'running', message: 'i18n schematic' });
   log.success({ action: '-------', message: '--------------' });
   validateInputs(options);
-  const outDir = path.resolve(process.cwd(), options.outDir);
+  const outDir = options.outDir;
   const excludes = options.excludes ?? [];
-  let cachesRef: Cache[] = [];
+  let schemaRef: Schema[] = [];
   let titlesRef: string[] = [];
 
   return async () => {
-    const caches = ensure(getCache());
-    const includedCaches = caches.filter(
-      (cache) => cache.title && !excludes.includes(cache.title)
+    const schema = ensure(getSchema());
+    const includedSchema = schema.filter(
+      (schema) => schema.title && !excludes.includes(schema.title)
     );
     const translations: FormattedTranslations = {};
     while (options.languages.length > 0) {
@@ -36,27 +35,27 @@ export function i18n(options: I18nOptions): Rule {
         throw new Error('no language found');
       }
 
-      cachesRef = includedCaches;
-      const translationPromises = includedCaches.map((cache) =>
-        getTranslation(cache, lng)
+      schemaRef = includedSchema;
+      const translationPromises = includedSchema.map((schema) =>
+        getTranslation(schema, lng)
       );
 
-      const caches = await Promise.all(translationPromises);
+      const schema = await Promise.all(translationPromises);
 
-      const formatted = includedCaches.reduce((acc, curr, i) => {
+      const formatted = includedSchema.reduce((acc, curr, i) => {
         return {
           ...acc,
-          [curr.title]: caches[i],
+          [curr.title]: schema[i],
         };
       }, {} as FormattedTranslations[string]);
 
       translations[lng] = formatted;
     }
     const translations_1 = await translations;
-    titlesRef = cachesRef.map((cache) => cache.title) as string[];
+    titlesRef = schemaRef.map((schema) => schema.title) as string[];
     const rules = Object.entries(translations_1).reduce(
-      (acc_1, [lng_1, caches_1]) => {
-        const translationsRules = Object.entries(caches_1).map(
+      (acc_1, [lng_1, schema_1]) => {
+        const translationsRules = Object.entries(schema_1).map(
           ([title, { options, columns }]) => {
             return applyWithOverwrite(url('./files/all-for-language'), [
               template({

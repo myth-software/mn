@@ -1,13 +1,5 @@
 {
   "schematics": {
-    "drizzle": {
-      "factory": "./src/factories/drizzle/index#drizzle",
-      "description": "generate drizzle"
-    },
-    "caches": {
-      "factory": "./src/factories/caches/index#caches",
-      "description": "generate caches"
-    },
     "express": {
       "factory": "./src/factories/express/index#express",
       "description": "generate express"
@@ -16,13 +8,9 @@
       "factory": "./src/factories/i18n/index#i18n",
       "description": "generate i18n"
     },
-    "interfaces": {
-      "factory": "./src/factories/interfaces/index#interfaces",
-      "description": "generate interfaces"
-    },
-    "locals": {
-      "factory": "./src/factories/locals/index#locals",
-      "description": "generate locals"
+    "fixtures": {
+      "factory": "./src/factories/fixtures/index#fixtures",
+      "description": "generate fixtures"
     },
     "mirage": {
       "factory": "./src/factories/mirage/index#mirage",
@@ -32,6 +20,10 @@
       "factory": "./src/factories/oas/index#oas",
       "description": "generate oas json"
     },
+    "schema": {
+      "factory": "./src/factories/schema/index#schema",
+      "description": "generate schema"
+    },
     "react-query": {
       "factory": "./src/factories/react-query/index#reactQuery",
       "description": "generate react-query state"
@@ -39,10 +31,6 @@
     "rtk-query": {
       "factory": "./src/factories/rtk-query/index#rtkQuery",
       "description": "generate rtk-query state"
-    },
-    "zod": {
-      "factory": "./src/factories/zod/index#zod",
-      "description": "generate zod"
     }
   }
 }

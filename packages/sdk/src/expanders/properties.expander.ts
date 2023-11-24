@@ -1,8 +1,8 @@
 import {
-  Cache,
   ExpandColumnsConfiguration,
   ExpandedColumns,
   InferWriteonly,
+  Schema,
 } from '@mountnotion/types';
 import { expandDate } from './date.expander';
 import { expandFiles } from './files.expander';
@@ -13,7 +13,7 @@ import { expandStatus } from './status.expander';
 import { expandTitle } from './title.expander';
 
 export function expandProperties<
-  TInstance extends Partial<InferWriteonly<Cache>>
+  TInstance extends Partial<InferWriteonly<Schema>>
 >(
   instance: TInstance,
   { mappings, columns }: ExpandColumnsConfiguration

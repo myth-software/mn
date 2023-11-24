@@ -2,7 +2,7 @@
 
 ## depends on
 
-1. caches
+1. schema
 
 ## output
 
@@ -12,16 +12,16 @@
 import { MountNotionQueryParameters } from '@mountnotion/types';
 import {
   Horses,
-  HorsesCache,
+  HorsesSchema,
   HorsesWriteonly,
   HORSES,
-} from '@pferd/domain-pferd-caches';
+} from '@pferd/domain-pferd-schema';
 import express, { Request, Response } from 'express';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 import { mn } from './mn';
 export const horsesRouter = express.Router();
 horsesRouter.get('/', async (req: Request, res: Response) => {
-  const where = req.query.where as MountNotionQueryParameters<HorsesCache>;
+  const where = req.query.where as MountNotionQueryParameters<HorsesSchema>;
   try {
     const horses: Horses[] = await mn.horses.query(where);
     res.status(200).send(horses);
@@ -111,11 +111,11 @@ server.on('error', console.error);
 ```typescript title="mn.ts"
 import { configureNotion } from '@mountnotion/sdk';
 import { drizzleClient } from '@pferd/domain-pferd-drizzle';
-import { caches } from '@pferd/domain-pferd-caches';
+import { schema } from '@pferd/domain-pferd-schema';
 export const mn =
   process.env.NODE_ENV === 'production'
     ? drizzleClient
-    : configureNotion({ integrationKey: process.env.INTEGRATION_KEY, caches });
+    : configureNotion({ integrationKey: process.env.INTEGRATION_KEY, schema });
 ```
 
 ## options

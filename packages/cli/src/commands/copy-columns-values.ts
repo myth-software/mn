@@ -3,7 +3,7 @@ import {
   flattenDatabaseResponse,
   notion,
 } from '@mountnotion/sdk';
-import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
+import { MountNotionConfig, MountnCommand } from '@mountnotion/types';
 import { log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { workspaceHasPages } from '../dependencies';
@@ -107,12 +107,12 @@ export default {
           }
         ),
       });
-      const cache = flattenDatabaseResponse(database);
+      const schema = flattenDatabaseResponse(database);
       log.success({
         action: 'copying',
         page: {
-          emoji: cache.icon,
-          title: cache.title,
+          emoji: schema.icon,
+          title: schema.title,
         },
         message: `value ${instance[from]} from ${from} to ${to}`,
       });

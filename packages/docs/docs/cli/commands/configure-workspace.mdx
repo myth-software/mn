@@ -5,23 +5,23 @@ configures mount notion workspace
 **dependencies**
 
 ```typescript
-cache.length > 1;
+schema.length > 1;
 ```
 
 **arguments**
 
-| name            | long              | short | prompt                    | enum                 |
-| --------------- | ----------------- | ----- | ------------------------- | -------------------- |
-| caches package  | --caches          | -e    | name of caches package    |                      |
-| api base url    | --base-url        | -b    | base url for api          |                      |
-| auth strategies | --auth-strategies | -a    | authentication strategies | email, sms           |
-| users database  | --users-database  | -d    | users database            | databases from cache |
-| user column     | --user-column     | -c    | user column               |                      |
+| name            | long              | short | prompt                    | enum                  |
+| --------------- | ----------------- | ----- | ------------------------- | --------------------- |
+| schema package  | --schema          | -e    | name of schema package    |                       |
+| api base url    | --base-url        | -b    | base url for api          |                       |
+| auth strategies | --auth-strategies | -a    | authentication strategies | email, sms            |
+| users database  | --users-database  | -d    | users database            | databases from schema |
+| user column     | --user-column     | -c    | user column               |                       |
 
 **cli example**
 
 ```sh title="terminal"
-npx mn configure-workspace --caches @myth-software/caches -b https://api.myth.software -a sms -a email --users-database users --user-column owner
+npx mn configure-workspace --schema @myth-software/schema -b https://api.myth.software -a sms -a email --users-database users --user-column owner
 ```
 
 **prompt example**
@@ -31,9 +31,9 @@ npx mn configure-workspace
 ```
 
 ```sh
-name of caches package:
+name of schema package:
 
-> @myth-software/caches
+> @myth-software/schema
 
 base url for api:
 

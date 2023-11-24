@@ -8,16 +8,16 @@ none
 
 **arguments**
 
-| name        | full          | short | promprt                              | default |
-| ----------- | ------------- | ----- | ------------------------------------ | ------- |
-| clear cache | --clear-cache | -c    | remove the existing cached workspace | false   |
-| fetch       | --fetch       | -f    | run the fetch command                | true    |
-| skip-lint   | --skip-lint   | -s    | skip lint rules                      | false   |
+| name         | full           | short | promprt                               | default |
+| ------------ | -------------- | ----- | ------------------------------------- | ------- |
+| clear schema | --clear-schema | -c    | remove the existing schemad workspace | false   |
+| fetch        | --fetch        | -f    | run the fetch command                 | true    |
+| skip-lint    | --skip-lint    | -s    | skip lint rules                       | false   |
 
 **cli example**
 
 ```sh title="terminal"
-npx mn --clear-cache --fetch false --skip-lint
+npx mn --clear-schema --fetch false --skip-lint
 ```
 
 **prompt example**
@@ -27,12 +27,12 @@ npx mn camp
 ```
 
 ```sh
-remove the existing cached workspace:
+remove the existing schemad workspace:
 [ ] yes
 [ ] no
 
 options
-- cleanup will clear the cache
+- cleanup will clear the schema
 - fetch will refetch all the notion data
 - scheme will rescheme all the schematics
 
@@ -40,7 +40,7 @@ mn configure
 
 options
 - manual will open the editor to the json configuration
-- inspect will open the editor to the root caches configuration
+- inspect will open the editor to the root schema configuration
 
 ```
 
@@ -48,10 +48,10 @@ options
 
 | name         | condition                                              |
 | ------------ | ------------------------------------------------------ |
-| cleanup      | if climber chooses to clear cache                      |
-| fetch        | if there is no cache                                   |
+| cleanup      | if climber chooses to clear schema                     |
+| fetch        | if there is no schema                                  |
 | lint-rows    | if there is configure-lint-rows and not --skip-lint    |
 | lint-columns | if there is configure-lint-columns and not --skip-lint |
 | fix-rows     | if failing rows and not --skip-lint                    |
 | fix-columns  | if failing columns and not --skip-lint                 |
-| schematics   | if the cache has changes                               |
+| schematics   | if the schema has changes                              |

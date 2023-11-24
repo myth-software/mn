@@ -1,5 +1,4 @@
 export * from './api-endpoints';
-export * from './caches';
 export * from './cli';
 export * from './client';
 export * from './columns';
@@ -7,6 +6,7 @@ export * from './file';
 export * from './fix';
 export * from './helpers';
 export * from './lint-rules';
+export * from './schema';
 export * from './schematics';
 export * from './sdk-client';
 export * from './tools-configuration';

@@ -11,13 +11,13 @@ import {
   RollupPropertyFilter,
   TextPropertyFilter,
 } from './api-endpoints';
-import { Cache } from './caches';
 import { Merge } from './helpers';
+import { Schema } from './schema';
 
 export declare type TypedMultiSelectColumnFilter<
-  TCache extends Cache,
+  TSchema extends Schema,
   TProperty extends string,
-  TOptions extends TCache['options'] = TCache['options']
+  TOptions extends TSchema['options'] = TSchema['options']
 > =
   | {
       contains: TOptions[TProperty][number];
@@ -28,9 +28,9 @@ export declare type TypedMultiSelectColumnFilter<
   | ExistencePropertyFilter;
 
 export declare type TypedSelectColumnFilter<
-  TCache extends Cache,
+  TSchema extends Schema,
   TProperty extends string,
-  TOptions extends TCache['options'] = TCache['options']
+  TOptions extends TSchema['options'] = TSchema['options']
 > =
   | {
       equals: TOptions[TProperty][number];
@@ -41,7 +41,7 @@ export declare type TypedSelectColumnFilter<
   | ExistencePropertyFilter;
 
 export declare type Filter<
-  T extends Cache,
+  T extends Schema,
   K extends keyof T['mappings'] = keyof T['mappings']
 > = {
   [P in K]: Merge<
@@ -96,43 +96,43 @@ export declare type Filter<
   >;
 }[K];
 
-export declare type OrFilter<T extends Cache> = {
+export declare type OrFilter<T extends Schema> = {
   or: Array<Filter<T>>;
 };
 
-export declare type AndFilter<T extends Cache> = {
+export declare type AndFilter<T extends Schema> = {
   and: Array<Filter<T>>;
 };
 
-export declare type MajorOrFilter<T extends Cache> = {
+export declare type MajorOrFilter<T extends Schema> = {
   or: Array<Filter<T> | OrFilter<T> | AndFilter<T>>;
 };
 
-export declare type MajorAndFilter<T extends Cache> = {
+export declare type MajorAndFilter<T extends Schema> = {
   and: Array<Filter<T> | OrFilter<T> | AndFilter<T>>;
 };
 
-export declare type QueryFilter<TCache extends Cache> =
-  | Filter<TCache>
-  | MajorOrFilter<TCache>
-  | MajorAndFilter<TCache>;
+export declare type QueryFilter<TSchema extends Schema> =
+  | Filter<TSchema>
+  | MajorOrFilter<TSchema>
+  | MajorAndFilter<TSchema>;
 
 /**
  *
  * [notion docs for filtering](https://developers.notion.com/reference/post-database-query-filter)
  * [notion docs for sorting](https://developers.notion.com/reference/post-database-query-sort)
  * */
-export declare type MountNotionQueryParameters<TCache extends Cache> = {
+export declare type MountNotionQueryParameters<TSchema extends Schema> = {
   [Key in keyof QueryDatabaseBodyParameters]: Key extends 'filter'
-    ? QueryFilter<TCache>
+    ? QueryFilter<TSchema>
     : Key extends 'sorts'
-    ? QuerySorts<TCache>
+    ? QuerySorts<TSchema>
     : QueryDatabaseParameters[Key];
 };
 
-export declare type QuerySorts<TCache extends Cache> = Array<
+export declare type QuerySorts<TSchema extends Schema> = Array<
   | {
-      property: keyof TCache['mappings'];
+      property: keyof TSchema['mappings'];
       direction: 'ascending' | 'descending';
     }
   | {

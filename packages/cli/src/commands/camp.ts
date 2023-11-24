@@ -1,12 +1,12 @@
 import { MountnCommand } from '@mountnotion/types';
-import { getCache, log } from '@mountnotion/utils';
+import { getSchema, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import fetch from './fetch';
 
 type CampOptions = {
   fetch: boolean;
   skipLint: boolean;
-  clearCache: boolean;
+  clearSchema: boolean;
 };
 
 function assert(
@@ -20,11 +20,11 @@ function assert(
 
 export const optionsPrompt = async (options: CampOptions) => {
   const prompts = [];
-  if (!options.clearCache) {
+  if (!options.clearSchema) {
     prompts.push({
       type: 'confirm',
-      message: 'remove the existing cached workspace?',
-      name: 'clearCache',
+      message: 'remove the existing schemad workspace?',
+      name: 'clearSchema',
     });
   }
   if (!options.fetch) {
@@ -55,24 +55,24 @@ export default {
   description: 'runs a watch command then calls an api on press of keyboard',
   options: [
     {
-      name: '-c, --clear-cache',
-      description: 'remove the existing cached workspace',
+      name: '-c, --clear-schema',
+      description: 'remove the existing schemad workspace',
     },
     { name: '-f, --fetch', description: 'run the fetch command' },
     { name: '-s, --skip-lint', description: 'skip lint rules' },
   ],
   actionFactory: (config) => async (args) => {
     assert(args);
-    const oldCache = getCache();
+    const oldSchema = getSchema();
     const options = await optionsPrompt(args);
     console.log(options);
-    const oldString = JSON.stringify(oldCache);
-    const newCache = await fetch.actionFactory(config)();
-    const newString = JSON.stringify(newCache);
+    const oldString = JSON.stringify(oldSchema);
+    const newSchema = await fetch.actionFactory(config)();
+    const newString = JSON.stringify(newSchema);
     if (oldString !== newString) {
       log.success({
         action: 'finding',
-        message: 'new cache',
+        message: 'new schema',
       });
     }
 

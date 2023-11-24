@@ -49,7 +49,7 @@ export default {
       });
       log.info({
         action: '',
-        message: '5 - inspect the caches',
+        message: '5 - inspect the schema',
       });
       log.info({
         action: '',

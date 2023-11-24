@@ -6,14 +6,14 @@ import {
 } from '@mountnotion/types';
 import { flattenPageResponse } from '../../flatteners';
 
-export async function create<TCache>(
+export async function create<TSchema>(
   query: CreatePageParameters
 ): Promise<PageObjectResponse>;
-export async function create<TCache>(
+export async function create<TSchema>(
   query: CreatePageParameters,
   config: ToolsConfiguration
-): Promise<[TCache, Columns]>;
-export async function create<TCache>(
+): Promise<[TSchema, Columns]>;
+export async function create<TSchema>(
   body: CreatePageParameters,
   config?: ToolsConfiguration
 ) {
@@ -40,7 +40,7 @@ export async function create<TCache>(
     return data as PageObjectResponse;
   }
 
-  const cache = flattenPageResponse<TCache>(data);
+  const schema = flattenPageResponse<TSchema>(data);
 
-  return cache;
+  return schema;
 }

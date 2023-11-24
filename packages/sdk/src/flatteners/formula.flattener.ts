@@ -10,7 +10,7 @@ export function flattenFormula(formula: {
   if (formula?.expression) {
     return formula.expression;
   }
-  if (formula?.string) {
+  if (Object.keys(formula).includes('string')) {
     return formula.string;
   }
   if (Number.isFinite(formula?.number)) {

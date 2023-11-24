@@ -55,9 +55,9 @@ caching    💪 flexin databases
 
 configure-workspace
 -------------------
-name of caches package:
+name of schema package:
 
-> @myth-software/caches
+> @myth-software/schema
 
 base url for api:
 
@@ -167,15 +167,13 @@ update 📝 logs icon for "giraffe orange" to 📝
 
 configure-schematics
 --------------------
-caches schematic is required, schemed automatially
+schema schematic is required, schemed automatially
 
 schematics to scheme:
-[ ] controllers
-[ ] interfaces
 [x] mirage
 [ ] react-query
 [ ] rtk-query
-[x] locals
+[x] fixtures
 
 database to exclude from all schematics:
 [x] logs
@@ -186,16 +184,16 @@ database to exclude from mirage:
 [ ] overlays
 [x] sets
 
-database to exclude from locals:
+database to exclude from fixtures:
 [x] overlays
 [x] sets
 
 schematics
 ----------
 progress bar showing stages
-scheming caches
+scheming schema
 scheming mirage
-scheming locals
+scheming fixtures
 
 camp-interactive
 ----------------
@@ -206,12 +204,12 @@ press
 1 - configure-workspace
 2 - configure-standards
 3 - configure-schematic
-4 - inspect the caches
+4 - inspect the schema
 5 - inspect the configuration file
 6 - go fetch, build, scheme
 
 > 4
-opening caches in code editor
+opening schema in code editor
 
 > 5
 opening configuration file in code editor

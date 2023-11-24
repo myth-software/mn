@@ -84,12 +84,12 @@ export default {
           },
         } as any);
 
-        const cache = flattenDatabaseResponse(database);
+        const schema = flattenDatabaseResponse(database);
         log.success({
           action: 'creating',
           page: {
-            emoji: cache.icon,
-            title: cache.title,
+            emoji: schema.icon,
+            title: schema.title,
           },
           message: `column ${name} of type ${type}`,
         });

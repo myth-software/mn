@@ -4,15 +4,15 @@ import { COLUMNS_LINT } from './constants.util';
 import { log } from './log.util';
 
 export function getLintColumns() {
-  let cached;
+  let schemad;
   try {
-    cached = readFileSync(COLUMNS_LINT, 'utf8');
+    schemad = readFileSync(COLUMNS_LINT, 'utf8');
   } catch (error) {
     log.info({ action: 'loading', message: 'no columns lint found' });
   }
 
-  if (cached) {
-    return JSON.parse(cached) as Array<Fix>;
+  if (schemad) {
+    return JSON.parse(schemad) as Array<Fix>;
   }
   return;
 }

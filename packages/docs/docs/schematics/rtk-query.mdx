@@ -4,14 +4,14 @@ redux
 
 ## depends on
 
-1. caches
+1. schema
 
 ## output
 
 ### auth
 
 ```typescript title="auth.api.ts"
-import { Users, UsersWriteonly } from '@pferd/domain-pferd-caches';
+import { Users, UsersWriteonly } from '@pferd/domain-pferd-schema';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 export const authApi = createApi({
@@ -77,7 +77,7 @@ import {
   Equipment,
   EquipmentQueryParameters,
   EquipmentWriteonly,
-} from '@pferd/domain-pferd-caches';
+} from '@pferd/domain-pferd-schema';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
 const {

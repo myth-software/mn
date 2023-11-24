@@ -3,8 +3,8 @@ import {
   flattenDatabaseResponse,
   notion,
 } from '@mountnotion/sdk';
-import { Cache, MountnCommand } from '@mountnotion/types';
-import { getTitleColumnFromCache, log } from '@mountnotion/utils';
+import { MountnCommand, Schema } from '@mountnotion/types';
+import { getTitleColumnFromSchema, log } from '@mountnotion/utils';
 import { prompt } from 'enquirer';
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator';
 
@@ -64,14 +64,14 @@ export default {
       },
       { all: true, resultsOnly: true, flattenResponse: true }
     );
-    const partialCache = {
+    const partialSchema = {
       columns,
-    } as Cache;
-    const TITLE = getTitleColumnFromCache(partialCache);
+    } as Schema;
+    const TITLE = getTitleColumnFromSchema(partialSchema);
     const database = await notion.databases.retrieve({
       database_id,
     });
-    const cache = flattenDatabaseResponse(database);
+    const schema = flattenDatabaseResponse(database);
 
     while (instances.length) {
       const instance = instances.shift();
@@ -99,8 +99,8 @@ export default {
         log.success({
           action: 'fixing',
           page: {
-            emoji: cache.icon,
-            title: cache.title,
+            emoji: schema.icon,
+            title: schema.title,
           },
           message: `id '${instance.id}' title property '${TITLE}' from '${
             instance[TITLE]
@@ -130,8 +130,8 @@ export default {
         log.success({
           action: 'fixing',
           page: {
-            emoji: cache.icon,
-            title: cache.title,
+            emoji: schema.icon,
+            title: schema.title,
           },
           message: `id '${instance.id}' title property '${TITLE}' to ${title}`,
         });
@@ -152,10 +152,10 @@ export default {
         log.success({
           action: 'fixing',
           page: {
-            emoji: cache.icon,
-            title: cache.title,
+            emoji: schema.icon,
+            title: schema.title,
           },
-          message: `id '${instance.id}' icon to ${cache.icon}`,
+          message: `id '${instance.id}' icon to ${schema.icon}`,
         });
       }
     }

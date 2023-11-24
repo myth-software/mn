@@ -1,6 +1,7 @@
-import { <%= classify(options.usersDatabase) %>, <%= classify(options.usersDatabase) %>Writeonly } from '<%= options.caches %>';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store';
+import { } from <>;
+%= classify(options.usersDatabase) %>, <%= classify(options.usersDatabase) %>Writeonly } from '<%= options.schema %>';
 
 export const authApi = createApi({
   baseQuery: fetchBaseQuery({

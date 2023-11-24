@@ -11,11 +11,11 @@ export declare type BasicOptions = {
   excludes: Array<string>;
   outDir: string;
   baseUrl: string;
-  caches: string;
+  schema: string;
   debug: boolean;
 };
 
-export declare type MirageOptions = { locals: string } & BasicOptions &
+export declare type MirageOptions = { fixtures: string } & BasicOptions &
   AuthOptions;
 
 export declare type RtkQueryOptions = BasicOptions & AuthOptions;
@@ -26,7 +26,7 @@ export declare type ControllersOptions = {
    */
   org: string;
   accessorProperty: string;
-  locals: string;
+  fixtures: string;
   public: Array<string>;
   drizzle: string;
 } & BasicOptions &
@@ -37,7 +37,7 @@ export declare type ExpressOptions = ControllersOptions & {
   eject: boolean;
 };
 
-export declare type LocalsOptions = BasicOptions & {
+export declare type FixturesOptions = BasicOptions & {
   all?: string[];
 };
 
@@ -53,7 +53,7 @@ export declare type Schematics =
       disable?: boolean;
     } & DrizzleOptions &
       I18nOptions &
-      LocalsOptions &
+      FixturesOptions &
       ExpressOptions &
       ControllersOptions &
       RtkQueryOptions &
@@ -70,7 +70,7 @@ export type MountNotionConfig = {
   auth: 'key' | 'oauth';
   schematicDefaults: {
     baseUrl?: string;
-    caches?: string;
+    schema?: string;
     strategies?: string[];
     userColumn?: string;
     excludes?: string[];

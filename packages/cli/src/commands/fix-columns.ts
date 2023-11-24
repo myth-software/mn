@@ -35,8 +35,8 @@ function assert(
 
 function dependencies() {
   const lintColumns = getLintColumns();
-  const hasCache = lintColumns !== undefined && lintColumns.length > 1;
-  if (!hasCache) {
+  const hasSchema = lintColumns !== undefined && lintColumns.length > 1;
+  if (!hasSchema) {
     log.fatal({
       action: 'aborting',
       message: 'no columns to fix',

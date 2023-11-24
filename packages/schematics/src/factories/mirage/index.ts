@@ -1,29 +1,28 @@
 import { chain, move, Rule, template, url } from '@angular-devkit/schematics';
 import { MirageOptions } from '@mountnotion/types';
-import { ensure, getCache, log, strings } from '@mountnotion/utils';
+import { ensure, getSchema, log, strings } from '@mountnotion/utils';
 import { applyWithOverwrite } from '../../rules';
 import { validateInputs } from './validate-inputs';
-import path = require('path');
 
 export function mirage(options: MirageOptions): Rule {
   log.success({ action: 'running', message: 'mirage schematic' });
   log.success({ action: '-------', message: '----------------' });
   validateInputs(options);
 
-  const outDir = path.resolve(process.cwd(), options.outDir);
+  const outDir = options.outDir;
   const excludes = options.excludes ?? [];
   return async () => {
-    const caches = ensure(getCache());
-    const includedCaches = caches.filter(
+    const schema = ensure(getSchema());
+    const includedSchema = schema.filter(
       ({ title }) => title && !excludes.includes(title)
     );
-    const titles = includedCaches.map((cache) => cache.title);
+    const titles = includedSchema.map((schema) => schema.title);
     const files = './files';
-    const endpointsRules = includedCaches.map((cache) => {
+    const endpointsRules = includedSchema.map((schema) => {
       return applyWithOverwrite(url(`${files}/endpoints-all`), [
         template({
-          title: cache.title,
-          cache,
+          title: schema.title,
+          schema,
           options,
           log,
           ...strings,
@@ -50,10 +49,10 @@ export function mirage(options: MirageOptions): Rule {
           }),
           move(`${outDir}/endpoints`),
         ]);
-    const modelsRules = includedCaches.map((cache) => {
+    const modelsRules = includedSchema.map((schema) => {
       return applyWithOverwrite(url(`${files}/models-all`), [
         template({
-          title: cache.title,
+          title: schema.title,
           options,
           log,
           ...strings,

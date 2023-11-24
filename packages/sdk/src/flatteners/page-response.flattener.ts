@@ -5,17 +5,17 @@ import { flattenIcon } from './icon.flattener';
 import { flattenNotionProperty } from './notion-property.flattener';
 
 /**
- *  flattens a notion page response to a tuple of the cache and mapping of keys to columns
+ *  flattens a notion page response to a tuple of the schema and mapping of keys to columns
  * @param page PageObjectResponse
- * @returns [TCache, Columns]
+ * @returns [TSchema, Columns]
  */
-export const flattenPageResponse = <TCache>({
+export const flattenPageResponse = <TSchema>({
   id,
   properties,
   icon,
   cover,
-}: PageObjectResponse): [TCache, Columns] => {
-  const cache: {
+}: PageObjectResponse): [TSchema, Columns] => {
+  const schema: {
     [key: string]: unknown;
   } = {
     id,
@@ -25,9 +25,9 @@ export const flattenPageResponse = <TCache>({
   for (const property in properties) {
     const instance = properties[property];
 
-    cache[property] = flattenNotionProperty(instance);
+    schema[property] = flattenNotionProperty(instance);
   }
   const columns = createColumns(properties);
-  const values = cache as unknown as TCache;
+  const values = schema as unknown as TSchema;
   return [values, columns];
 };

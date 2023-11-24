@@ -1,0 +1,67 @@
+# schema
+
+databases schemad as code
+
+## depends on
+
+nothing
+
+## output
+
+### notion schema
+
+```typescript title="equipment.schema.ts"
+import {
+  InferReadonly,
+  InferWriteonly,
+  MountNotionQueryParameters,
+} from '@mountnotion/types';
+export const EQUIPMENT = {
+  title: 'equipment',
+  id: '0ccf3301-bc91-4657-a3d4-e0b31a240e9c',
+  icon: '💄',
+  cover: '',
+  description: '',
+  columns: { type: 'select', name: 'title' },
+  options: {
+    type: ['saddle', 'reigns', 'boots', 'jodphurs', 'bridle', 'grooming'],
+  },
+  relations: null,
+  mappings: {
+    /** [notion docs for select](https://developers.notion.com/reference/property-object#select) */ type: 'type',
+    /** [notion docs for title](https://developers.notion.com/reference/property-object#title) */ name: 'name',
+  },
+} as const;
+export declare type EquipmentSchema = typeof EQUIPMENT;
+export declare type EquipmentQueryParameters =
+  MountNotionQueryParameters<EquipmentSchema>;
+export declare type EquipmentReadonly = InferReadonly<EquipmentSchema>;
+export declare type EquipmentWriteonly = InferWriteonly<EquipmentSchema>;
+export declare type Equipment = EquipmentReadonly & EquipmentWriteonly;
+```
+
+### drizzle schema
+
+```typescript title="horses.schema.ts"
+import {
+  ReadonlyColumnTypes,
+  AdditionalPropertyTypes,
+} from '@mountnotion/types';
+import { InferModel } from 'drizzle-orm';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+export const horses = pgTable('horses', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  icon: text('icon').notNull(),
+  cover: text('cover').notNull(),
+  description: text('description').notNull(),
+  recordings: text('recordings').array(),
+  age: text('age'),
+  name: text('name'),
+});
+export declare type Horses = typeof horses.$inferSelect;
+export declare type HorsesWriteonly = Omit<
+  Horses,
+  ReadonlyColumnTypes | AdditionalPropertyTypes
+>;
+export declare type NewHorses = typeof horses.$inferInsert;
+```

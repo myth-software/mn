@@ -1,10 +1,14 @@
-import { local<%= classify(title) %> } from '<%= options.locals %>';
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'begin: mirage endpoints-all' }) %>
+<% } %>
+
+import { fixture<%= classify(title) %> } from '<%= options.fixtures %>';
 import { Response, Server } from 'miragejs';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 export function <%= camelize(title) %>Endpoints(server: Server) {
-  let db: any[] = local<%= classify(title) %>.list;
+  let db: any[] = fixture<%= classify(title) %>.list;
   server.get('/<%= dasherize(title) %>', () => {
     return new Response(200, {}, db);
   });
@@ -50,3 +54,7 @@ export function <%= camelize(title) %>Endpoints(server: Server) {
     }
   });
 }
+
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'end: mirage endpoints-all' }) %>
+<% } %>

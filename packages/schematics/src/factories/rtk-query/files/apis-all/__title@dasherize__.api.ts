@@ -1,10 +1,10 @@
-import {
-  <%= classify(title) %>,
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { } from <>
+%= classify(title) %>,
   <%= classify(title) %>Columns,
   <%= classify(title) %>Writeonly,
   <%= classify(title) %>QueryParameters,
-} from '<%= options.caches %>';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+} from '<%= options.schema %>';
 <% if (options.strategies) { %>
   import { RootState } from '../store';
 <% } %>

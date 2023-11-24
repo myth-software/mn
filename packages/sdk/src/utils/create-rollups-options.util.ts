@@ -1,14 +1,14 @@
 import {
-  Cache,
   Columns,
   DatabasePropertyConfigResponse,
+  Schema,
 } from '@mountnotion/types';
 
 export function createRollupsOptions(
   rollups: Columns,
   properties: Record<string, DatabasePropertyConfigResponse>,
-  caches: Cache[]
-): Cache['options'] {
+  schema: Schema[]
+): Schema['options'] {
   return Object.entries(rollups).reduce((acc, [property, type]) => {
     const dbProperty = properties[property];
     if (type !== 'select' && type !== 'multi_select' && type !== 'status') {
@@ -28,11 +28,11 @@ export function createRollupsOptions(
     }
 
     const relationDatabaseId = relationProperty.relation.database_id;
-    const cache = caches.find((cache) => cache.id === relationDatabaseId);
-    if (!cache) {
+    const scheme = schema.find((scheme) => scheme.id === relationDatabaseId);
+    if (!scheme) {
       throw new Error('relation database not found');
     }
-    const { columns, options } = cache;
+    const { columns, options } = scheme;
 
     if (
       (columns[rollupName] !== 'select' &&
@@ -47,5 +47,5 @@ export function createRollupsOptions(
       ...acc,
       [property]: options[rollupName],
     };
-  }, {} as Cache['options']);
+  }, {} as Schema['options']);
 }

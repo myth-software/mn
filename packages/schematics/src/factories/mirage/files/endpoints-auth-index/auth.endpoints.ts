@@ -1,9 +1,13 @@
-import { local<%= classify(options.usersDatabase) %> } from '<%= options.locals %>';
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'begin: mirage auth endpoints' }) %>
+<% } %>
+
+import { fixture<%= classify(options.usersDatabase) %> } from '<%= options.fixtures %>';
 import { Response, Server } from 'miragejs';
 
 export function authEndpoints(server: Server) {
   server.get(`/a/sms/profile`, () => {
-    return new Response(200, {}, local<%= classify(options.usersDatabase) %>.example);
+    return new Response(200, {}, fixture<%= classify(options.usersDatabase) %>.example);
   });
 
   server.post(`/a/sms/login-initialization`, () => {
@@ -18,3 +22,7 @@ export function authEndpoints(server: Server) {
     );
   });
 }
+
+<% if (options.debug) { %>
+  <% log.debug({ action: 'debugging', message: 'end: mirage auth endpoints' }) %>
+<% } %>

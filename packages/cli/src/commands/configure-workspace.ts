@@ -1,7 +1,7 @@
 import { MountnCommand, MountNotionConfig } from '@mountnotion/types';
 import {
   ensure,
-  getCache,
+  getSchema,
   log,
   writeFileWithPrettyJson,
 } from '@mountnotion/utils';
@@ -9,7 +9,7 @@ import { prompt } from 'enquirer';
 import { CONFIG_FILE } from '../utils';
 
 export type WorkspaceOptions = {
-  caches: string | null;
+  schema: string | null;
   baseUrl: string | null;
   authStrategies: Array<'email' | 'sms'> | null;
   usersDatabase: string | null;
@@ -26,25 +26,25 @@ function assert(
 }
 
 function dependencies() {
-  const cache = getCache();
-  const hasCache = cache !== undefined && cache.length > 1;
-  if (!hasCache) {
+  const schema = getSchema();
+  const hasSchema = schema !== undefined && schema.length > 1;
+  if (!hasSchema) {
     log.fatal({
       action: 'aborting',
-      message: 'missing mount notion cache',
+      message: 'missing mount notion schema',
     });
   }
 }
 
 export async function optionsPrompt(options: WorkspaceOptions) {
   const prompts = [];
-  const cache = ensure(getCache());
+  const schema = ensure(getSchema());
 
-  if (!options.caches) {
+  if (!options.schema) {
     prompts.push({
       type: 'input',
-      message: 'name of caches package',
-      name: 'caches',
+      message: 'name of schema package',
+      name: 'schema',
     });
   }
 
@@ -70,7 +70,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
       type: 'select',
       message: 'users database',
       name: 'usersDatabase',
-      choices: cache.map((c) => {
+      choices: schema.map((c) => {
         return {
           name: c.title,
           value: c.title,
@@ -84,7 +84,7 @@ export async function optionsPrompt(options: WorkspaceOptions) {
     let userColunn;
     if (results.usersDatabase && !options.userColumn) {
       const database = ensure(
-        cache.find((c) => c.title === results.usersDatabase)
+        schema.find((c) => c.title === results.usersDatabase)
       );
       const choices = Object.keys(database.columns);
       const result = await prompt<{ userColumn: string }>([
@@ -124,8 +124,8 @@ export default {
       description: 'users database',
     },
     {
-      name: '-c, --caches [name]',
-      description: 'name of caches package',
+      name: '-c, --schema [name]',
+      description: 'name of schema package',
     },
     {
       name: '-u, --user-colum [name]',
@@ -140,7 +140,7 @@ export default {
       ...config,
       schematicDefaults: {
         ...config.schematicDefaults,
-        caches: options.caches ?? config.schematicDefaults?.caches,
+        schema: options.schema ?? config.schematicDefaults?.schema,
         baseUrl: options.baseUrl ?? config.schematicDefaults?.baseUrl,
         strategies:
           options.authStrategies ?? config.schematicDefaults?.strategies,

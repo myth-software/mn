@@ -1,6 +1,8 @@
 import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from 'react-query';
-import { <%= camelize(title) %>Request, InfrastructureOptions } from '../infrastructure';
-import { <%= classify(title) %> } from '<%= options.caches %>';
+import { } from <>;
+import { } from <>;
+%= camelize(title) %>Request, InfrastructureOptions } from '../infrastructure';
+%= classify(title) %> } from '<%= options.schema %>';
 
 export const use<%= classify(title) %>GetById = ({ id }: InfrastructureOptions<<%= classify(title) %>>, options?: UseQueryOptions<<%= classify(title) %>, unknown, <%= classify(title) %>, string[]>) => {
   const results = useQuery(

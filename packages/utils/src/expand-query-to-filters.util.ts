@@ -1,7 +1,7 @@
-import { Cache, QueryFilter } from '@mountnotion/types';
+import { QueryFilter, Schema } from '@mountnotion/types';
 
 export function expandQueryToFilters(
-  cache: Cache,
+  schema: Schema,
   query: any
 ): QueryFilter<any> {
   const filters: QueryFilter<any> = {
@@ -9,8 +9,8 @@ export function expandQueryToFilters(
   };
   for (const key in query) {
     const value = query[key];
-    const column = cache.mappings[key];
-    const colType = cache.columns[column];
+    const column = schema.mappings[key];
+    const colType = schema.columns[column];
     if (!value) {
       continue;
     }

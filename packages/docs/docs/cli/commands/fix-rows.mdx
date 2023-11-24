@@ -5,7 +5,7 @@ fixes rows that failed lint rules
 **dependencies**
 
 ```typescript
-const databasesWithRowsFails = cache.filter(
+const databasesWithRowsFails = schema.filter(
   (database) => database.lintFails.rows.length > 0
 );
 databasesWithRowsFails.length > 1;

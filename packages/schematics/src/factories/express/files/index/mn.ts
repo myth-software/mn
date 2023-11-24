@@ -2,11 +2,11 @@
   <% log.debug({ action: 'debugging', message: 'mn.ts' }) %>
 <% } %>
 
-import { caches } from '<%= options.caches %>';
+import { schema } from '<%= options.schema %>';
 import { db, drizzleClient } from '<%= options.drizzle %>';
 import { configureNotion } from '@mountnotion/sdk';
 
-const notionClient = configureNotion({ caches });
+const notionClient = configureNotion({ schema });
 export const mn =
   process.env.NODE_ENV === 'production'
     ? (drizzleClient as unknown as typeof notion)

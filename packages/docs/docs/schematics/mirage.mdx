@@ -4,20 +4,20 @@ create a mock api using mirage.js
 
 ## depends on
 
-1. caches
-2. locals
+1. schema
+2. fixtures
 
 ## output
 
 ### endpoints
 
 ```typescript title="equipment.endpoints.ts"
-import { localEquipment } from '@pferd/domain-pferd-locals';
+import { fixtureEquipment } from '@pferd/domain-pferd-fixtures';
 import { Response, Server } from 'miragejs';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 export function equipmentEndpoints(server: Server) {
-  let db: any[] = localEquipment.list;
+  let db: any[] = fixtureEquipment.list;
   server.get('/equipment', () => {
     return new Response(200, {}, db);
   });
@@ -60,7 +60,7 @@ export function equipmentEndpoints(server: Server) {
 ### models
 
 ```typescript title="equipment.model.ts"
-import { Equipment } from '@pferd/domain-pferd-caches';
+import { Equipment } from '@pferd/domain-pferd-schema';
 import { Model } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 export const equipmentModel: ModelDefinition<Equipment> = Model.extend({});

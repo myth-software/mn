@@ -8,10 +8,10 @@ none
 
 **arguments**
 
-| name              | long           | short | prompt                                   | enum               |
-| ----------------- | -------------- | ----- | ---------------------------------------- | ------------------ |
-| schematics        | --schematics   | -s    | schematics to scheme                     | all schematics     |
-| excludes from all | --excludes-all | -e    | databases to exclude from all schematics | databases in cache |
+| name              | long           | short | prompt                                   | enum                |
+| ----------------- | -------------- | ----- | ---------------------------------------- | ------------------- |
+| schematics        | --schematics   | -s    | schematics to scheme                     | all schematics      |
+| excludes from all | --excludes-all | -e    | databases to exclude from all schematics | databases in schema |
 
 **cli example**
 
@@ -26,7 +26,7 @@ npx mn configure-schematics
 ```
 
 ```sh
-caches schematic is required, schemed automatially
+schema schematic is required, schemed automatially
 
 schematics to scheme:
 [ ] controllers
@@ -34,7 +34,7 @@ schematics to scheme:
 [x] mirage
 [ ] react-query
 [ ] rtk-query
-[x] locals
+[x] fixtures
 
 databases to exclude from all schematics:
 [x] logs
@@ -45,7 +45,7 @@ databases to exclude from mirage:
 [ ] overlays
 [x] sets
 
-databases to exclude from locals:
+databases to exclude from fixtures:
 [x] overlays
 [x] sets
 ```
