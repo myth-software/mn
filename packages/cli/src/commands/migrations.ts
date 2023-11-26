@@ -18,11 +18,11 @@ function assert(
 
 function dependencies(config: MountNotionConfig) {
   const drizzleExists = config.schematics.some(
-    (schematic) => schematic.name === 'drizzle'
+    (schematic) => schematic.name === 'schema'
   );
 
   if (!drizzleExists) {
-    throw new Error('drizzle is not configured');
+    throw new Error('schema schematic is not configured in mn.json');
   }
 }
 
