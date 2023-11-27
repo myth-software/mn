@@ -59,10 +59,10 @@ export default {
     assert(args);
     dependencies(config);
 
-    const drizzleSchematic = config.schematics.find(
-      (schematic) => schematic.name === 'drizzle'
+    const schemaSchematic = config.schematics.find(
+      (schematic) => schematic.name === 'schema'
     );
-    const outDir = drizzleSchematic?.outDir;
+    const outDir = schemaSchematic?.outDir;
 
     const command = (await optionsPrompt(args)).command;
 
