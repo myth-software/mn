@@ -1,28 +1,28 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { cleanEnv, str } from 'envalid';
 import postgres from 'postgres';
+dotenv.config({
+  path: '../../../../.env',
+});
 
-const connectionString = process.env['CONNECTION_STRING']!;
-const sql = postgres(connectionString, {
+const env = cleanEnv(process.env, {
+  CONNECTION_STRING: str(),
+  NODE_ENV: str(),
+});
+
+const sql = postgres(env.CONNECTION_STRING, {
   max: 1,
-  ssl:
-    process.env['NODE_ENV']! === 'production'
-      ? { rejectUnauthorized: false }
-      : process.env['NODE_ENV']! === 'staging'
-      ? true
-      : false,
+  ssl: env.isProduction ? { rejectUnauthorized: false } : false,
 });
 const db = drizzle(sql);
-
 async function run() {
   const outDir = process.argv[2];
-
   await migrate(db, { migrationsFolder: `${outDir}/../migrations` });
   return 0;
 }
-
-run()
+export default run()
   .then((exitCode) => {
     process.exitCode = exitCode;
     process.exit();
