@@ -1,0 +1,8 @@
+{
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
+  "editor.rulers": [80],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
