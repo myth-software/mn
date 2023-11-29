@@ -48,15 +48,13 @@ export default function configureDrizzleUpdate<
       return acc;
     }, [] as string[]);
 
-    const joinTables = relations.map((relation) =>
-      getJoinTable(relation, notionScheme, {
+    const joinTables = relations.map((relation) => {
+      const value = clean[variablize(relation)];
+      return getJoinTable(relation, notionScheme, {
         primaryId: primary.id,
-        relatedIds:
-          typeof clean[relation] === 'string'
-            ? [clean[relation]]
-            : clean[relation],
-      })
-    );
+        relatedIds: typeof value === 'string' ? [value] : value,
+      });
+    });
 
     const pending = {} as any;
     for (const {
@@ -64,9 +62,9 @@ export default function configureDrizzleUpdate<
       firstId,
       secondId,
       firstValue,
-      first,
       primaryId,
       relatedIds,
+      relatedColumn,
     } of joinTables) {
       const drizzleJoinScheme = config.schema[constName];
       // delete from the join table the rows that have the primary key
@@ -91,11 +89,16 @@ export default function configureDrizzleUpdate<
                 [secondId]: secondId,
               };
 
-          return db.update(config.schema[constName]).set(setValues);
+          return db
+            .insert(config.schema[constName])
+            .values(setValues)
+            .returning();
         });
 
         const updated = (await Promise.all(values)).flat();
-        pending[first] = updated.map((creation) => creation[firstId]);
+        pending[variablize(relatedColumn)] = updated.map(
+          (creation) => creation[isPrimaryFirst ? secondId : firstId]
+        );
       }
     }
 

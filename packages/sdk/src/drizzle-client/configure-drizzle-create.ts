@@ -69,24 +69,29 @@ export default function configureDrizzleCreate<
       relatedColumn,
       primaryId,
     } of joinTables) {
-      const isFirstPrimary = primaryId === firstValue;
+      const isPrimaryFirst = primaryId === firstValue;
 
-      const arr = isFirstPrimary ? secondValue : firstValue;
+      const arr = isPrimaryFirst
+        ? Array.isArray(secondValue) &&
+          secondValue.map((val) => ({
+            [firstId]: primaryId,
+            [secondId]: val,
+          }))
+        : Array.isArray(firstValue) &&
+          firstValue.map((val) => ({
+            [firstId]: val,
+            [secondId]: primaryId,
+          }));
       if (!Array.isArray(arr)) {
         throw new Error('unexpectedly not an array');
       }
 
-      const values = arr
-        .map((val) => ({
-          [firstId]: isFirstPrimary ? val : secondValue,
-          [secondId]: isFirstPrimary ? secondValue : val,
-        }))
-        .map((val) =>
-          db.insert(config.schema[constName]).values(val).returning()
-        );
+      const values = arr.map((val) =>
+        db.insert(config.schema[constName]).values(val).returning()
+      );
       const created = (await Promise.all(values)).flat();
       pending[variablize(relatedColumn)] = created.map(
-        (creation) => creation[isFirstPrimary ? firstId : secondId]
+        (creation) => creation[isPrimaryFirst ? secondId : firstId]
       );
     }
     return { ...primary, ...pending };
