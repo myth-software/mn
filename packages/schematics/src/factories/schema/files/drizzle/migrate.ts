@@ -14,7 +14,7 @@ const env = cleanEnv(process.env, {
 
 const sql = postgres(env.CONNECTION_STRING, {
   max: 1,
-  ssl: env.isProduction ? { rejectUnauthorized: false } : false,
+  ssl: { rejectUnauthorized: false },
 });
 const db = drizzle(sql);
 async function run() {

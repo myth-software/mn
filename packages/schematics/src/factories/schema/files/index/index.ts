@@ -11,12 +11,7 @@ import * as schema from './drizzle.schema';
 import { SCHEMA } from './notion.schema';
 export const db = drizzle(
   postgres(process.env['CONNECTION_STRING']!, {
-    ssl:
-      process.env['NODE_ENV']! === 'production'
-        ? { rejectUnauthorized: false }
-        : process.env['NODE_ENV']! === 'staging'
-        ? true
-        : false,
+    ssl: { rejectUnauthorized: false },
   }),
   { schema }
 );
