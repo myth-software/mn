@@ -1,3 +1,4 @@
+import { MountNotionClientDrizzleConfig } from './configure-drizzle.type';
 import {
   checkboxPropertyFilter,
   datePropertyFilter,
@@ -10,11 +11,13 @@ import {
   textPropertyFilter,
 } from './filters';
 
-export function mapNotionToDrizzleFilter(filter: any, database: any) {
+export function mapNotionToDrizzleFilter<
+  TConfig extends MountNotionClientDrizzleConfig<TConfig['schema']>
+>(filter: any, drizzleScheme: any, config: TConfig, title: string) {
   if (filter.select) {
     const { select, property } = filter;
     const drizzleFilter = selectPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: select,
       property,
     });
@@ -27,7 +30,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.rich_text) {
     const { rich_text, property } = filter;
     const drizzleFilter = textPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: rich_text,
       property,
     });
@@ -40,7 +43,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.title) {
     const { title, property } = filter;
     const drizzleFilter = textPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: title,
       property,
     });
@@ -53,7 +56,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.phone_number) {
     const { phone_number, property } = filter;
     const drizzleFilter = textPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: phone_number,
       property,
     });
@@ -66,7 +69,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.url) {
     const { url, property } = filter;
     const drizzleFilter = textPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: url,
       property,
     });
@@ -79,7 +82,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.people) {
     const { people, property } = filter;
     const drizzleFilter = peoplePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: people,
       property,
     });
@@ -92,7 +95,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.date) {
     const { date, property } = filter;
     const drizzleFilter = datePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: date,
       property,
     });
@@ -105,7 +108,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.status) {
     const { status, property } = filter;
     const drizzleFilter = selectPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: status,
       property,
     });
@@ -118,7 +121,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.email) {
     const { email, property } = filter;
     const drizzleFilter = textPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: email,
       property,
     });
@@ -131,7 +134,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.multi_select) {
     const { multi_select, property } = filter;
     const drizzleFilter = multiSelectPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: multi_select,
       property,
     });
@@ -143,11 +146,15 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
 
   if (filter.relation) {
     const { relation, property } = filter;
-    const drizzleFilter = relationPropertyFilter({
-      database,
-      filter: relation,
-      property,
-    });
+    const drizzleFilter = relationPropertyFilter(
+      {
+        database: drizzleScheme,
+        filter: relation,
+        property,
+      },
+      config,
+      title
+    );
 
     if (drizzleFilter) {
       return drizzleFilter;
@@ -157,7 +164,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.files) {
     const { files, property } = filter;
     const drizzleFilter = existencePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: files,
       property,
     });
@@ -170,7 +177,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.created_by) {
     const { created_by, property } = filter;
     const drizzleFilter = peoplePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: created_by,
       property,
     });
@@ -183,7 +190,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.created_time) {
     const { created_time, property } = filter;
     const drizzleFilter = datePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: created_time,
       property,
     });
@@ -196,7 +203,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.last_edited_by) {
     const { last_edited_by, property } = filter;
     const drizzleFilter = peoplePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: last_edited_by,
       property,
     });
@@ -209,7 +216,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.last_edited_time) {
     const { last_edited_time, property } = filter;
     const drizzleFilter = datePropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: last_edited_time,
       property,
     });
@@ -222,11 +229,15 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.rollup?.any?.relation) {
     const property = filter.property;
     const relation = filter.rollup?.any?.relation;
-    const drizzleFilter = relationPropertyFilter({
-      database,
-      filter: relation,
-      property,
-    });
+    const drizzleFilter = relationPropertyFilter(
+      {
+        database: drizzleScheme,
+        filter: relation,
+        property,
+      },
+      config,
+      title
+    );
 
     if (drizzleFilter) {
       return drizzleFilter;
@@ -242,7 +253,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.checkbox) {
     const { checkbox, property } = filter;
     const drizzleFilter = checkboxPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: checkbox,
       property,
     });
@@ -255,7 +266,7 @@ export function mapNotionToDrizzleFilter(filter: any, database: any) {
   if (filter.number) {
     const { number, property } = filter;
     const drizzleFilter = numberPropertyFilter({
-      database,
+      database: drizzleScheme,
       filter: number,
       property,
     });

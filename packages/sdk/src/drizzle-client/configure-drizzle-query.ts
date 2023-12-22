@@ -9,10 +9,14 @@ export default function configureDrizzleQuery<
   const db = config.db;
 
   return async function drizzleQuery(args: MountNotionQueryParameters<any>) {
+    // the fundamental challenge is to query and filter, i believe relations only,
+    // with the new many-to-many handling
     const where = typeof args === 'string' ? JSON.parse(args) : args;
     const { filter, orderBy, limit, offset } = mapNotionToDrizzleWhere(
+      where,
       drizzleScheme,
-      where
+      config,
+      title
     );
     const query = db.select().from(drizzleScheme);
 

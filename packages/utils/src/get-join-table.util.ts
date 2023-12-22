@@ -65,5 +65,6 @@ export function getJoinTable(
     secondValue,
     primaryId: values?.primaryId,
     relatedIds: values?.relatedIds,
+    isRelatedTableFirst,
   };
 }

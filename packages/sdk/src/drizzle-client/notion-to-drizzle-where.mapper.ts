@@ -1,4 +1,6 @@
+import { AndFilter, OrFilter, Schema } from '@mountnotion/types';
 import { and, asc, desc, or } from 'drizzle-orm';
+import { MountNotionClientDrizzleConfig } from './configure-drizzle.type';
 import { mapNotionToDrizzleFilter } from './notion-to-drizzle-filter.mapper';
 
 type DrizzleWhere = {
@@ -15,9 +17,13 @@ type NotionWhere = {
   page_size?: number;
 };
 
-export function mapNotionToDrizzleWhere(
-  database: any,
-  where?: NotionWhere
+export function mapNotionToDrizzleWhere<
+  TConfig extends MountNotionClientDrizzleConfig<TConfig['schema']>
+>(
+  where: NotionWhere,
+  drizzleScheme: any,
+  config: TConfig,
+  title: string
 ): DrizzleWhere {
   const drizzleWhere = {} as DrizzleWhere;
   if (!where) {
@@ -47,35 +53,52 @@ export function mapNotionToDrizzleWhere(
     return drizzleWhere;
   }
   if (!where.filter.or && !where.filter.and) {
-    drizzleWhere.filter = mapNotionToDrizzleFilter(where.filter, database);
+    drizzleWhere.filter = mapNotionToDrizzleFilter(
+      where.filter,
+      drizzleScheme,
+      config,
+      title
+    );
   }
 
   if (where.filter.or) {
     drizzleWhere.filter = or(
-      ...where.filter.or.map((orFilter: any) =>
-        mapNotionToDrizzleFilter(orFilter, database)
+      ...where.filter.or.map((orFilter: OrFilter<Schema>) =>
+        mapNotionToDrizzleFilter(orFilter, drizzleScheme, config, title)
       )
     );
   }
 
-  if (where.filter.and && where.filter.and.some((filter: any) => filter.or)) {
-    const orIndex = where.filter.and.findIndex((filter: any) => filter.or);
-    const otherIndex = where.filter.and.findIndex((filter: any) => !filter.or);
+  if (
+    where.filter.and &&
+    where.filter.and.some((filter: OrFilter<Schema>) => filter.or)
+  ) {
+    const orIndex = where.filter.and.findIndex(
+      (filter: OrFilter<Schema>) => filter.or
+    );
+    const otherIndex = where.filter.and.findIndex(
+      (filter: OrFilter<Schema>) => !filter.or
+    );
 
     drizzleWhere.filter = and(
       or(
-        ...where.filter.and[orIndex].or.map((orFilter: any) =>
-          mapNotionToDrizzleFilter(orFilter, database)
+        ...where.filter.and[orIndex].or.map((orFilter: OrFilter<Schema>) =>
+          mapNotionToDrizzleFilter(orFilter, drizzleScheme, config, title)
         )
       ),
-      mapNotionToDrizzleFilter(where.filter.and[otherIndex], database)
+      mapNotionToDrizzleFilter(
+        where.filter.and[otherIndex],
+        drizzleScheme,
+        config,
+        title
+      )
     );
   }
 
   if (where.filter.and) {
     drizzleWhere.filter = and(
-      ...where.filter.and.map((andFilter: any) =>
-        mapNotionToDrizzleFilter(andFilter, database)
+      ...where.filter.and.map((andFilter: AndFilter<Schema>) =>
+        mapNotionToDrizzleFilter(andFilter, drizzleScheme, config, title)
       )
     );
   }
