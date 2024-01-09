@@ -6,11 +6,11 @@ export function checkboxPropertyFilter({
   filter,
   property,
 }: FilterArgs) {
-  if (filter.equals) {
+  if (typeof filter.equals === 'boolean') {
     return eq(database[property], filter.equals);
   }
 
-  if (filter.does_not_equal) {
+  if (typeof filter.does_not_equal === 'boolean') {
     return ne(database[property], filter.does_not_equal);
   }
 
